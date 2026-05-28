@@ -1,0 +1,1235 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Презентация группового проекта P03D20">
+    <meta name="keywords" content="Презентация группового проекта P03D20, алгоритм Дейкстры, польская нотация">
+    <meta name="robots" content="index, follow">
+    <title>Командный проект tomokoom, creganvi, effrafab | P03D20</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Philosopher:wght@400;700&family=Roboto+Serif:opsz,wght@8..144,100;8..144,400;8..144,500;8..144,700&family=Russo+One&family=Montserrat:wght@400;600;700;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer">
+
+    <!-- Core Libraries -->
+    <script src="https://code.jquery.com/jquery-2.2.3.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.9.0/p5.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.6.0/gsap.min.js"></script>
+
+    <style>
+        /* ============ RESET ============ */
+        *{padding:0;margin:0;border:none}
+        *,*::before,*::after{box-sizing:border-box}
+        a,a:link,a:visited{text-decoration:none;color:inherit}
+        aside,nav,footer,header,section,main{display:block}
+        img,svg{max-width:100%;height:auto;vertical-align:top}
+        ul,li{list-style:none}
+        input,textarea,button,select{font-family:inherit;font-size:inherit;color:inherit;background:transparent;outline:none}
+
+        /* ============ VARIABLES ============ */
+        :root{
+            --bg:#0A0A0F;
+            --surface:#13131F;
+            --surface-light:#1A1A2E;
+            --surface-card:#16162A;
+            --primary:#00FF88;
+            --primary-glow:rgba(0,255,136,0.2);
+            --secondary:#7B61FF;
+            --secondary-glow:rgba(123,97,255,0.2);
+            --accent:#FF4757;
+            --accent-glow:rgba(255,71,87,0.2);
+            --amber:#F1A700;
+            --blue:#008BFF;
+            --purple:#A24FEA;
+            --text:#FFFFFF;
+            --text-secondary:#A0A0B0;
+            --text-muted:#6B6B7B;
+            --border:rgba(255,255,255,0.06);
+            --border-light:rgba(255,255,255,0.1);
+            --gradient-1:linear-gradient(135deg,#00FF88,#00D4AA);
+            --gradient-2:linear-gradient(135deg,#7B61FF,#FF4757);
+            --gradient-hero:linear-gradient(135deg,#00FF88 0%,#7B61FF 50%,#FF4757 100%);
+        }
+
+        html,body{
+            font-family:'Inter',sans-serif;
+            background:var(--bg);
+            color:var(--text);
+            overflow-x:hidden;
+            line-height:1.6;
+        }
+
+        body::before{
+            content:'';
+            position:fixed;
+            inset:0;
+            background:radial-gradient(ellipse at 20% 50%,rgba(0,255,136,0.04) 0%,transparent 50%),radial-gradient(ellipse at 80% 20%,rgba(123,97,255,0.04) 0%,transparent 50%),radial-gradient(ellipse at 50% 80%,rgba(255,71,87,0.03) 0%,transparent 50%);
+            pointer-events:none;
+            z-index:0;
+        }
+
+        /* ============ HEADER ============ */
+        header{position:relative;z-index:2;padding-bottom:40px}
+        .container{max-width:1400px;margin:0 auto;padding:0 20px;position:relative;z-index:2}
+        section{position:relative;z-index:2;padding:50px 0}
+
+        /* ============ ANIMATED HR ============ */
+        .glow-divider{
+            border:none;
+            height:3px;
+            margin:60px 0;
+            background:linear-gradient(90deg,transparent,var(--primary),var(--secondary),var(--accent),transparent);
+            background-size:200% 100%;
+            animation:dividerGlow 3s linear infinite;
+            border-radius:2px;
+            position:relative;
+        }
+        .glow-divider::after{
+            content:'';
+            position:absolute;
+            inset:-6px 0;
+            background:inherit;
+            filter:blur(12px);
+            opacity:0.5;
+            border-radius:2px;
+        }
+        @keyframes dividerGlow{0%{background-position:200% 0}100%{background-position:-200% 0}}
+
+        /* ============ HERO ============ */
+        .hero{text-align:center;padding:40px 20px 30px}
+        .hero-badge{display:inline-block;background:var(--surface);border:1px solid var(--primary);color:var(--primary);padding:6px 18px;border-radius:50px;font-size:0.8rem;font-weight:600;text-transform:uppercase;letter-spacing:2px;margin-bottom:24px;animation:badgePulse 2s infinite}
+        @keyframes badgePulse{0%,100%{box-shadow:0 0 0 0 var(--primary-glow)}50%{box-shadow:0 0 0 12px transparent}}
+        .hero-title{font-family:'Russo One',sans-serif;font-size:clamp(2.5rem,8vw,5rem);background:var(--gradient-hero);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1.2;margin-bottom:16px}
+        .hero-subtitle{font-size:clamp(0.95rem,2vw,1.2rem);color:var(--text-secondary);max-width:600px;margin:0 auto}
+
+        /* ============ MOOD ============ */
+        .mood-section{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin:40px 0}
+        .mood-card{background:var(--surface);border-radius:20px;padding:30px;text-align:center;position:relative;overflow:hidden;min-height:180px;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:all 0.4s ease}
+        .mood-card.scared{border:2px solid rgba(255,71,87,0.4);box-shadow:0 0 30px rgba(255,71,87,0.15),inset 0 0 30px rgba(255,71,87,0.03);animation:scaredGlow 2s ease-in-out infinite}
+        @keyframes scaredGlow{0%,100%{box-shadow:0 0 20px rgba(255,71,87,0.15),inset 0 0 20px rgba(255,71,87,0.02)}50%{box-shadow:0 0 40px rgba(255,71,87,0.3),inset 0 0 40px rgba(255,71,87,0.05)}}
+        .mood-card.party{border:2px solid rgba(0,255,136,0.4);box-shadow:0 0 30px rgba(0,255,136,0.15),inset 0 0 30px rgba(0,255,136,0.03);animation:partyGlow 1.5s ease-in-out infinite}
+        @keyframes partyGlow{0%,100%{box-shadow:0 0 20px rgba(0,255,136,0.15),inset 0 0 20px rgba(0,255,136,0.02)}50%{box-shadow:0 0 45px rgba(0,255,136,0.35),inset 0 0 45px rgba(0,255,136,0.06)}}
+        .mood-icon{font-size:3.5rem;margin-bottom:12px;position:relative;z-index:1}
+        .mood-card.scared .mood-icon{animation:shake 0.5s ease-in-out infinite}
+        @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+        .mood-card.party .mood-icon{animation:bounce 0.6s ease-in-out infinite alternate}
+        @keyframes bounce{0%{transform:translateY(0) scale(1)}100%{transform:translateY(-12px) scale(1.1)}}
+        .mood-title{font-family:'Russo One',sans-serif;font-size:1.4rem;margin-bottom:8px;position:relative;z-index:1;letter-spacing:1px}
+        .mood-card.scared .mood-title{color:var(--bg);border-radius:16px;text-shadow:0 0 20px rgba(255,71,87,0.4);background:var(--secondary)}
+        .mood-card.party .mood-title{color:var(--primary);background:rgba(0,0,0,0.25);border-radius:16px;text-shadow:0 0 20px rgba(0,255,136,0.4);animation:textRainbow 2s linear infinite}
+        @keyframes textRainbow{0%{filter:hue-rotate(0deg)}100%{filter:hue-rotate(360deg)}}
+        .mood-desc{background:rgba(0,0,0,0.85);border-radius:16px;color:var(--text-secondary);font-size:0.92rem;position:relative;z-index:1;max-width:80%;margin:0 auto;padding:4px 12px}
+        .mood-card::after{content:'';position:absolute;top:0;left:0;right:0;bottom:0;border-radius:18px;pointer-events:none}
+        .mood-card.scared::after{background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(255,71,87,0.03) 2px,rgba(255,71,87,0.03) 4px);animation:rain 0.5s linear infinite}
+        @keyframes rain{0%{background-position:0 0}100%{background-position:0 20px}}
+        .mood-card.party::after{background:radial-gradient(circle at var(--x,50%) var(--y,50%),rgba(0,255,136,0.15) 0%,transparent 50%)}
+
+        /* ============ QUEST ============ */
+        .quest-box{background:var(--surface);border:1px solid var(--primary);border-radius:20px;padding:30px;margin:30px 0;position:relative;box-shadow:0 0 30px var(--primary-glow)}
+        .quest-box::before{content:'🎯 QUEST';position:absolute;top:-14px;left:30px;background:var(--primary);color:var(--bg);padding:4px 16px;border-radius:50px;font-size:0.8rem;font-weight:700;letter-spacing:1px}
+        .quest-text{font-family:'Roboto Serif',serif;font-style:italic;font-size:1.05rem;line-height:1.8;color:var(--text)}
+        .quest-text .hl{color:var(--primary);font-weight:700;font-style:normal}
+
+        /* ============ MEMES ============ */
+        .memes-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin:30px 0}
+        .meme-card{background:var(--surface);border:1px solid var(--border-light);border-radius:16px;overflow:hidden;transition:all 0.3s ease}
+        .meme-card:hover{border-color:var(--secondary);box-shadow:0 10px 40px var(--secondary-glow)}
+        .meme-card img{width:100%;height:auto;display:block;object-fit:contain;background:#0d0d1a}
+
+        /* ============ SECTION TITLE ============ */
+        .section-title{font-family:'Russo One',sans-serif;font-size:clamp(1.8rem,4vw,2.8rem);text-align:center;margin-bottom:36px;background:var(--gradient-hero);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+        .section-title.green{background:var(--gradient-1);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+
+        /* ============ TRIBE LOGO SVG ============ */
+        .tribe-logo{width:32px;height:32px;flex-shrink:0;border-radius:8px;display:inline-flex;align-items:center;justify-content:center;font-weight:900;font-size:1rem;color:#fff}
+        .tribe-fox{background:linear-gradient(135deg,#FF4757,#FF6B81)}
+        .tribe-lynx{background:linear-gradient(135deg,#7B61FF,#A78BFA)}
+        .tribe-lizard{background:linear-gradient(135deg,#00FF88,#00D4AA)}
+
+        /* ============ TEAM ============ */
+        .team-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin:30px 0}
+        .team-card{background:var(--surface-card);border:1px solid var(--border);border-radius:20px;padding:24px;transition:all 0.3s ease;position:relative}
+        .team-card:hover{border-color:var(--primary);box-shadow:0 12px 40px var(--primary-glow);transform:translateY(-4px)}
+        .team-card.team-leader{border-color:var(--amber);box-shadow:0 0 25px rgba(241,167,0,0.2)}
+        .team-card-header{display:flex;align-items:center;gap:16px;margin-bottom:20px}
+        .team-avatar{width:64px;height:64px;border-radius:16px;overflow:hidden;flex-shrink:0;background:var(--surface-light);display:flex;align-items:center;justify-content:center;font-size:2rem}
+        .team-avatar img{width:100%;height:100%;object-fit:cover}
+        .team-info h4{font-family:'Russo One',sans-serif;font-size:1.1rem;color:var(--text);display:flex;align-items:center;gap:8px;margin-bottom:4px}
+        .team-info .tribe-points{font-size:0.75rem;color:var(--text-muted);margin-top:2px}
+        .role-badge{position:absolute;top:-14px;left:50%;transform:translateX(-50%);padding:4px 14px;border-radius:50px;font-size:0.72rem;font-weight:700;letter-spacing:1px;white-space:nowrap;color:var(--bg)}
+        .role-leader{background:var(--amber)}
+        .role-dev{background:var(--secondary)}
+        .role-dev2{background:#00D4AA}
+        .progress-bar{width:100%;height:6px;background:rgba(255,255,255,0.05);border-radius:3px;margin-bottom:16px;overflow:hidden}
+        .progress-fill{height:100%;border-radius:3px;background:var(--gradient-1)}
+        .stat-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;font-size:0.85rem;color:var(--text-secondary)}
+        .badge-grid{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:20px}
+        .badge{padding:4px 10px;border-radius:50px;font-size:0.72rem;font-weight:600;border:1px solid}
+        .badge.xp{background:#DDE3E9;border-color:#DDE3E9;color:#1a1a1a}
+        .badge.prp{background:var(--amber);border-color:var(--amber);color:#1a1a1a}
+        .badge.crp{background:var(--blue);border-color:var(--blue)}
+        .badge.coins{background:var(--purple);border-color:var(--purple)}
+        .peer-feedback h5{font-weight:600;font-size:0.9rem;color:var(--text);margin-bottom:12px}
+        .feedback-item{display:flex;align-items:center;gap:10px;padding:6px 0;font-size:0.8rem;color:var(--text-secondary)}
+        .feedback-item svg{width:20px;height:20px;flex-shrink:0;fill:var(--text-muted)}
+        .feedback-item .score{margin-left:auto;color:var(--text);font-weight:600}
+        .peer-total{display:flex;justify-content:space-between;margin-top:12px;padding-top:12px;border-top:1px solid var(--border);font-size:0.8rem;color:var(--text-muted)}
+        .peer-total span:last-child{color:var(--text);font-weight:600}
+
+      /* ============ VIDEO (CSS-only плеер) ============ */
+.video-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(380px,1fr));gap:20px;margin:30px 0;}
+.video-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;overflow:hidden;transition:all 0.3s ease;}
+.video-card:hover{border-color:var(--primary);box-shadow:0 8px 30px var(--primary-glow);}
+.video-thumb{
+    position:relative;
+    aspect-ratio:16/9;
+    cursor:pointer;
+    overflow:hidden;
+    display:block;
+    text-decoration:none;
+    color:inherit;
+}
+.video-thumb img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    transition:transform 0.5s ease,filter 0.5s ease;
+}
+.video-card:hover .video-thumb img{
+    transform:scale(1.05);
+    filter:brightness(0.6);
+}
+.video-overlay{
+    position:absolute;
+    inset:0;
+    background:linear-gradient(135deg,rgba(0,0,0,0.6) 0%,rgba(0,0,0,0.2) 50%,rgba(0,0,0,0.6) 100%);
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:12px;
+    transition:background 0.3s ease;
+}
+.video-card:hover .video-overlay{
+    background:linear-gradient(135deg,rgba(0,0,0,0.3) 0%,rgba(0,0,0,0.1) 50%,rgba(0,0,0,0.3) 100%);
+}
+.video-play-circle{
+    width:72px;
+    height:72px;
+    border-radius:50%;
+    border:3px solid var(--primary);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    transition:all 0.3s ease;
+    background:rgba(0,0,0,0.5);
+    backdrop-filter:blur(4px);
+    box-shadow:0 0 30px var(--primary-glow);
+}
+.video-card:hover .video-play-circle{
+    transform:scale(1.15);
+    border-color:#fff;
+    box-shadow:0 0 50px rgba(0,255,136,0.6);
+}
+.video-play-circle::after{
+    content:'';
+    width:0;
+    height:0;
+    border-left:22px solid var(--primary);
+    border-top:13px solid transparent;
+    border-bottom:13px solid transparent;
+    margin-left:5px;
+    transition:border-left-color 0.3s ease;
+}
+.video-card:hover .video-play-circle::after{
+    border-left-color:#fff;
+}
+.video-hint{
+    color:#fff;
+    font-size:0.85rem;
+    font-weight:500;
+    text-align:center;
+    padding:6px 16px;
+    background:rgba(0,0,0,0.6);
+    border-radius:50px;
+    backdrop-filter:blur(4px);
+    opacity:0;
+    transform:translateY(8px);
+    transition:all 0.3s ease;
+}
+.video-card:hover .video-hint{
+    opacity:1;
+    transform:translateY(0);
+}
+.video-label{
+    padding:14px 16px;
+    font-size:0.85rem;
+    color:var(--text-secondary);
+    text-align:center;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+    flex-wrap:wrap;
+    border-top:1px solid var(--border);
+}
+@media(max-width:768px){
+    .video-grid{grid-template-columns:1fr;}
+    .video-play-circle{width:56px;height:56px;}
+    .video-play-circle::after{border-left-width:17px;border-top-width:10px;border-bottom-width:10px;}
+}
+        /* ============ PHOTO CAROUSEL ============ */
+        .carousel-container {
+    position: relative;
+    max-width: 1000px;
+    margin: 30px auto;
+    border-radius: 20px;
+    border: 1px solid var(--border-light);
+    overflow: hidden;
+    background: #000;
+}
+.carousel-track {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16/10;
+}
+.carousel-slide {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transform: scale(0.92);
+    filter: blur(8px);
+    transition: opacity 0.7s cubic-bezier(0.4, 0, 0.2, 1),
+                transform 0.7s cubic-bezier(0.4, 0, 0.2, 1),
+                filter 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+}
+.carousel-slide.active {
+    opacity: 1;
+    transform: scale(1);
+    filter: blur(0);
+    z-index: 2;
+}
+.carousel-slide.prev {
+    opacity: 0;
+    transform: scale(1.05) translateX(-8%);
+    filter: blur(4px);
+    z-index: 1;
+}
+.carousel-slide.next {
+    opacity: 0;
+    transform: scale(1.05) translateX(8%);
+    filter: blur(4px);
+    z-index: 1;
+}
+.carousel-slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    border-radius: 0;
+}
+.carousel-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.5) 0%, transparent 40%, transparent 60%, rgba(0,0,0,0.3) 100%);
+    z-index: 3;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.5s;
+}
+.carousel-container:hover .carousel-overlay {
+    opacity: 1;
+}
+.carousel-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(10,10,15,0.7);
+    backdrop-filter: blur(8px);
+    border: 1px solid var(--primary);
+    color: var(--primary);
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 1.4rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    z-index: 10;
+    opacity: 0;
+}
+.carousel-container:hover .carousel-btn {
+    opacity: 1;
+}
+.carousel-btn:hover {
+    background: var(--primary);
+    color: var(--bg);
+    box-shadow: 0 0 25px var(--primary-glow);
+    transform: translateY(-50%) scale(1.1);
+}
+.carousel-prev { left: 16px; }
+.carousel-next { right: 16px; }
+.carousel-dots {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    padding: 16px;
+    background: var(--surface);
+    position: relative;
+    z-index: 10;
+}
+.carousel-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--text-muted);
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.carousel-dot.active {
+    background: var(--primary);
+    box-shadow: 0 0 12px var(--primary-glow);
+    transform: scale(1.3);
+}
+.carousel-counter {
+    position: absolute;
+    bottom: 60px;
+    right: 20px;
+    z-index: 10;
+    background: rgba(10,10,15,0.7);
+    backdrop-filter: blur(8px);
+    color: #fff;
+    padding: 4px 12px;
+    border-radius: 50px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+.carousel-container:hover .carousel-counter {
+    opacity: 1;
+}
+@media (max-width: 768px) {
+    .carousel-btn { width: 38px; height: 38px; font-size: 1.1rem; }
+}
+
+        /* ============ KNOWLEDGE ============ */
+        .knowledge-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:20px;margin:30px 0}
+        .knowledge-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:24px;transition:all 0.3s ease}
+        .knowledge-card:hover{border-color:var(--primary);box-shadow:0 8px 30px var(--primary-glow);transform:translateY(-4px)}
+        .knowledge-card h3{color:var(--primary);font-family:'Russo One',sans-serif;font-size:1.05rem;margin-bottom:10px}
+        .knowledge-card p{color:var(--text-secondary);font-size:0.88rem;line-height:1.7}
+
+        /* ============ DIJKSTRA ============ */
+        .dijkstra-block{display:flex;gap:30px;align-items:flex-start;background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:30px;margin:30px 0}
+        .dijkstra-img{flex-shrink:0;width:220px;border-radius:16px;overflow:hidden;border:2px solid var(--secondary)}
+        .dijkstra-img img{width:100%;display:block}
+        .dijkstra-content{flex:1}
+        .dijkstra-content h3{font-family:'Russo One',sans-serif;font-size:1.6rem;color:var(--secondary);margin-bottom:18px}
+        .dijkstra-steps li{padding:9px 0;border-bottom:1px solid var(--border);color:var(--text-secondary);display:flex;align-items:center;gap:10px;font-size:0.9rem}
+        .dijkstra-steps li::before{content:'';width:7px;height:7px;border-radius:50%;background:var(--primary);flex-shrink:0}
+
+        /* ============ QUOTE ============ */
+        .quote-block{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:36px;text-align:center;margin:40px 0}
+        .quote-text{font-family:'Roboto Serif',serif;font-style:italic;font-size:clamp(1rem,2vw,1.3rem);color:var(--text);line-height:1.8}
+        .quote-author{display:block;margin-top:18px;color:var(--primary);font-weight:700;font-style:normal;font-family:'Inter',sans-serif}
+
+        /* ============ TASKS ============ */
+        .task-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;margin:30px 0}
+        .task-item{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px;display:flex;align-items:center;gap:14px;transition:all 0.3s ease}
+        .task-item:hover{border-color:var(--primary)}
+        .task-num{width:40px;height:40px;border-radius:50%;background:var(--primary);color:var(--bg);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:1.1rem;flex-shrink:0}
+        .task-text{color:var(--text);font-size:0.9rem}
+
+        /* ============ REVIEWS ============ */
+        .reviews-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px;margin:30px 0}
+        .review-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:24px;transition:all 0.3s ease}
+        .review-card:hover{border-color:var(--secondary)}
+        .review-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+        .reviewer-name{font-weight:700;font-size:1rem;color:var(--text)}
+        .review-date{font-size:0.8rem;color:var(--text-muted)}
+        .review-score{font-family:'Russo One',sans-serif;font-size:2.5rem;margin-bottom:8px}
+        .review-score.pass{color:var(--primary)}
+        .review-score.fail{color:var(--accent)}
+        .review-label{font-size:0.75rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:14px}
+        .review-text{font-size:0.88rem;color:var(--text-secondary);line-height:1.7}
+
+        /* ============ SUCCESS ============ */
+        .success-block{text-align:center;padding:50px 20px;background:var(--surface);border:1px solid var(--primary);border-radius:20px;margin:30px 0;box-shadow:0 0 50px var(--primary-glow);position:relative}
+        .success-icon{font-size:4rem;margin-bottom:16px}
+        .success-title{font-family:'Russo One',sans-serif;font-size:2.2rem;color:var(--primary);margin-bottom:12px}
+        #confetti{position:absolute;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none}
+
+     /* ============ FOOTER ============ */
+footer {
+    position: relative;
+    z-index: 2;
+    margin-top: 60px;
+    background: var(--bg);
+    overflow: hidden;
+}
+
+.fireflies-container {
+    position: relative;
+    width: 100%;
+    height: 100px;
+    background: radial-gradient(ellipse at center, #0d1a0d 0%, var(--bg) 70%);
+}
+
+.firefly {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background: #00FF88;
+    border-radius: 50%;
+    box-shadow:
+        0 0 6px 2px rgba(0, 255, 136, 0.7),
+        0 0 12px 4px rgba(0, 255, 136, 0.4),
+        0 0 20px 8px rgba(0, 255, 136, 0.2);
+    animation: fireflyFloat var(--duration) ease-in-out infinite;
+    animation-delay: var(--delay);
+    opacity: 0;
+}
+
+.firefly::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 2px;
+    height: 2px;
+    background: #fff;
+    border-radius: 50%;
+}
+
+/* Позиции и параметры для каждого светлячка */
+.firefly:nth-child(1) { left: 5%; top: 20%; --duration: 4s; --delay: 0s; }
+.firefly:nth-child(2) { left: 10%; top: 60%; --duration: 5s; --delay: 0.5s; }
+.firefly:nth-child(3) { left: 15%; top: 30%; --duration: 3.5s; --delay: 1s; }
+.firefly:nth-child(4) { left: 20%; top: 70%; --duration: 6s; --delay: 0.3s; }
+.firefly:nth-child(5) { left: 25%; top: 15%; --duration: 4.5s; --delay: 1.5s; }
+.firefly:nth-child(6) { left: 30%; top: 50%; --duration: 5.5s; --delay: 0.8s; }
+.firefly:nth-child(7) { left: 35%; top: 40%; --duration: 3.8s; --delay: 2s; }
+.firefly:nth-child(8) { left: 40%; top: 80%; --duration: 4.2s; --delay: 0.2s; }
+.firefly:nth-child(9) { left: 45%; top: 10%; --duration: 5.8s; --delay: 1.2s; }
+.firefly:nth-child(10) { left: 50%; top: 55%; --duration: 3.2s; --delay: 0.7s; }
+.firefly:nth-child(11) { left: 55%; top: 25%; --duration: 4.7s; --delay: 1.8s; }
+.firefly:nth-child(12) { left: 60%; top: 65%; --duration: 6.2s; --delay: 0.4s; }
+.firefly:nth-child(13) { left: 65%; top: 35%; --duration: 3.6s; --delay: 0.9s; }
+.firefly:nth-child(14) { left: 70%; top: 75%; --duration: 5.1s; --delay: 1.4s; }
+.firefly:nth-child(15) { left: 75%; top: 20%; --duration: 4.3s; --delay: 0.6s; }
+.firefly:nth-child(16) { left: 80%; top: 60%; --duration: 5.4s; --delay: 1.1s; }
+.firefly:nth-child(17) { left: 85%; top: 45%; --duration: 3.9s; --delay: 0.15s; }
+.firefly:nth-child(18) { left: 90%; top: 15%; --duration: 4.8s; --delay: 1.6s; }
+.firefly:nth-child(19) { left: 95%; top: 55%; --duration: 3.3s; --delay: 0.25s; }
+.firefly:nth-child(20) { left: 97%; top: 35%; --duration: 5.2s; --delay: 0.95s; }
+
+@keyframes fireflyFloat {
+    0%, 100% {
+        transform: translate(0, 0) scale(1);
+        opacity: 0;
+    }
+    10% {
+        opacity: 0.8;
+    }
+    20% {
+        transform: translate(var(--tx1, 30px), var(--ty1, -40px)) scale(1.2);
+        opacity: 1;
+    }
+    40% {
+        transform: translate(var(--tx2, -20px), var(--ty2, -20px)) scale(0.8);
+        opacity: 0.6;
+    }
+    60% {
+        transform: translate(var(--tx3, 40px), var(--ty3, -50px)) scale(1.3);
+        opacity: 1;
+    }
+    80% {
+        transform: translate(var(--tx4, -10px), var(--ty4, -30px)) scale(0.7);
+        opacity: 0.3;
+    }
+    90% {
+        opacity: 0;
+    }
+}
+
+/* Уникальные траектории для каждого */
+.firefly:nth-child(odd) { --tx1: 30px; --ty1: -50px; --tx2: -25px; --ty2: -30px; --tx3: 35px; --ty3: -55px; --tx4: -15px; --ty4: -25px; }
+.firefly:nth-child(even) { --tx1: -30px; --ty1: -40px; --tx2: 20px; --ty2: -35px; --tx3: -40px; --ty3: -45px; --tx4: 10px; --ty4: -20px; }
+.firefly:nth-child(3n) { --tx1: 25px; --ty1: -55px; --tx2: -30px; --ty2: -25px; --tx3: 20px; --ty3: -60px; --tx4: -20px; --ty4: -35px; }
+
+.copyright {
+    padding: 20px;
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    text-align: center;
+    border-top: 1px solid var(--border);
+    position: relative;
+    z-index: 3;
+    background: var(--bg);
+}
+        /* ============ UP BTN ============ */
+        .upbtn{z-index:9999;width:48px;height:48px;position:fixed;bottom:24px;right:24px;cursor:pointer;border:2px solid var(--primary);border-radius:50%;transform:scale(0);transition:all 0.3s ease;background:var(--primary);color:var(--bg);display:flex;align-items:center;justify-content:center;font-size:1.3rem;font-weight:700}
+        .upbtn:hover{transform:scale(1.2)!important;box-shadow:0 0 30px var(--primary-glow)}
+
+        /* ============ RESPONSIVE ============ */
+        @media(max-width:992px){.team-grid{grid-template-columns:1fr;max-width:500px;margin:30px auto}.memes-grid{grid-template-columns:1fr;max-width:500px;margin:30px auto}.mood-section{grid-template-columns:1fr}.dijkstra-block{flex-direction:column;text-align:center}.dijkstra-img{width:180px;margin:0 auto}}
+        @media(max-width:768px){.video-grid{grid-template-columns:1fr}.reviews-grid{grid-template-columns:1fr}.carousel-btn{width:36px;height:36px;font-size:1rem}}
+        @media(max-width:480px){.hero-title{font-size:1.8rem}.mood-card{padding:20px}}
+    </style>
+</head>
+<body>
+<header>
+    <div class="container">
+        <!-- HERO -->
+        <div class="hero">
+            <div class="hero-badge">🎓 Школа 21 • P03D20</div>
+            <h1 class="hero-title">GRAPH BUILDER</h1>
+            <p class="hero-subtitle">Алгоритм Дейкстры + польская нотация = графики в терминале</p>
+        </div>
+
+        <!-- MOOD -->
+        <div class="mood-section">
+            <div class="mood-card scared" style="position:relative;overflow:hidden">
+                <div id="ghosts" style="position:absolute;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none"></div>
+                <span class="mood-icon" style="position:relative;z-index:1">😱</span>
+                <div class="mood-title" style="position:relative;z-index:1">Цвет настроения — ЧЁРНЫЙ</div>
+                <p class="mood-desc" style="position:relative;z-index:1">Перед сдачей стафу очень страшно... Всё ли работает? А вертер?</p>
+            </div>
+            <div class="mood-card party" onmousemove="this.style.setProperty('--x',(event.offsetX/this.offsetWidth*100)+'%');this.style.setProperty('--y',(event.offsetY/this.offsetHeight*100)+'%')">
+                <span class="mood-icon">🥳</span>
+                <div class="mood-title">Очень хочется — ЗЕЛЁНЫЙ</div>
+                <p class="mood-desc">Когда проект сдан! Вертер пройден! День отмечается зелёным цветом!</p>
+            </div>
+        </div>
+
+        <!-- QUEST -->
+        <div class="quest-box">
+            <p class="quest-text">На языке <span class="hl">Си</span> разработать программу <span class="hl">src/graph.c</span> для построения графиков функций, задаваемых произвольными выражениями. Использовать <span class="hl">алгоритм Дейкстры</span> для перевода выражения в <span class="hl">польскую нотацию</span>. Сборка — <span class="hl">Makefile</span>, стадия <span class="hl">all</span>. Исполняемый файл: <span class="hl">build/graph</span>.</p>
+        </div>
+
+        <!-- MEMES -->
+        <div class="memes-grid">
+            <div class="meme-card"><img src="https://sun9-55.userapi.com/s/v1/ig2/4IAcfS3c7nm_bq_2vW5TVMhAZXbLRlM_OvIUw15gPYD9SmqC6hZUZZA3WtiltMb5Kr04p37kEFcnqnsXRSGEoodk.jpg?quality=95&as=32x18,48x27,72x41,108x61,160x90,240x135,360x203,480x271,540x305,640x361,720x406,780x440&from=bu&u=xDdZzlRWyAJv_XlVKonzwMFN7_xkmCXMueS9MwHTU6o&cs=780x0" alt="Мем" loading="lazy"></div>
+            <div class="meme-card"><img src="https://sun9-33.userapi.com/s/v1/ig2/VwFZ80WJNT_Uhc4aCHUv7Tk3UHP4d3bC_zYDbtd3bGmOo4cxBY_pxLMEx0w_gGqjPlhADC8T3NNg8GBqmaVohfcF.jpg?quality=95&as=32x18,48x27,72x40,108x60,160x89,240x134,360x200,480x267,540x301,640x356,720x401,1080x601,1272x708&from=bu&u=dvq-8l6MfY_1Nwfj9-rO6hQUcF-lfVfdFJcCVD-KdOE&cs=1272x0" alt="Мем" loading="lazy"></div>
+            <div class="meme-card"><img src="https://sun9-53.userapi.com/s/v1/ig2/dUbuV3HgKOXJg3M6UQCsoNV8PCzt5eXZfa3STqD1RNHWJQLzjnGQXxiFcUNk8QMmD05gtaBIPrFbDk8W34RnQfbi.jpg?quality=95&as=32x27,48x41,72x62,108x93,160x137,240x206,360x309,480x412,540x464,640x550,720x618,800x687&from=bu&u=dJJqUfz5rl20GCX8R5CIMlxENAs4mt75zseB8fMn8Y0&cs=800x0" alt="Мем" loading="lazy"></div>
+        </div>
+    </div>
+</header>
+
+<main>
+    <hr class="glow-divider">
+
+    <!-- TEAM -->
+    <section>
+        <div class="container">
+            <h2 class="section-title">👥 Наша Команда</h2>
+            <!-- Фото команды -->
+
+            <div class="team-grid">
+                <!-- Fox - Team Leader -->
+                <div class="team-card team-leader">
+                    <!-- Ольга — Team Leader -->
+                    <div style="text-align:center; position:relative;">
+
+                        <div style="border-radius:20px; overflow:hidden; border:2px solid var(--amber); box-shadow:0 0 30px rgba(241,167,0,0.2); aspect-ratio:3/4; position:relative;">
+                            <img src="https://sun9-22.userapi.com/s/v1/ig2/p9acLQH4HYV_N8kMRKTMaYYW9Vi9PA7Xwef0-qypUdRe0ZY9GUuSQHq-lbomX8D9xluRBlz48I27HM4BBRSI9PTO.jpg?quality=95&as=32x21,48x31,72x47,108x71,160x105,240x157,360x236,480x315,540x354,640x420,720x472,1080x709,1280x840,1440x945,2490x1634&from=bu&u=PgI_zwhjojoCRkmeGk1KnqR2YLltUX6dYz5FK7VLgLw&cs=2490x0"
+                                 alt="Ольга — Team Leader"
+                                 style="width:100%;height:100%;object-fit:cover;display:block;"
+                                 loading="lazy">
+                            <div style="position:absolute;bottom:0;left:0;right:0;background:linear-gradient(to top, rgba(0,0,0,0.8), transparent);padding:40px 16px 16px;">
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="role-badge role-leader" style="display:inline-block; background:var(--surface); border:1px solid var(--amber); color:var(--amber); padding:4px 16px; border-radius:50px; ">⭐ TEAM LEADER —  <span style="color:#fff;font-weight:700;font-size:1.1rem;font-family:'Russo One',sans-serif;">Ольга</span></div>
+                    <div class="team-card-header" style="margin-top:12px">
+                        <div class="team-avatar"><img src="https://cdn.sberclass.ru/services/storage/download/global/bb0a9c53-d4ab-4c9a-b875-b5d5e5ce3e3e?path=220eccdd-e37e-47d8-84be-cf276d20a7e3/e1abc5a8-a983-40af-a0f5-84ca73a9505e/2024-08-13+12.40.06.jpg" alt="Fox" onerror="this.style.display='none';this.parentElement.innerHTML='🦊';this.parentElement.style.fontSize='2.5rem'"></div>
+                        <div class="team-info">
+                            <h4>Fox </h4>
+                            <p class="tribe-points"><span style="color:var(--amber);font-size:0.8rem;font-weight:600;">tomokoom</span> • 44 tribe points</p>
+                        </div>
+                    </div>
+                    <div class="progress-bar"><div class="progress-fill" style="width:31%"></div></div>
+                    <div class="stat-row"><span>lvl 0</span><span>31%</span></div>
+                    <div class="badge-grid"><span class="badge xp">157 XP</span><span class="badge prp">14 PRP</span><span class="badge crp">5 CRP</span><span class="badge coins">0 Coins</span></div>
+                    <div class="peer-feedback">
+                        <h5>Peer feedback</h5>
+                        <div class="feedback-item"><svg viewBox="0 0 24 24"><path d="M9 13a4 4 0 100-8 4 4 0 000 8zm0 2c-2.67 0-8 1.34-8 4v1a1 1 0 001 1h14a1 1 0 001-1v-1c0-2.66-5.33-4-8-4z"/></svg> Interested <span class="score">4/4</span></div>
+                        <div class="feedback-item"><svg viewBox="0 0 24 24"><path d="M15.5 11a1.5 1.5 0 100-3 1.5 1.5 0 000 3zm-7 0a1.5 1.5 0 100-3 1.5 1.5 0 000 3zm3.49-9C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm-5-6c.78 2.34 2.72 4 5 4s4.22-1.66 5-4H7z"/></svg> Nice <span class="score">4/4</span></div>
+                        <div class="feedback-item"><svg viewBox="0 0 24 24"><path fill-rule="evenodd" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67V7z"/></svg> Punctual <span class="score">4/4</span></div>
+                        <div class="feedback-item"><svg viewBox="0 0 24 24"><path d="M2 21h10a1 1 0 011 1 1 1 0 01-1 1H2a1 1 0 01-1-1 1 1 0 011-1zm3.24-12.93l2.83-2.83 12.73 12.73a2 2 0 01-2.83 2.83L5.24 8.07z"/></svg> Rigorous <span class="score">4/4</span></div>
+                        <div class="peer-total"><span>All Peer Reviews</span><span>27</span></div>
+                    </div>
+                </div>
+
+                <!-- Lynx - Developer -->
+                <div class="team-card" style="border: 2px solid var(--secondary);">
+                    <!-- Никита — Developer -->
+                    <div style="text-align:center; position:relative;">
+
+                        <div style="border-radius:20px; overflow:hidden; border:2px solid var(--secondary); box-shadow:0 0 30px rgba(123,97,255,0.2); aspect-ratio:3/4; position:relative;">
+                            <img src="https://sun9-64.userapi.com/s/v1/ig2/nxXgz1UD1KfyYZ0_4fx--FD9MD_i4X5GvL7Y2jvIOom3nZjGjoeRL_EinXSDTdS2iVeUAhBuSyZJboMpwU-orh2A.jpg?quality=95&as=32x25,48x38,72x57,108x85,160x126,240x189,360x284,480x378,540x425,561x442&from=bu&u=x2d4s_9acTfswqeMnY7_iS8W01k3diOk7mB_oYe6_V4&cs=561x0"
+                                 alt="Никита — Developer"
+                                 style="width:100%;height:100%;object-fit:cover;display:block;"
+                                 loading="lazy">
+                            <div style="position:absolute;bottom:0;left:0;right:0;background:linear-gradient(to top, rgba(0,0,0,0.8), transparent);padding:40px 16px 16px;">
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="role-badge role-dev">💻 DEVELOPER — <span style="color:#fff;font-weight:700;font-size:1.1rem;font-family:'Russo One',sans-serif;">Никита</span></div>
+                    <div class="team-card-header" style="margin-top:12px">
+                        <div class="team-avatar"><img src="https://cdn.sberclass.ru/services/storage/download/global/515725a7-23d4-4f41-b239-3f131568449e?path=85a39954-7c51-4fe9-9593-a84ba8c794e6/4c8c3392-dd4f-43b4-be7f-7c3d889b30f7/%D0%A1%D0%BD%D0%B8%D0%BC%D0%BE%D0%BA+%D1%8D%D0%BA%D1%80%D0%B0%D0%BD%D0%B0+2024-08-13+%D0%B2+10.26.18.png" alt="Lynx" onerror="this.style.display='none';this.parentElement.innerHTML='🐱';this.parentElement.style.fontSize='2.5rem'"></div>
+                        <div class="team-info">
+                            <h4>Lynx</h4>
+                            <p class="tribe-points"><span style="color:var(--secondary);font-size:0.8rem;font-weight:600;">creganvi</span> • 54 tribe points</p>
+                        </div>
+                    </div>
+                    <div class="progress-bar"><div class="progress-fill" style="width:51%"></div></div>
+                    <div class="stat-row"><span>lvl 0</span><span>51%</span></div>
+                    <div class="badge-grid"><span class="badge xp">256 XP</span><span class="badge prp">6 PRP</span><span class="badge crp">5 CRP</span><span class="badge coins">0 Coins</span></div>
+                    <div class="peer-feedback">
+                        <h5>Peer feedback</h5>
+                        <div class="feedback-item"><svg viewBox="0 0 24 24"><path d="M9 13a4 4 0 100-8 4 4 0 000 8zm0 2c-2.67 0-8 1.34-8 4v1a1 1 0 001 1h14a1 1 0 001-1v-1c0-2.66-5.33-4-8-4z"/></svg> Interested <span class="score">4/4</span></div>
+                        <div class="feedback-item"><svg viewBox="0 0 24 24"><path d="M15.5 11a1.5 1.5 0 100-3 1.5 1.5 0 000 3zm-7 0a1.5 1.5 0 100-3 1.5 1.5 0 000 3zm3.49-9C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm-5-6c.78 2.34 2.72 4 5 4s4.22-1.66 5-4H7z"/></svg> Nice <span class="score">4/4</span></div>
+                        <div class="feedback-item"><svg viewBox="0 0 24 24"><path fill-rule="evenodd" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67V7z"/></svg> Punctual <span class="score">4/4</span></div>
+                        <div class="feedback-item"><svg viewBox="0 0 24 24"><path d="M2 21h10a1 1 0 011 1 1 1 0 01-1 1H2a1 1 0 01-1-1 1 1 0 011-1zm3.24-12.93l2.83-2.83 12.73 12.73a2 2 0 01-2.83 2.83L5.24 8.07z"/></svg> Rigorous <span class="score">4/4</span></div>
+                        <div class="peer-total"><span>All Peer Reviews</span><span>27</span></div>
+                    </div>
+                </div>
+
+                <!-- Lizard - Developer -->
+                <div class="team-card" style="border: 2px solid #00D4AA;">
+                    <!-- Константин — Developer -->
+                    <div style="text-align:center; position:relative;">
+
+                        <div style="border-radius:20px; overflow:hidden; border:2px solid #00D4AA; box-shadow:0 0 30px rgba(0,212,170,0.2); aspect-ratio:3/4; position:relative;">
+                            <img src="https://sun9-22.userapi.com/s/v1/ig2/liErBt9IzQVbKwzzFI88O6LFG92YzmcYNI7SD_S6QysKn9nQVMReAoYoZIDxkKQa6I7OvHnBVwnmekcYO4lz9Oft.jpg?quality=95&as=32x39,48x58,72x87,108x130,160x193,240x290,319x385&from=bu&u=ZsnhGksBSySTrRmvDIITR6FQgJ0hGRaSReO85K4q1iA&cs=319x0"
+                                 alt="Константин — Developer"
+                                 style="width:100%;height:100%;object-fit:cover;display:block;"
+                                 loading="lazy">
+                            <div style="position:absolute;bottom:0;left:0;right:0;background:linear-gradient(to top, rgba(0,0,0,0.8), transparent);padding:40px 16px 16px;">
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="role-badge role-dev2">💻 DEVELOPER — <span style="color:#fff;font-weight:700;font-size:1.1rem;font-family:'Russo One',sans-serif;">Константин</span></div>
+                    <div class="team-card-header" style="margin-top:12px">
+                        <div class="team-avatar"><img src="https://cdn.sberclass.ru/services/storage/download/global/bb0a9c53-d4ab-4c9a-b875-b5d5e5ce3e3e?path=d71aeb18-fe0b-4c80-8921-89934d1fb44c/b8158708-ea0c-4bf8-bab9-8e8ff8a038cd/2024-08-13+12.41.55.jpg" alt="Lizard" onerror="this.style.display='none';this.parentElement.innerHTML='🦎';this.parentElement.style.fontSize='2.5rem'"></div>
+                        <div class="team-info">
+                            <h4>Lizard</h4>
+                            <p class="tribe-points"><span style="color: #00D4AA;font-size:0.8rem;font-weight:600;">effrafab</span> • 81 tribe points</p>
+                        </div>
+                    </div>
+                    <div class="progress-bar"><div class="progress-fill" style="width:92%"></div></div>
+                    <div class="stat-row"><span>lvl 0</span><span>92%</span></div>
+                    <div class="badge-grid"><span class="badge xp">463 XP</span><span class="badge prp">7 PRP</span><span class="badge crp">5 CRP</span><span class="badge coins">0 Coins</span></div>
+                    <div class="peer-feedback">
+                        <h5>Peer feedback</h5>
+                        <div class="feedback-item"><svg viewBox="0 0 24 24"><path d="M9 13a4 4 0 100-8 4 4 0 000 8zm0 2c-2.67 0-8 1.34-8 4v1a1 1 0 001 1h14a1 1 0 001-1v-1c0-2.66-5.33-4-8-4z"/></svg> Interested <span class="score">4/4</span></div>
+                        <div class="feedback-item"><svg viewBox="0 0 24 24"><path d="M15.5 11a1.5 1.5 0 100-3 1.5 1.5 0 000 3zm-7 0a1.5 1.5 0 100-3 1.5 1.5 0 000 3zm3.49-9C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm-5-6c.78 2.34 2.72 4 5 4s4.22-1.66 5-4H7z"/></svg> Nice <span class="score">4/4</span></div>
+                        <div class="feedback-item"><svg viewBox="0 0 24 24"><path fill-rule="evenodd" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67V7z"/></svg> Punctual <span class="score">4/4</span></div>
+                        <div class="feedback-item"><svg viewBox="0 0 24 24"><path d="M2 21h10a1 1 0 011 1 1 1 0 01-1 1H2a1 1 0 01-1-1 1 1 0 011-1zm3.24-12.93l2.83-2.83 12.73 12.73a2 2 0 01-2.83 2.83L5.24 8.07z"/></svg> Rigorous <span class="score">4/4</span></div>
+                        <div class="peer-total"><span>All Peer Reviews</span><span>29</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <hr class="glow-divider">
+
+    <!-- TASKS & GOAL -->
+    <section>
+        <div class="container">
+            <h2 class="section-title green">📋 Задачи и цель</h2>
+            <div class="task-list">
+                <div class="task-item"><span class="task-num">1</span><span class="task-text">Разбор выражения в список лексем</span></div>
+                <div class="task-item"><span class="task-num">2</span><span class="task-text">Алгоритм Дейкстры (Shunting-yard)</span></div>
+                <div class="task-item"><span class="task-num">3</span><span class="task-text">Вычисление значения функции по RPN</span></div>
+                <div class="task-item"><span class="task-num">4</span><span class="task-text">Отрисовка графика в терминале</span></div>
+            </div>
+            <div style="background:var(--surface);border-radius:18px;padding:28px;margin:30px 0;text-align:center">
+                <h3 style="font-family:'Russo One',sans-serif;font-size:1.3rem;color:var(--secondary);margin-bottom:12px">🎯 Цель проекта</h3>
+                <p style="color:var(--text);font-size:1.1rem">Построить график функции по произвольному выражению<br>и вывести его в терминал</p>
+                <p style="color:var(--primary);margin-top:12px;font-weight:600">Пример: <code>sin(cos(2*x))</code> → график в терминале</p>
+            </div>
+            <div style="max-width:700px;margin:30px auto">
+                <div class="video-card">
+                    <a href="https://vk.com/video90015734_456239029?list=ln-a2nFBGTH1zHpodJZun" target="_blank" class="video-thumb" title="Смотреть видео в новом окне">
+                        <img src="https://sun9-37.userapi.com/s/v1/ig2/Uo0BAjsBBmMhE0tkgceWJjyUtOUH1WiIXdAP0gRwX_eqUARTtMY3DF8EU_TIBpEskWUfRBAEO2EW_khuKIP4myND.jpg?quality=95&as=32x8,48x11,72x17,108x26,160x38,240x57,360x85,480x114,540x128,640x152,720x171,1045x248&from=bu&u=1z2WvsqRB_WKmW1h0M8nfv43uRICvHUS3qUEsBL6uus&cs=1045x0" alt="GRAPH BUILDER — Алгоритм Дейкстры + польская нотация = графики в терминале" loading="lazy">
+                        <div class="video-overlay">
+                            <div class="video-play-circle"></div>
+                            <span class="video-hint">▶ Смотреть видео</span>
+                        </div>
+                    </a>
+                    <div class="video-label">🖥️ Отрисовка графика в терминале (демо)</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <hr class="glow-divider">
+
+    <!-- KNOWLEDGE -->
+    <section>
+        <div class="container">
+            <h2 class="section-title">🧠 Что мы узнали</h2>
+            <div class="knowledge-grid">
+                <div class="knowledge-card"><h3>📝 Польская нотация</h3><p>Бесскобочная запись выражений. Названа в честь математика Яна Лукасевича.</p></div>
+                <div class="knowledge-card"><h3>🔤 Инфиксная</h3><p>Оператор между операндами: <code style="color:#00FF88">2 + 2 = 4</code></p></div>
+                <div class="knowledge-card"><h3>🔢 Префиксная</h3><p>Оператор перед операндами: <code style="color:#00FF88">+ 2 2 = 4</code></p></div>
+                <div class="knowledge-card"><h3>🔙 Постфиксная</h3><p>Оператор после операндов. Не требует скобок и приоритетов!</p></div>
+            </div>
+            <div class="dijkstra-block">
+                <div class="dijkstra-img"><img src="https://sun9-8.userapi.com/s/v1/ig2/9EZgy2iMeXHeqfDieh7yep2mS5IPGQYVY0t7k79ihV7B3IGSZ2acYGhOjFHKPIZYV7mKB1sXH24H5Q4pu3VVELp-.jpg?quality=95&as=32x43,48x64,72x96,108x144,160x213,240x320,360x480,480x640,540x720,640x853,720x960,1080x1440,1200x1600&from=bu&u=YTAtypB6j91NlQXk6ttPO1ZuG21aGodFyzGzVWKBr-A&cs=1200x0" alt="Дейкстра" loading="lazy"></div>
+                <div class="dijkstra-content">
+                    <h3>⚙️ Алгоритм Дейкстры</h3>
+                    <ul class="dijkstra-steps">
+                        <li>Проходим строку слева направо</li>
+                        <li>Число → сразу в выходную строку</li>
+                        <li>Оператор → в стек, но сначала выталкиваем более приоритетные</li>
+                        <li>«(» → в стек</li>
+                        <li>«)» → выталкиваем всё до открывающей</li>
+                    </ul>
+                    <p style="margin-top:14px;color:var(--text-secondary)"><strong style="color:#00FF88">Стек (LIFO)</strong> — последний пришёл, первый вышел.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <hr class="glow-divider">
+
+    <!-- PHOTO-VIDEO -->
+    <section>
+        <div class="container">
+            <h2 class="section-title green">📸 Фото-видеоотчёт</h2>
+            <!-- P2P блок -->
+            <div style="max-width:800px;margin:0 auto 40px;text-align:center;">
+                <div style="background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:30px;">
+                    <div style="display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:16px;flex-wrap:wrap; flex-direction: column;">
+                       <p> <span style="font-size:2rem;">🤝</span>
+                        <span style="font-family:'Russo One',sans-serif;font-size:1.4rem;background:var(--gradient-1);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;white-space:nowrap;">P2P</span>
+                        <span style="font-size:2rem;">🤝</span></p>
+                        <p> <span style="font-size:2rem;">🗣️ </span>
+                        <span style="font-family:'Russo One',sans-serif;font-size:1.4rem;background:var(--gradient-1);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;white-space:nowrap;">PEER TO PEER</span>
+                            <span style="font-size:2rem; display:inline-block;transform:scaleX(-1);">🗣️</span></p>
+                    </div>
+                    <p style="color:var(--text-secondary);font-size:0.95rem;line-height:1.8;">
+                        В Школе 21 нет учителей и лекций — мы учимся друг у друга.<br>
+                        <strong style="color:var(--text);">Peer to Peer</strong> — это когда команды обмениваются опытом,<br>
+                        обсуждают проекты и вместе находят лучшие решения.<br>
+                        <span style="color:var(--primary);">Каждый помогает каждому. Это и есть настоящее комьюнити, где рождаются крутые идеи!</span> ✨
+                    </p>
+                </div>
+            </div>
+            <!-- Videos -->
+            <div class="video-grid">
+                <div class="video-card">
+                    <a href="https://drive.google.com/file/d/13vj7XUOKUVZDYjGx98Ygjr9dVJzwRj7M/view" target="_blank" class="video-thumb" title="Смотреть видео в новом окне">
+                        <img src="https://sun9-55.userapi.com/s/v1/ig2/SY00edzkbk9DUXnM_OBCM8xzVTrp69Nsn3YQkXtb0Q599IGK1Oyz8pVVfpPxRfsmtYZ9aOPAEnoJKk__r4hlUm-_.jpg?quality=95&as=32x19,48x29,72x44,108x66,160x97,240x146,360x219,480x292,540x328,640x389,720x438,1080x656,1280x778,1440x875,1920x1167&from=bu&u=mtMH5rs_KTM1rhim70_TEve5lW8GF-Bnr4AsjlyCcpc&cs=1920x0" alt="Видеоотчёт №1" loading="lazy">
+                        <div class="video-overlay">
+                            <div class="video-play-circle"></div>
+                            <span class="video-hint">▶ Смотреть видео</span>
+                        </div>
+                    </a>
+                    <div class="video-label">🎥 Видеоотчёт №1</div>
+                </div>
+                <div class="video-card">
+                    <a href="https://drive.google.com/file/d/1ajmy4C9GLNeDqYeSaDE0n_bSQaj5iG2H/view" target="_blank" class="video-thumb" title="Смотреть видео в новом окне">
+                        <img src="https://sun9-82.userapi.com/s/v1/ig2/aHnG3Z87QgYQFw4G7wutaV1_00pk2rUh1mX8esf-3QBErAerzAajDhiAZ7sLuEtJl8EWNpz3nINg8AW3W7Rk0vJU.jpg?quality=95&as=32x18,48x27,72x41,108x62,160x91,240x137,360x206,480x274,540x309,640x366,720x411,1080x617,1280x731,1400x800&from=bu&u=okzhU5OKxfkCJt7A5-gqfd7MonP8bwx9bZPbdILOln4&cs=1400x0" alt="Видеоотчёт №2" loading="lazy">
+                        <div class="video-overlay">
+                            <div class="video-play-circle"></div>
+                            <span class="video-hint">▶ Смотреть видео</span>
+                        </div>
+                    </a>
+                    <div class="video-label">🎥 Видеоотчёт №2</div>
+                </div>
+            </div>
+
+            <!-- Photo Carousel -->
+            <div class="carousel-container" id="photoCarousel">
+                <div class="carousel-track" id="carouselTrack"></div>
+                <div class="carousel-overlay"></div>
+                <button class="carousel-btn carousel-prev" onclick="moveCarousel(-1)" aria-label="Предыдущее">‹</button>
+                <button class="carousel-btn carousel-next" onclick="moveCarousel(1)" aria-label="Следующее">›</button>
+                <div class="carousel-counter" id="carouselCounter">1 / 13</div>
+                <div class="carousel-dots" id="carouselDots"></div>
+            </div>
+
+        </div>
+    </section>
+
+    <hr class="glow-divider">
+
+    <!-- REVIEWS -->
+    <section>
+        <div class="container">
+            <h2 class="section-title">📊 Оценки и фидбек</h2>
+            <div class="quote-block">
+                <p class="quote-text">«Тестирование программ можно использовать для выявления наличия ошибок, но никогда — для выявления их отсутствия!»</p>
+                <span class="quote-author">— Эдсгер Вибе Дейкстра</span>
+            </div>
+            <div class="reviews-grid">
+                <div class="review-card">
+                    <div class="review-header"><span class="reviewer-name">tylandmi</span><span class="review-date">26.03.2025</span></div>
+                    <div class="review-score fail">Crash 0%</div>
+                    <div class="review-label">Code Review</div>
+                    <p class="review-text">Программа собирается, работает, обрабатывает стандартный ввод. Есть несколько замечаний:<br>1. Инициализируйте все переменные. Обращайте внимание на работу с памятью — есть утечки.<br>2. Используйте более безопасные функции (strtod вместо atof, strncpy вместо strcpy).<br>3. Область допустимых значений функций (кв. корень и логарифм).<br>Крашится при пустом вводе. Утечки при вводе числа > 20 знаков.</p>
+                </div>
+                <div class="review-card">
+                    <div class="review-header"><span class="reviewer-name">Verter</span><span class="review-date">26.03.2025</span></div>
+                    <div class="review-score pass">100%</div>
+                    <div class="review-label">Automatic Tests</div>
+                    <p class="review-text"><strong>Style test:</strong> OK ✓<br><strong>Static code analysis:</strong> OK ✓<br>Все автоматические тесты пройдены успешно!</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <hr class="glow-divider">
+
+    <!-- RESULT -->
+    <section>
+        <div class="container">
+            <h2 class="section-title green">🏆 Итог</h2>
+            <div class="success-block" id="successBlock">
+                <div id="confetti"></div>
+                <div class="success-icon" style="position:relative;z-index:1">🎉</div>
+                <div class="success-title" style="position:relative;z-index:1">МЫ МОЛОДЦЫ!</div>
+                <p style="font-size:1.1rem;color:var(--text-secondary);margin-bottom:24px;line-height:1.8;position:relative;z-index:1">
+                    Программа успешно строит графики функций.<br>
+                    <span style="color:#00FF88;font-weight:700">Вертер пройден на 100% — миссия выполнена!</span>
+                </p>
+                <div style="max-width:650px;margin:30px auto;text-align:center;position:relative;z-index:1">
+                    <div style="background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:30px">
+                        <div style="font-size:2.5rem;margin-bottom:12px">🤝</div>
+                        <p style="color:var(--text);font-size:1rem;line-height:1.8;margin-bottom:16px">
+                            Неважно, что у стафа не прошли проверку.<br>
+                            <strong style="color:var(--secondary)">Мы — команда.</strong><br>
+                            <span style="color:var(--text-secondary)">Мы научились новому, разобрались в польской нотации,<br>алгоритме Дейкстры и сборке через Makefile.<br>Ошибки — это просто ступеньки к следующей победе.</span>
+                        </p>
+                        <div style="border-top:1px solid var(--border);padding-top:16px;margin-top:16px;">
+                            <div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:10px;color:var(--primary);font-weight:700;font-size:0.95rem;text-align:center;">
+        <span style="display:inline-flex;align-items:center;gap:6px;white-space:nowrap;">
+            <img src="https://cdn.sberclass.ru/services/storage/download/global/bb0a9c53-d4ab-4c9a-b875-b5d5e5ce3e3e?path=220eccdd-e37e-47d8-84be-cf276d20a7e3/e1abc5a8-a983-40af-a0f5-84ca73a9505e/2024-08-13+12.40.06.jpg" alt="Fox" style="width:32px;height:32px;border-radius:50%;object-fit:cover;flex-shrink:0;" onerror="this.style.display='none';this.parentElement.innerHTML='🦊';this.parentElement.style.fontSize='1.5rem';">
+            tomokoom
+        </span>
+                                <span style="display:inline-flex;align-items:center;gap:6px;white-space:nowrap;">
+            <img src="https://cdn.sberclass.ru/services/storage/download/global/515725a7-23d4-4f41-b239-3f131568449e?path=85a39954-7c51-4fe9-9593-a84ba8c794e6/4c8c3392-dd4f-43b4-be7f-7c3d889b30f7/%D0%A1%D0%BD%D0%B8%D0%BC%D0%BE%D0%BA+%D1%8D%D0%BA%D1%80%D0%B0%D0%BD%D0%B0+2024-08-13+%D0%B2+10.26.18.png" alt="Lynx" style="width:32px;height:32px;border-radius:50%;object-fit:cover;flex-shrink:0;" onerror="this.style.display='none';this.parentElement.innerHTML='🐱';this.parentElement.style.fontSize='1.5rem';">
+            creganvi
+        </span>
+                                <span style="display:inline-flex;align-items:center;gap:6px;white-space:nowrap;">
+            <img src="https://cdn.sberclass.ru/services/storage/download/global/bb0a9c53-d4ab-4c9a-b875-b5d5e5ce3e3e?path=d71aeb18-fe0b-4c80-8921-89934d1fb44c/b8158708-ea0c-4bf8-bab9-8e8ff8a038cd/2024-08-13+12.41.55.jpg" alt="Lizard" style="width:32px;height:32px;border-radius:50%;object-fit:cover;flex-shrink:0;" onerror="this.style.display='none';this.parentElement.innerHTML='🦎';this.parentElement.style.fontSize='1.5rem';">
+            effrafab
+        </span>
+                            </div>
+                        </div>
+                        <p style="color:var(--text-muted);font-size:0.8rem;margin-top:8px">P03D20 • Школа 21 • 2025</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+<footer>
+
+    <div class="copyright">© 2023–2026 Ольга Кашина (Щербинина). Все права защищены.   <div class="fireflies-container">
+        <div class="firefly"></div>
+        <div class="firefly"></div>
+        <div class="firefly"></div>
+        <div class="firefly"></div>
+        <div class="firefly"></div>
+        <div class="firefly"></div>
+        <div class="firefly"></div>
+        <div class="firefly"></div>
+        <div class="firefly"></div>
+        <div class="firefly"></div>
+        <div class="firefly"></div>
+        <div class="firefly"></div>
+        <div class="firefly"></div>
+        <div class="firefly"></div>
+        <div class="firefly"></div>
+        <div class="firefly"></div>
+        <div class="firefly"></div>
+        <div class="firefly"></div>
+        <div class="firefly"></div>
+        <div class="firefly"></div>
+    </div></div>
+</footer>
+
+<!-- UP BTN -->
+<div class="upbtn">⬆</div>
+
+<!-- SCRIPTS -->
+<script>
+    // ===== GHOSTS (instance mode) =====
+ var ghostSketch = new p5(function(p) {
+     var blobs = [];
+
+     p.setup = function() {
+         var el = document.getElementById('ghosts');
+         var canvas = p.createCanvas(el.offsetWidth, el.offsetHeight);
+         canvas.parent("ghosts");
+         p.drawingContext.shadowBlur = 60;
+         p.drawingContext.shadowColor = "rgb(10,10,15)";
+         for (var i = 0; i < 18; i++) {
+             blobs.push(new Blob(p.random(p.width), p.random(p.height)));
+         }
+     };
+
+     p.draw = function() {
+         p.clear();
+         for (var b = 0; b < blobs.length; b++) {
+             blobs[b].update();
+             blobs[b].show();
+         }
+     };
+
+     function Blob(x, y) {
+         this.pos = p.createVector(x, y);
+         this.vel = p5.Vector.random2D();
+         this.vel.mult(p.random(0.6, 2.2));
+         this.r = p.random(28, 56);
+         this.yoff = p.random(1000);
+
+         this.update = function() {
+             this.pos.add(this.vel);
+             if (this.pos.x > p.width + this.r) this.pos.x = -this.r;
+             if (this.pos.x < -this.r) this.pos.x = p.width + this.r;
+             if (this.pos.y > p.height + this.r) this.pos.y = -this.r;
+             if (this.pos.y < -this.r) this.pos.y = p.height + this.r;
+         };
+
+         this.show = function() {
+             p.noStroke();
+             p.fill(255, 255, 255, 190);
+             p.push();
+             p.translate(this.pos.x, this.pos.y);
+             p.beginShape();
+             var xoff = 0;
+             for (var a = 0; a < p.TWO_PI; a += 0.12) {
+                 var offset;
+                 if (a > p.PI / 6 && a < 5 * p.PI / 6) {
+                     offset = p.map(p.noise(xoff, this.yoff), 0, 1, -0.26 * this.r, 0.68 * this.r);
+                 } else {
+                     offset = p.map(p.noise(xoff, this.yoff), 0, 1, -0.05 * this.r, 0.05 * this.r);
+                 }
+                 var r = this.r + offset;
+                 p.vertex(r * p.cos(a), r * p.sin(a));
+                 xoff += 0.1;
+             }
+             p.endShape(p.CLOSE);
+             this.yoff += 0.04;
+             p.pop();
+
+             // Eyes
+             var eo = 0.2 * this.r;
+             p.stroke(30);
+             p.fill(30);
+             p.ellipse(this.pos.x - eo, this.pos.y - eo, 0.14 * this.r, 0.2 * this.r);
+             p.ellipse(this.pos.x + eo, this.pos.y - eo, 0.14 * this.r, 0.2 * this.r);
+
+             // Eyebrows
+             p.strokeWeight(this.r * 0.04);
+             p.stroke(30);
+             p.noFill();
+             p.line(this.pos.x - eo * 1.8, this.pos.y - eo * 2.2, this.pos.x - eo * 0.4, this.pos.y - eo * 1.4);
+             p.line(this.pos.x + eo * 1.8, this.pos.y - eo * 2.2, this.pos.x + eo * 0.4, this.pos.y - eo * 1.4);
+
+             // Pupils
+             p.fill(255);
+             p.noStroke();
+             p.ellipse(this.pos.x - eo, this.pos.y - eo - 2, 0.06 * this.r, 0.1 * this.r);
+             p.ellipse(this.pos.x + eo, this.pos.y - eo - 2, 0.06 * this.r, 0.1 * this.r);
+
+             // Mouth
+             p.fill(30);
+             p.noStroke();
+             p.arc(this.pos.x, this.pos.y + this.r * 0.05, 0.35 * this.r, 0.35 * this.r, 0, p.PI);
+         };
+     }
+
+     // Resize
+     p.windowResized = function() {
+         var el = document.getElementById('ghosts');
+         p.resizeCanvas(el.offsetWidth, el.offsetHeight);
+     };
+ });
+
+     // ===== PHOTO CAROUSEL =====
+     var carouselPhotos = [
+     'https://sun9-24.userapi.com/s/v1/ig2/iQ-8Xv7EaxIdGTh732SxMHJ8lzvdwvtCP8Mb6oBW9txwcWC3w-hzledybiB4bIpHR5T2JXtNEZNOxmOzxCsAWMz4.jpg?quality=95&as=32x43,48x64,72x96,108x144,160x213,240x320,360x480,480x640,540x720,640x853,720x960,1080x1440,1125x1500&from=bu&cs=1125x0',
+     'https://sun9-7.userapi.com/s/v1/ig2/2Ns4D7XcoQ-2Aiju1l89__MV2-MYqFZiuZu55E44weG5NZpwT40k3ofFUBE0mhnjyF7xKG53-VWgJZbNrau-ZYSd.jpg?quality=95&as=32x43,48x64,72x96,108x144,160x213,240x320,360x480,480x640,540x720,640x853,720x960,1080x1440,1125x1500&from=bu&cs=1125x0',
+     'https://sun9-15.userapi.com/s/v1/ig2/QbAxTjNDI45W6lXaNyc83654Wv4U2ddoKzOE8P6Mm_jI-Yj8MVDEhdKhDvH8mQxIkLetI7COKD6Ew9I_Eri832qB.jpg?quality=95&as=32x43,48x64,72x96,108x144,160x213,240x320,360x480,480x640,540x720,640x853,720x960,1080x1440,1125x1500&from=bu&cs=1125x0',
+     'https://sun9-77.userapi.com/s/v1/ig2/1PQHNHNLErUAhk-vCGxBYvWG7t0B3cUMZC6fdpIGmDmbe6HWrrb2uNw9Yky_6LqQvLRbN-755pcOHzkTw943z7D-.jpg?quality=95&as=32x43,48x64,72x96,108x144,160x213,240x320,360x480,480x640,540x720,640x853,720x960,1080x1440,1125x1500&from=bu&cs=1125x0',
+     'https://sun9-8.userapi.com/s/v1/ig2/ZdmeNpdA9yBofRffEELIZiYfJn5LPGNFo5x7eOlSeW7FZq2_CHplKsfO4RMLAUnCb-8ldM9CNZRzgJp5HUNbz7nd.jpg?quality=95&as=32x43,48x64,72x96,108x144,160x213,240x320,360x480,480x640,540x720,640x853,720x960,1080x1440,1125x1500&from=bu&cs=1125x0',
+     'https://sun9-27.userapi.com/s/v1/ig2/XLVth-na79LwOORFpL1a6RKTHVYWREhwG8PE6LZwosbRDqVwg4eosZdu2Rq22uCST0M6BBNXSC2MHvvw3ISvFwmD.jpg?quality=95&as=32x43,48x64,72x96,108x144,160x213,240x320,360x480,480x640,540x720,640x853,720x960,1080x1440,1125x1500&from=bu&cs=1125x0',
+     'https://sun9-26.userapi.com/s/v1/ig2/d84RDhkT-sbDO6ry2argW6ZhiHk4UeB7zMxwr7frH7Rc_hhVo-KCJy007tAAFrzMpmUyFbI3eLeUUjrr4ksTCQl3.jpg?quality=95&as=32x43,48x64,72x96,108x144,160x213,240x320,360x480,480x640,540x720,640x853,720x960,1080x1440,1125x1500&from=bu&cs=1125x0',
+     'https://sun9-13.userapi.com/s/v1/ig2/6dcoRuk6h3tSdMWdnYyU1cZKQG303SnzxqDzlmVRVC9AnjMpxVDYPIW64FQFUGM3xSLaDfJy8g7ZCV7dnWkfclFY.jpg?quality=95&as=32x43,48x64,72x96,108x144,160x213,240x320,360x480,480x640,540x720,640x853,720x960,1080x1440,1125x1500&from=bu&cs=1125x0',
+     'https://sun9-7.userapi.com/s/v1/ig2/flZ37kbo6aKmCRlNikPuOBQCN1cTIE7gn-g0RWC3OqXNO4mt6eTeiuLvQpfzQK2jFwFmDcPQokVcvAdwHfLxXDgt.jpg?quality=95&as=32x43,48x64,72x96,108x144,160x213,240x320,360x480,480x640,540x720,640x853,720x960,1080x1440,1125x1500&from=bu&cs=1125x0',
+     'https://sun9-69.userapi.com/s/v1/ig2/jW9dnS5s_fR0EWGIA0rzg50tcxAT9voxCcjxBj3JGHeZOxVp_C-u7obyx04u9NeZOtX-5wA-U8CwPXS0UFHfMQOy.jpg?quality=95&as=32x43,48x64,72x96,108x144,160x213,240x320,360x480,480x640,540x720,640x853,720x960,1080x1440,1125x1500&from=bu&cs=1125x0',
+     'https://sun9-67.userapi.com/s/v1/ig2/zAt4LKkVGC4pslbknYMTK2K53HAi772Iy54WXchHxSiLJ14QiQiiG3sMYNAeorH7cJldER7nU-bdoxXJ8Ho9ZViI.jpg?quality=95&as=32x43,48x64,72x96,108x144,160x213,240x320,360x480,480x640,540x720,640x853,720x960,1080x1440,1125x1500&from=bu&cs=1125x0',
+     'https://sun9-86.userapi.com/s/v1/ig2/ECXJOp5_WKGopM7F6i7nDwpGBmFru9zYRUL7DnLZzFoCX9sgIy_Wq7LPYttFQEkxH7Z7GNMeDydopGezu1LKRjg_.jpg?quality=95&as=32x43,48x64,72x96,108x144,160x213,240x320,360x480,480x640,540x720,640x853,720x960,1080x1440,1125x1500&from=bu&cs=1125x0',
+     'https://sun9-85.userapi.com/s/v1/ig2/CwC9TkEQbWl018zhxQleXX43UAbGYa7eEjJF9u6msjHofIEVol5uXxFvG8ThbnufoLyupyMBgVlIANfl66pBygfa.jpg?quality=95&as=32x43,48x64,72x96,108x144,160x213,240x320,360x480,480x640,540x720,640x853,720x960,1080x1440,1125x1500&from=bu&cs=1125x0'
+ ];
+ var carouselIndex = 0;
+ var carouselAutoPlay;
+
+ function buildCarousel() {
+     var track = document.getElementById('carouselTrack');
+     var dots = document.getElementById('carouselDots');
+     track.innerHTML = '';
+     dots.innerHTML = '';
+     carouselPhotos.forEach(function(src, i) {
+         var slide = document.createElement('div');
+         slide.className = 'carousel-slide' + (i === 0 ? ' active' : '');
+         slide.innerHTML = '<img src="' + src + '" alt="Фото ' + (i + 1) + '" loading="lazy">';
+         // КЛИК → ОТКРЫТЬ В НОВОМ ОКНЕ
+         slide.onclick = function() {
+             window.open(src, '_blank');
+         };
+         slide.title = 'Нажмите, чтобы открыть в новом окне';
+         track.appendChild(slide);
+
+         var dot = document.createElement('span');
+         dot.className = 'carousel-dot' + (i === 0 ? ' active' : '');
+         dot.onclick = function(e) { e.stopPropagation(); goToCarousel(i); };
+         dots.appendChild(dot);
+     });
+     updateCounter();
+     startAutoPlay();
+ }
+
+ function updateCarousel() {
+     var slides = document.querySelectorAll('.carousel-slide');
+     var total = slides.length;
+     slides.forEach(function(slide, i) {
+         slide.classList.remove('active', 'prev', 'next');
+         if (i === carouselIndex) {
+             slide.classList.add('active');
+         } else if (i === (carouselIndex - 1 + total) % total) {
+             slide.classList.add('prev');
+         } else if (i === (carouselIndex + 1) % total) {
+             slide.classList.add('next');
+         }
+     });
+     var dots = document.querySelectorAll('.carousel-dot');
+     dots.forEach(function(d, i) { d.classList.toggle('active', i === carouselIndex); });
+     updateCounter();
+ }
+
+ function updateCounter() {
+     var counter = document.getElementById('carouselCounter');
+     if (counter) {
+         counter.textContent = (carouselIndex + 1) + ' / ' + carouselPhotos.length;
+     }
+ }
+
+ function moveCarousel(dir) {
+     carouselIndex = (carouselIndex + dir + carouselPhotos.length) % carouselPhotos.length;
+     updateCarousel();
+     resetAutoPlay();
+ }
+
+ function goToCarousel(i) {
+     carouselIndex = i;
+     updateCarousel();
+     resetAutoPlay();
+ }
+
+ function startAutoPlay() {
+     carouselAutoPlay = setInterval(function() { moveCarousel(1); }, 4000);
+ }
+
+ function resetAutoPlay() {
+     clearInterval(carouselAutoPlay);
+     startAutoPlay();
+ }
+
+ // Инициализация
+ buildCarousel();
+
+     // ===== CONFETTI (instance mode) =====
+var confettiSketch;
+var confettiInited = false;
+
+var confettiObserver = new IntersectionObserver(function(entries) {
+    if (entries[0].isIntersecting && !confettiInited) {
+        confettiInited = true;
+        confettiSketch = new p5(function(p) {
+            var particles = [];
+
+            p.setup = function() {
+                var el = document.getElementById('confetti');
+                var canvas = p.createCanvas(el.offsetWidth || 500, el.offsetHeight || 400);
+                canvas.parent("confetti");
+                for (var i = 0; i < 60; i++) {
+                    particles.push({
+                        x: p.random(p.width),
+                        y: p.random(-p.height, 0),
+                        w: p.random(6, 12),
+                        h: p.random(4, 8),
+                        vx: p.random(-0.8, 0.8),
+                        vy: p.random(1.5, 4),
+                        color: p.random(['#00FF88', '#7B61FF', '#FF4757', '#F1A700', '#00D4AA', '#FF6B81', '#A78BFA']),
+                        rot: p.random(p.TWO_PI),
+                        rv: p.random(-0.03, 0.03)
+                    });
+                }
+            };
+
+            p.draw = function() {
+                p.clear();
+                for (var i = 0; i < particles.length; i++) {
+                    var pt = particles[i];
+                    pt.x += pt.vx;
+                    pt.y += pt.vy;
+                    pt.rot += pt.rv;
+                    if (pt.y > p.height) {
+                        pt.y = p.random(-20, 0);
+                        pt.x = p.random(p.width);
+                    }
+                    p.push();
+                    p.translate(pt.x, pt.y);
+                    p.rotate(pt.rot);
+                    p.fill(pt.color);
+                    p.noStroke();
+                    p.rect(0, 0, pt.w, pt.h, 2);
+                    p.pop();
+                }
+            };
+
+            p.windowResized = function() {
+                var el = document.getElementById('confetti');
+                p.resizeCanvas(el.offsetWidth || 500, el.offsetHeight || 400);
+            };
+        });
+    }
+}, { threshold: 0.3 });
+
+// Запускаем наблюдение за successBlock через 500мс
+setTimeout(function() {
+    var el = document.getElementById('successBlock');
+    if (el) confettiObserver.observe(el);
+}, 500);
+
+     // ===== SCROLL TO TOP =====
+     $(window).scroll(function(){$(this).scrollTop()>100?$('.upbtn').css('transform','scale(1)'):$('.upbtn').css('transform','scale(0)')});
+     $('.upbtn').on('click',function(){$('html,body').animate({scrollTop:0},500)});
+
+</script>
+</body>
+</html>
