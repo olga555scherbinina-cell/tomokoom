@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Бассейн Школы 21 | Челябинск | Ольга Кашина</title>
+    <meta name="description" content="Как я прошла бассейн Школы 21 в Челябинске и поступила на основное обучение">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&family=Russo+One&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- Swiper -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+    <style>
+        :root {
+            --bg: #0a0a0f;
+            --surface: #13131f;
+            --surface-light: #1a1a2e;
+            --primary: #00ff88;
+            --secondary: #7b61ff;
+            --accent: #ff4757;
+            --accent-red: #FF033E;
+            --amber: #f1a700;
+            --text: #ffffff;
+            --text-secondary: #a0a0b0;
+            --text-muted: #6b6b7b;
+            --border: rgba(255,255,255,0.06);
+            --radius: 20px;
+            --shadow: 0 8px 30px rgba(0,0,0,0.4);
+            --transition: 0.3s cubic-bezier(0.4,0,0.2,1);
+            --gradient-hero: linear-gradient(135deg, #00ff88 0%, #7b61ff 50%, #ff4757 100%);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        body::before {
+            content: '';
+            position: fixed; inset: 0;
+            background:
+                radial-gradient(ellipse at 20% 50%, rgba(0,255,136,0.03) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 20%, rgba(123,97,255,0.03) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 80%, rgba(255,71,87,0.02) 0%, transparent 50%);
+            pointer-events: none; z-index: 0;
+        }
+
+        .container { max-width: 1100px; margin: 0 auto; padding: 0 24px; position: relative; z-index: 2; }
+        section { padding: 60px 0; position: relative; z-index: 2; }
+
+        .glow-divider {
+            border: none; height: 2px; margin: 40px 0;
+            background: linear-gradient(90deg, transparent, var(--primary), var(--secondary), transparent);
+            opacity: 0.5;
+        }
+
+        /* Header */
+        .header {
+            text-align: center; padding: 40px 24px;
+            background: linear-gradient(180deg, rgba(0,255,136,0.05) 0%, transparent 100%);
+            border-bottom: 1px solid var(--border);
+            min-height: 100vh;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            position: relative;
+        }
+        .header .container { width: 100%; max-width: 1100px; }
+        .badge {
+            display: inline-block; background: var(--surface); color: var(--primary);
+            border: 1px solid var(--primary); padding: 8px 24px; border-radius: 50px;
+            font-size: 0.85rem; font-weight: 600; letter-spacing: 2px; margin-bottom: 20px;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(0,255,136,0.3); }
+            50% { box-shadow: 0 0 0 15px transparent; }
+        }
+        .hero-title {
+            font-family: 'Russo One', sans-serif;
+            font-size: clamp(2.5rem, 8vw, 5rem);
+            background: var(--gradient-hero);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.2; margin-bottom: 12px;
+        }
+        .hero-subtitle { color: var(--text-secondary); font-size: 1.1rem; margin: 0 auto 16px; }
+        .hero-location {
+            display: inline-flex; align-items: center; gap: 8px;
+            background: var(--surface); color: var(--amber);
+            border: 1px solid var(--amber); padding: 10px 22px; border-radius: 50px;
+            font-size: 0.9rem; font-weight: 600; margin-top: 6px; margin-bottom: 30px;
+        }
+        .hero-location i { font-size: 1rem; }
+
+        .hero-block {
+            text-align: center; padding: 30px 20px;
+            background: var(--surface); border: 1px solid var(--border);
+            border-radius: var(--radius); margin: 0 auto; width: 100%;
+        }
+        .typing .text {
+            font-family: 'Russo One', sans-serif;
+            font-size: clamp(1.3rem, 4vw, 2rem);
+            color: var(--primary); display: inline-block;
+        }
+        .typing .cursor {
+            display: inline-block; width: 3px; height: 1.2em;
+            background: var(--primary); margin-left: 4px;
+            animation: blink 0.8s infinite; vertical-align: middle;
+        }
+        @keyframes blink { 50% { opacity: 0; } }
+
+        .inform { text-align: center; color: var(--text-muted); font-size: 0.8rem; margin-top: 10px; margin-bottom: 0; }
+
+        .section-title {
+            font-family: 'Russo One', sans-serif;
+            font-size: clamp(1.6rem, 4vw, 2.2rem); text-align: center; margin-bottom: 40px;
+            background: var(--gradient-hero);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Stats */
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 20px; margin: 30px 0; }
+        .stat-card {
+            background: var(--surface); border: 1px solid var(--border);
+            border-radius: var(--radius); padding: 28px 20px; text-align: center;
+            transition: var(--transition); position: relative; overflow: hidden;
+        }
+        .stat-card:hover { transform: translateY(-4px); box-shadow: var(--shadow); }
+        .stat-number { font-family: 'Russo One', sans-serif; font-size: 3rem; margin-bottom: 4px; }
+        .stat-number.green { color: var(--primary); }
+        .stat-number.red { color: var(--accent-red); }
+        .stat-label { color: var(--text-secondary); font-size: 0.9rem; font-weight: 500; }
+
+        /* Story */
+        .story-card {
+            background: var(--surface); border: 1px solid var(--border);
+            border-radius: var(--radius); padding: 30px; margin-bottom: 24px;
+            transition: var(--transition);
+        }
+        .story-card:hover { border-color: var(--primary); }
+        .story-date {
+            display: inline-block; background: var(--primary); color: #000;
+            padding: 4px 14px; border-radius: 50px; font-size: 0.8rem;
+            font-weight: 700; margin-bottom: 16px;
+        }
+        .story-title { font-family: 'Russo One', sans-serif; font-size: 1.3rem; margin-bottom: 12px; color: var(--primary); }
+        .story-text { color: var(--text-secondary); font-size: 0.95rem; line-height: 1.7; }
+        .story-text strong { color: var(--text); }
+
+        .story-inline-img { width: 100%; border-radius: 12px; margin: 16px 0; border: 1px solid var(--border); }
+
+        /* Swiper */
+        .swiper { width: 100%; max-width: 900px; border-radius: var(--radius); overflow: hidden; margin: 24px auto 0; }
+        .swiper-slide img { width: 100%; height: 100%; object-fit: cover; aspect-ratio: 4/3; display: block; }
+        .swiper-caption {
+            position: absolute; bottom: 0; left: 0; right: 0;
+            background: linear-gradient(transparent, rgba(0,0,0,0.8));
+            color: #fff; padding: 40px 16px 16px; font-size: 1rem; font-weight: 600;
+        }
+
+        /* Two-column layout for "What is Pool?" */
+        .two-col {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center;
+            margin-bottom: 30px;
+        }
+        .two-col-text { color: var(--text-secondary); line-height: 1.7; font-size: 0.95rem; }
+        .two-col-video { width: 100%; }
+
+        /* Photo cards */
+        .photo-cards-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px; margin: 30px 0;
+        }
+        .photo-card {
+            background: var(--surface); border: 1px solid var(--border);
+            border-radius: var(--radius); overflow: hidden; transition: var(--transition);
+        }
+        .photo-card:hover { border-color: var(--primary); box-shadow: var(--shadow); transform: translateY(-4px); }
+        .photo-card img {
+            width: 100%; aspect-ratio: 4/3; object-fit: cover; display: block; cursor: pointer;
+        }
+        .photo-card-caption { padding: 16px 20px; }
+        .photo-card-caption strong { display: block; color: var(--text); font-size: 0.95rem; margin-bottom: 4px; }
+        .photo-card-caption p { color: var(--text-secondary); font-size: 0.85rem; margin: 0; }
+
+        /* Admin cards */
+        .admin-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin: 30px 0; }
+        .admin-card {
+            background: var(--surface); border: 1px solid var(--border);
+            border-radius: var(--radius); overflow: hidden; text-align: center;
+            transition: var(--transition); padding-bottom: 16px;
+        }
+        .admin-card:hover { border-color: var(--amber); box-shadow: var(--shadow); }
+        .admin-card img { width: 100%; height: 350px; object-fit: cover; display: block; }
+        .admin-card .admin-badge {
+            display: inline-block; background: var(--amber); color: #000;
+            padding: 6px 16px; border-radius: 50px; font-size: 0.8rem;
+            font-weight: 700; margin-top: 12px; letter-spacing: 1px;
+        }
+        .admin-card .admin-name { font-family: 'Russo One', sans-serif; font-size: 1.1rem; color: var(--text); margin-top: 8px; }
+
+        /* Meme */
+        .meme-block { text-align: center; margin: 30px 0; }
+        .meme-block img { max-width: 100%; border-radius: var(--radius); border: 1px solid var(--border); }
+        .meme-caption { color: var(--text-secondary); font-size: 0.85rem; margin-top: 10px; }
+
+        /* Fail cards */
+        .fail-card {
+            background: var(--surface); border: 1px solid rgba(255,71,87,0.3);
+            border-radius: var(--radius); padding: 24px; margin-bottom: 16px;
+            text-align: center; transition: var(--transition);
+        }
+        .fail-card:hover { border-color: var(--accent); }
+        .fail-icon { font-size: 3rem; margin-bottom: 12px; }
+        .fail-title { font-family: 'Russo One', sans-serif; font-size: 1.2rem; color: var(--accent); margin-bottom: 8px; }
+        .fail-text { color: var(--text-secondary); font-size: 0.9rem; }
+
+        /* Final */
+        .final-block {
+            text-align: center; padding: 50px 30px;
+            background: var(--surface); border: 2px solid var(--primary);
+            border-radius: var(--radius); box-shadow: 0 0 50px rgba(0,255,136,0.2);
+        }
+        .final-icon { font-size: 5rem; margin-bottom: 16px; }
+        .final-title { font-family: 'Russo One', sans-serif; font-size: 2rem; color: var(--primary); margin-bottom: 16px; }
+        .final-text { color: var(--text-secondary); font-size: 1rem; line-height: 1.7; }
+        .final-video { margin-top: 30px; }
+        .final-video iframe {
+            max-width: 325px; height: 580px; border-radius: 12px;
+        }
+
+        /* Video embed */
+        .video-embed {
+            position: relative; padding-bottom: 56.25%; height: 0;
+            overflow: hidden; border-radius: 12px; margin: 16px 0;
+        }
+        .video-embed iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border-radius: 12px; }
+
+        /* Video clips */
+        .video-clips {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px; margin: 30px 0;
+        }
+        .video-clip-card {
+            background: var(--surface); border: 1px solid var(--border);
+            border-radius: var(--radius); overflow: hidden; text-align: center;
+        }
+        .video-clip-card iframe { width: 100%; max-width: 325px; height: 580px; margin: 0 auto; display: block; }
+        .video-clip-label { padding: 14px; color: var(--text-secondary); font-size: 0.85rem; }
+
+        /* Footer */
+        .footer { text-align: center; padding: 40px 20px; border-top: 1px solid var(--border); color: var(--text-muted); font-size: 0.85rem; }
+
+        /* Up button */
+        .upbtn {
+            position: fixed; bottom: 24px; right: 24px; z-index: 999;
+            width: 48px; height: 48px; border-radius: 50%;
+            background: var(--primary); color: #000; border: none; cursor: pointer;
+            font-size: 1.3rem; display: flex; align-items: center; justify-content: center;
+            opacity: 0; transform: scale(0); transition: var(--transition);
+            box-shadow: 0 4px 15px rgba(0,255,136,0.3);
+        }
+        .upbtn.show { opacity: 1; transform: scale(1); }
+
+        /* Modal */
+        .modal {
+            display: none; position: fixed; inset: 0; z-index: 1000;
+            background: rgba(0,0,0,0.9); align-items: center; justify-content: center;
+        }
+        .modal.active { display: flex; }
+        .modal img { max-width: 90%; max-height: 90%; border-radius: 12px; }
+        .modal-close { position: absolute; top: 20px; right: 20px; color: #fff; font-size: 2rem; cursor: pointer; background: none; border: none; }
+
+        @media (max-width: 992px) {
+            .header { min-height: auto; padding: 50px 24px 40px; }
+            .swiper { max-width: 100%; }
+            .two-col { grid-template-columns: 1fr; gap: 24px; }
+        }
+        @media (max-width: 768px) {
+            section { padding: 40px 0; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .photo-cards-grid { grid-template-columns: 1fr; }
+            .video-clips { grid-template-columns: 1fr; }
+            .admin-cards { grid-template-columns: 1fr; max-width: 350px; margin: 30px auto; }
+            .hero-block { padding: 20px 14px; }
+            .swiper-slide img { aspect-ratio: 4/3; }
+        }
+        @media (max-width: 480px) {
+            .stats-grid { grid-template-columns: 1fr; }
+            .hero-title { font-size: 2rem; }
+            .hero-location { font-size: 0.8rem; padding: 8px 16px; }
+            .video-clip-card iframe { width: 100%; height: 400px; }
+            .final-video iframe { width: 100%; height: 400px; }
+            .admin-card img { height: 280px; }
+        }
+
+         /* Сетка */
+.olgaCard-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin: 10px -10px;
+    counter-reset: num;
+}
+.olgaCard-container *,
+.olgaCard-container *::before,
+.olgaCard-container *::after {
+    box-sizing: border-box;
+}
+.olgaCard-col {
+    width: 100%;
+    padding: 10px;
+}
+@media (min-width: 576px) {
+    .olgaCard-col {
+        width: 100%;
+    }
+}
+@media (min-width: 768px) {
+    .olgaCard-col {
+        width: 50%;
+    }
+}
+@media (min-width: 992px) {
+    .olgaCard-col {
+        width: 50%;
+    }
+}
+@media (min-width: 1200px) {
+    .olgaCard-col {
+        width: 33.33%;
+    }
+}
+@media (min-width: 1400px) {
+    .olgaCard-col {
+        width: 50%;
+    }
+}
+
+
+/* Карточка */
+.olgaCard {
+    position: relative;
+    height: 100%;
+    z-index: 1;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 2px solid #ddd;
+    transition: 0.5s;
+}
+.olgaCard-image {
+    position: relative;
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+}
+.olgaCard-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    transition: 0.5s;
+}
+.olgaCard-image strong {
+    color: #2E038C;
+    font-size: 18px;
+    line-height: 1.3;
+    text-transform: uppercase;
+    padding: 80px 16px 46px;
+    text-align: center;
+    display: block;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: linear-gradient(rgba(255, 255, 255, 0), rgba(255, 255, 255, 1));
+    text-shadow: 0 0 22px rgba(255, 255, 255, 0.8), 0 2px 10px rgba(255, 255, 255, 1);
+    transition: 0.5s;
+    font-weight: 600;
+}
+.olgaCard-txt {
+    transform: translateY(-42px);
+    text-align: center;
+}
+.olgaCard-txt p {
+    font-size: 16px;
+    line-height: 1.3;
+    padding: 0 16px;
+    margin: 0;
+    color: #000;
+}
+.olgaCard:hover {
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.2), inset 0 0 0 2px rgba(0, 0, 0, 0.1);
+}
+.olgaCard:hover .olgaCard-image img  {
+    transform: scale(1.4);
+}
+.olgaCard:hover .olgaCard-image strong {
+    padding: 80px 16px 26px;
+    color: #000;
+}
+@media (min-width: 576px) {
+    .olgaCard-txt p {
+        font-size: 18px;
+    }
+}
+    </style>
+</head>
+<body>
+
+<header class="header">
+    <div class="container">
+        <div class="badge">💧 БАССЕЙН ШКОЛЫ 21</div>
+        <h1 class="hero-title">ПОГРУЖЕНИЕ В IT</h1>
+        <p class="hero-subtitle">26 дней интенсивного обучения. С нуля до первых программ на C.</p>
+        <div class="hero-location">
+            <i class="fas fa-map-marker-alt"></i> Челябинск • 3 марта – 28 марта 2025
+        </div>
+
+        <div class="hero-block">
+            <div class="typing">
+                <span class="text">Не просто выстояли —</span>
+                <span style="font-family:'Russo One',sans-serif;font-size:clamp(1.4rem,3.5vw,2rem);background:var(--gradient-hero);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">Вместе стали сильнее!</span>
+            </div>
+            <div class="swiper" id="mainSlider">
+                <div class="swiper-wrapper">
+                    <div class="swiper-slide">
+                        <img src="https://sun9-19.userapi.com/impg/usd50RsggzJpJUHtuMWytWU0T0wNNYvlwfwXyQ/8C7mrX11QN8.jpg?size=1280x960&quality=95&sign=33deefcfd33f3498433e1fdf960ebc0a&type=album" alt="Фотосессия в последний день 1" loading="lazy">
+                        <div class="swiper-caption">Последний день бассейна</div>
+                    </div>
+                    <div class="swiper-slide">
+                        <img style="object-position: 25% 6%;" src="https://sun9-3.userapi.com/impg/LdwiaLiAiddlfQeYRIX9G0W3vmFEOWuDfLjlTw/W4FUy6FHUfc.jpg?size=1280x960&quality=95&sign=21f35a4881aa627c859f80fc84437b08&type=album" alt="Фотосессия в последний день 2" loading="lazy">
+                        <div class="swiper-caption">Мы сделали это!</div>
+                    </div>
+                    <div class="swiper-slide">
+                        <img src="https://sun9-47.userapi.com/impg/xAl0NEsmq1kaGs_YZXYUnto1cTwEpBDra6lVVw/FByjG0vS3t4.jpg?size=1280x960&quality=95&sign=9c5e05759544a2d59000ca21b29dabad&type=album" alt="Фотосессия в последний день 3" loading="lazy">
+                        <div class="swiper-caption">Команда!</div>
+                    </div>
+                </div>
+                <div class="swiper-pagination"></div>
+                <div class="swiper-button-prev" style="color:var(--primary);"></div>
+                <div class="swiper-button-next" style="color:var(--primary);"></div>
+            </div>
+            <p class="inform">*28.03.2025 Челябинск. Кампус школы 21.</p>
+        </div>
+    </div>
+</header>
+
+<main>
+    <div class="glow-divider"></div>
+
+    <!-- Что такое Бассейн? -->
+    <section>
+        <div class="container">
+            <h2 class="section-title">🎬 Что такое Бассейн?</h2>
+            <div class="two-col">
+                <div class="two-col-text">
+                    <p>
+                        <strong>Бассейн</strong> — это отборочный интенсив Школы 21.<br> 26 дней полного погружения в программирование на языке C.
+                        Никаких лекций, никаких учителей. Только ты, терминал, Google и такие же участники вокруг.
+                    </p>
+                    <p style="margin-top:12px;">
+                        Каждый день — новый проект. Каждые выходные — командный проект на 48 часов.
+                        Три экзамена, которые проверят твою стрессоустойчивость.
+                        <strong>Это самый быстрый способ понять, подходит ли тебе IT.</strong>
+                    </p>
+                </div>
+                <div class="two-col-video">
+                    <div class="video-embed" style="margin:0;">
+                        <iframe src="https://vk.com/clip_ext.php?oid=-231586725&id=456239120&autoplay=0" allow="autoplay; encrypted-media; fullscreen; picture-in-picture; screen-wake-lock;" frameborder="0" allowfullscreen></iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="glow-divider"></div>
+
+    <!-- История -->
+    <section>
+        <div class="container">
+            <h2 class="section-title">📖 Как всё было</h2>
+
+            <div class="story-card">
+                <span class="story-date">Старт • 3 марта 2025</span>
+                <div class="story-title">🚀 Первый день</div>
+                <p class="story-text">
+                    Я подала заявку на сайте, прошла онлайн-тесты, и меня пригласили на <strong>"Бассейн"</strong> – вступительный интенсив.
+                    Первый день — и сразу <strong>сообщение от команды АДМ</strong> с правилами: никаких консультаций по коду и выполнению заданий команда АДМ НЕ ДАЕТ, задавай вопросы пирам, сидящим справа и слева, гугли сам.
+                    Впереди 26 дней неизвестности.
+                </p>
+                <img class="story-inline-img" src="https://sun9-65.userapi.com/impg/l1p6bNdPVG-cHzO4bh69D_4FaJO6rkrOJX8L_g/aXVTl6ek8u8.jpg?size=661x280&quality=95&sign=9a040d1440b018406396c695c42c72d0&type=album" alt="Старт бассейна" loading="lazy">
+            </div>
+
+            <!-- Админы -->
+            <div class="story-card">
+                <span class="story-date">Команда АДМ</span>
+                <div class="story-title">👩‍💼 Админы школы</div>
+                <p class="story-text">Те самые люди, которые проводили для нас мероприятия, поддерживали и помогали не сойти с ума эти 26 дней:</p>
+                <div class="admin-cards">
+                    <div class="admin-card">
+                        <img src="https://sun9-12.userapi.com/impg/dxgabYdQKTDYdBgxCaybEh_Nb2_gmOhpWkjq7Q/8BHPzDpKj2E.jpg?size=2027x2160&quality=95&sign=979d4394c8c26069dc852274335043bd&type=album" alt="Юлия Мужагитова" loading="lazy">
+                        <div class="admin-badge">#adm</div>
+                        <div class="admin-name">Юлия Мужагитова</div>
+                    </div>
+                    <div class="admin-card">
+                        <img src="https://sun9-40.userapi.com/impg/PEkjxPhhJv_YFEVU18Ehk8TR0uafCFr3AeLPfA/T-NXlCgbd_s.jpg?size=1620x2160&quality=95&sign=eaf36eeb566bceb89e568a79260217c6&type=album" alt="Алексей Басков" loading="lazy">
+                        <div class="admin-badge">#adm</div>
+                        <div class="admin-name">Алексей Басков</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Мем -->
+            <div class="story-card">
+                <span class="story-date">Ожидание vs Реальность</span>
+                <div class="story-title">🤡 Мем про ожидания от учёбы</div>
+                <div class="meme-block">
+                    <img src="https://habrastorage.org/getpro/habr/post_images/0ec/bd8/712/0ecbd8712865539b1cfa76b125b957c3.png" alt="Пошел учиться на программиста" loading="lazy">
+                    <p class="meme-caption">Когда думал, что будешь писать крутые приложения, а пока разбираешься с указателями... 💀</p>
+                </div>
+            </div>
+
+            <!-- Зарядки, чаепития, движ -->
+            <div class="story-card">
+                <span class="story-date">Будни бассейна</span>
+                <div class="story-title">🏃‍♂️ Зарядки, чаепития и движ</div>
+                <p class="story-text">
+                    В бассейне было не только про код. Каждое утро начиналось с <strong>зарядки</strong> и <strong>чаепития</strong>.
+                    Организаторы писали: «Зарядка через 15 минут!» — и мы бежали.
+                    Было весело: кто-то опаздывал, кто-то звал других, а кто-то просто приходил посмотреть.
+                    Мы <strong>поздравляли Настю с днём рождения</strong>, играли в шахматы, ходили на тусовку на Белом рынке.
+                    Это были моменты, когда мы становились <strong>настоящей командой</strong>.
+                </p>
+                <div class="olgaCard-container">
+                    <div class="olgaCard-col">
+                        <!-- Карточка -->
+                        <div class="olgaCard">
+                            <div class="olgaCard-image">
+                                <img src="https://sun9-27.userapi.com/impg/RZqZcAgaSBx3OHdnNHxBUgHB1j93waxYoY05xg/w773I1NQXl0.jpg?size=1280x960&quality=95&sign=7e0c5dcbdeb22d33042f0c54dec3b634&type=album" alt="А организатор то к нам подойдет?">
+                                <strong>А организатор то к нам подойдет?🤣</strong>
+                            </div>
+                            <div class="olgaCard-txt">
+                                <p>да, скоро прибежит!!!</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="olgaCard-col">
+                        <!-- Карточка -->
+                        <div class="olgaCard">
+                            <div class="olgaCard-image">
+                                <img src="https://sun9-31.userapi.com/impg/6gsXA6xERixUg9sq5vh_bP1sAhL6E70Z-p5a4A/CFcaYlHn1Uc.jpg?size=1280x960&quality=95&sign=207df2e69b5915176463bb26f8d6dde7&type=album" alt="Сегодня была долгая зарядка,">
+                                <strong>Сегодня была долгая зарядка,</strong>
+                            </div>
+                            <!-- <div class="olgaCard-txt">
+                             <p>Контент карточки</p>
+                         </div>-->
+                        </div>
+                    </div>
+                    <div class="olgaCard-col">
+                        <!-- Карточка -->
+                        <div class="olgaCard">
+                            <div class="olgaCard-image">
+                                <img src="https://sun9-44.userapi.com/impg/Rk9fQ9cmYdthqIT58S4eZ84V9nULyiDp5-rRow/-3L-1GFN8vM.jpg?size=1280x960&quality=95&sign=1733e0cfb81b853439f5382d79772b6e&type=album" alt="а далее  планируем проводить 5-ти-минутки ежедневно.">
+                                <strong>а далее  планируем проводить 5-ти-минутки ежедневно.</strong>
+                            </div>
+                            <!-- <div class="olgaCard-txt">
+                                 <p>Контент карточки</p>
+                             </div>-->
+                        </div>
+                    </div>
+                    <div class="olgaCard-col">
+                        <!-- Карточка -->
+                        <div class="olgaCard">
+                            <div class="olgaCard-image">
+                                <img src="https://sun9-46.userapi.com/impg/C7w598kLhGt-L6EOMSg5E8iuMTrlVg2RCIr-Lw/JaVvrxL5Ekk.jpg?size=1280x960&quality=95&sign=0c7de5832f666eb1e3756387fa23878d&type=album" alt="Заблаговременно будем писать: Зарядка через 15 минут.">
+                                <strong>Заблаговременно будем писать: Зарядка через 15 минут.</strong>
+                            </div>
+                            <!-- <div class="olgaCard-txt">
+                                <p>Контент карточки</p>
+                            </div>-->
+                        </div>
+                    </div>
+                    <div class="olgaCard-col">
+                        <!-- Карточка -->
+                        <div class="olgaCard">
+                            <div class="olgaCard-image">
+                                <img src="https://sun9-31.userapi.com/impg/jMZGTPqIcGS-tKgL-Cidd_LYyzN-OpXlXYuziQ/q-2VjyXuR2Q.jpg?size=1280x961&quality=95&sign=08fb568eb24e04a0bac75bb4cf888afa&type=album" alt="Попытка была😁, но один человек потом пришёл, спасибо😌, ещё других даже звал😌">
+                                <strong>Попытка была😁, но один человек потом пришёл, спасибо😌, ещё других даже звал😌
+
+                                </strong>
+                            </div>
+                            <!-- <div class="olgaCard-txt">
+                                  <p>Контент карточки</p>
+                              </div>-->
+                        </div>
+                    </div>
+                    <div class="olgaCard-col">
+                        <!-- Карточка -->
+                        <div class="olgaCard">
+                            <div class="olgaCard-image">
+                                <img src="https://sun9-17.userapi.com/impg/ebZD4vuk8EkOFE1tjaZ2n9ZnbQA9We7JmMW7Vg/rq4NQHQTOAU.jpg?size=1280x960&quality=95&sign=9e16a660097dca57a762335dc1c9e936&type=album" alt="Это просто поглядеть 😁✌🏼">
+                                <strong>Это просто поглядеть 😁✌🏼 Потом скину куда там надо 🤣
+                                </strong>
+                            </div>
+                            <!-- <div class="olgaCard-txt">
+                                  <p>Контент карточки</p>
+                              </div>-->
+                        </div>
+                    </div>
+                    <div class="olgaCard-col">
+                        <!-- Карточка -->
+                        <div class="olgaCard">
+                            <div class="olgaCard-image">
+                                <img src="https://sun9-55.userapi.com/impg/zl9bvd16gxfbQ4odskKZbqtcXRHjvAge3OlooQ/NaYi3i10Jvo.jpg?size=960x1280&quality=95&sign=64034a432a2b1fbf9fd451e753f03be7&type=album" alt="ой и мы покажемся тогда">
+                                <strong>ой и мы покажемся тогда</strong>
+                            </div>
+                            <!-- <div class="olgaCard-txt">
+                                   <p>Контент карточки</p>
+                               </div>-->
+                        </div>
+                    </div>
+                    <div class="olgaCard-col">
+                        <!-- Карточка -->
+                        <div class="olgaCard">
+                            <div class="olgaCard-image">
+                                <img src="https://sun9-36.userapi.com/impg/p_5g_HPAXjU9qGkOIYFd06nXQ1sQuHVkeP4IEQ/ot4Xi_Zk9c4.jpg?size=960x1280&quality=95&sign=9b524a9baf8bc4b61e8710f6578e76dd&type=album" alt="Пойдемте в шахматы играть">
+                                <strong>Пойдемте в шахматы играть</strong>
+                            </div>
+                            <!-- <div class="olgaCard-txt">
+                                   <p>Контент карточки</p>
+                               </div>-->
+                        </div>
+                    </div>
+                    <div class="olgaCard-col">
+                        <!-- Карточка -->
+                        <div class="olgaCard">
+                            <div class="olgaCard-image">
+                                <img src="https://sun9-70.userapi.com/impg/GYB86_C_jPLrmc9IhmCJU9qyoiXn1rQSPObuKw/1FzRAYBQls0.jpg?size=1280x720&quality=95&sign=c5b2ce999f76df8bf969a1e464086bda&type=album" alt="Ееее, мероприятие прошло прикольно.">
+                                <strong>Ееее, мероприятие прошло прикольно. Спасибо всем, кто пришел!</strong>
+                            </div>
+                            <!-- <div class="olgaCard-txt">
+                                  <p>Контент карточки</p>
+                              </div>-->
+                        </div>
+                    </div>
+                    <div class="olgaCard-col">
+                        <!-- Карточка -->
+                        <div class="olgaCard">
+                            <div class="olgaCard-image">
+                                <img src="https://sun9-38.userapi.com/impg/VbXoR8MqoNCns2Lh-bckcgCqD0cD6XN--05dBw/_qxueJ91Kys.jpg?size=901x503&quality=95&sign=afdd528273e6ef8a2c64a2d495c96608&type=album" alt="Готовимся поздравить Настю с д.р">
+                                <strong>Готовимся поздравить Настю с д.р</strong>
+                            </div>
+                            <!-- <div class="olgaCard-txt">
+                                   <p>Контент карточки</p>
+                               </div>-->
+                        </div>
+                    </div>
+                    <div class="olgaCard-col">
+                        <!-- Карточка -->
+                        <div class="olgaCard">
+                            <div class="olgaCard-image">
+                                <img src="https://sun9-47.userapi.com/impg/CTyYNs6pFKFVSCBMVRi5hrW3PQc6GRD6Gx0JMg/6RAUR543sAU.jpg?size=901x506&quality=95&sign=9076164493849f852d772b4cda2d0ce6&type=album" alt="Готовимся поздравить Настю с д.р">
+                                <strong>Готовимся поздравить Настю с д.р</strong>
+                            </div>
+                            <!-- <div class="olgaCard-txt">
+                                   <p>Контент карточки</p>
+                               </div>-->
+                        </div>
+                    </div>
+                    <div class="olgaCard-col">
+                        <!-- Карточка -->
+                        <div class="olgaCard">
+                            <div class="olgaCard-image">
+                                <img src="https://sun9-58.userapi.com/impg/w-6ex-mMxHQWj3Jl6ozli5pk-Qa3P9N5vy54HA/kgUjkIenUYM.jpg?size=901x504&quality=95&sign=51744dc53af8aab7a0e8cdcaee357d08&type=album" alt="Готовимся поздравить Настю с д.р">
+                                <strong>Готовимся поздравить Настю с д.р</strong>
+                            </div>
+                            <!-- <div class="olgaCard-txt">
+                                   <p>Контент карточки</p>
+                               </div>-->
+                        </div>
+                    </div>
+                    <div class="olgaCard-col">
+                        <!-- Карточка -->
+                        <div class="olgaCard">
+                            <div class="olgaCard-image">
+                                <img src="https://sun9-17.userapi.com/impg/rpYYw_MC29kgsfwAT_MOnyGQLXCzSpYaMcr4tA/6bD73frNx_U.jpg?size=810x497&quality=95&sign=f082703b534230d3a8f727c68c3347f0&type=album" alt="Готовимся поздравить Настю с д.р">
+                                <strong>Готовимся поздравить Настю с д.р</strong>
+                            </div>
+                            <!-- <div class="olgaCard-txt">
+                                   <p>Контент карточки</p>
+                               </div>-->
+                        </div>
+                    </div>
+                    <div class="olgaCard-col">
+                        <!-- Карточка -->
+                        <div class="olgaCard">
+                            <div class="olgaCard-image">
+                                <iframe src="https://vkvideo.ru/video_ext.php?oid=-230056261&id=456239017&hash=bd747737720c2269" width="640" height="360" frameborder="0" allowfullscreen="1" allow="autoplay; encrypted-media; fullscreen; picture-in-picture"></iframe>
+                                <strong>Готовимся поздравить Настю с д.р</strong>
+                            </div>
+                            <!-- <div class="olgaCard-txt">
+                                   <p>Контент карточки</p>
+                               </div>-->
+                        </div>
+                    </div>
+                    <div class="olgaCard-col">
+                        <!-- Карточка -->
+                        <div class="olgaCard">
+                            <div class="olgaCard-image">
+                                <img src="https://sun9-80.userapi.com/impg/uMDzZuRuLK5wnMWmNPp4cOsb3ZDM88P5S2UPpg/XMtYga5b5QU.jpg?size=1280x960&quality=95&sign=61e5b4c9d1877a3b86e67500c9776e04&type=album" alt="Тусовка на Белом рынке">
+                                <strong>Тусовка на Белом рынке</strong>
+                            </div>
+                            <!-- <div class="olgaCard-txt">
+                                  <p>Контент карточки</p>
+                              </div>-->
+                        </div>
+                    </div>
+                    <div class="olgaCard-col">
+                        <!-- Карточка -->
+                        <div class="olgaCard">
+                            <div class="olgaCard-image">
+                                <img src="https://sun9-26.userapi.com/impg/eKI2i06LIyfKLP6KNxESdDtb_IafohzbpNecqw/BUWASCkPoUc.jpg?size=1280x960&quality=95&sign=ea56d0bc2db6f54b1b2b88b16aaf9fb8&type=album" alt="Мы сидим за столами возле сцены">
+                                <strong>Мы сидим за столами возле сцены</strong>
+                            </div>
+                            <!-- <div class="olgaCard-txt">
+                                   <p>Контент карточки</p>
+                               </div>-->
+                        </div>
+                    </div>
+                    <div class="olgaCard-col">
+                        <!-- Карточка -->
+                        <div class="olgaCard">
+                            <div class="olgaCard-image">
+                                <img src="https://sun9-13.userapi.com/impg/JFQxD-n0rhgiUbohBivvSz4AO45os7JoLC_1iA/T82WfaTllTQ.jpg?size=1280x960&quality=95&sign=d63c283d772a5aecf1fa0788fa707c39&type=album" alt="Мы сидим за столами возле сцены">
+                                <strong>Тусовка на Белом рынке</strong>
+                            </div>
+                            <!-- <div class="olgaCard-txt">
+                                   <p>Контент карточки</p>
+                               </div>-->
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <div class="glow-divider"></div>
+
+    <!-- Статистика -->
+    <section>
+        <div class="container">
+            <h2 class="section-title">📊 Моя статистика</h2>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number green">26</div>
+                    <div class="stat-label">Дней бассейна</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number green">6</div>
+                    <div class="stat-label">Зелёных дней</div>
+                </div>
+                <div class="stat-card" style="border-color: rgba(255,3,62,0.4); box-shadow: 0 0 20px rgba(255,3,62,0.1);">
+                    <div class="stat-number red">3</div>
+                    <div class="stat-label" style="color: var(--accent-red);">Экзамена провалено</div>
+                </div>
+                <div class="stat-card" style="border-color: var(--amber); box-shadow: 0 0 20px rgba(241,167,0,0.15);">
+                    <div class="stat-number" style="color: var(--amber);">1</div>
+                    <div class="stat-label" style="color: var(--amber);">Поступление на основу</div>
+                </div>
+            </div>
+
+            <div class="story-card" style="margin-top:30px;">
+                <span class="story-date">Статистика</span>
+                <div class="story-title" style="color:var(--accent);">💀 16 проектов зафейлено, 3 экзамена провалено</div>
+                <p class="story-text">
+                    Из всего бассейна мне зачли только <strong>6 проектов</strong>. Остальные 16 — в пролёте.
+                    Три экзамена. <strong>Три провала</strong>. Каждый раз я садилась за компьютер, открывала задания — и понимала, что не успеваю.
+                    Время тикает, вокруг все пишут код, а у меня пустой экран и паника.
+                    Но знаете что? <strong>Это нормально</strong>. Бассейн — он не про идеальные оценки. Он про то, чтобы не сдаться.
+                </p>
+                <div class="fail-card">
+                    <div class="fail-icon">😭</div>
+                    <div class="fail-title">Exam 01 — не сдала</div>
+                    <div class="fail-text">Паника, пустой экран, время вышло.</div>
+                </div>
+                <div class="fail-card">
+                    <div class="fail-icon">😱</div>
+                    <div class="fail-title">Exam 02 — опять не сдала</div>
+                    <div class="fail-text">Строки и память. Казалось, что всё знаю. Оказалось — нет.</div>
+                </div>
+                <div class="fail-card">
+                    <div class="fail-icon">🤡</div>
+                    <div class="fail-title">Final Exam — и снова мимо</div>
+                    <div class="fail-text">Я так усиленно готовилась по коду...Была уверена, что сегодня точно получится))) НО Я забыла, что ssh-keygen пишется с черточкой))) и даже не дошла до заданий))) </div>
+                </div>
+            </div>
+
+            <div class="story-card">
+                <span class="story-date">Финал • апрель 2025</span>
+                <div class="story-title">🎉 Я поступила!</div>
+                <p class="story-text">
+                    После 26 дней эмоциональной встряски, после проваленных экзаменов и всего 6 зачтённых проектов — <strong>меня взяли на основное обучение</strong>.
+                    Почему? Потому что я не сдалась. Потому что я была в кампусе каждый день. Потому что я помогала другим и училась у них.
+                    <strong>Бассейн — это не гонка за оценками. Это проверка на прочность. Это умение вставать после падений, помогать другим и идти до конца.<br>Бассейн — это про характер</strong>. И мой характер прошёл проверку.
+                </p>
+                <img class="story-inline-img" src="https://sun9-52.userapi.com/impg/qyn42XbV_OqlgDjftm5dnLwW8T_KkzXJ8DD87A/aumvvgmBmqE.jpg?size=1257x627&quality=95&sign=116c27d8afef025b95da0893ff5770db&type=album" alt="Я прошёл бассейн" loading="lazy">
+                <p style="text-align:center;color:var(--primary);font-weight:700;margin-top:8px;">
+                    🔥 4 недели адреналина, кода и бессонных ночей – но оно того стоило!<br>
+                    <strong>Спасибо всем, кто был рядом эти 26 дней. Вы — лучшие!</strong> 🦊
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <div class="glow-divider"></div>
+
+    <!-- Финал -->
+    <section>
+        <div class="container">
+
+            <div class="final-block">
+                <div class="final-icon">🏆</div>
+                <div class="final-title">Заветные слова: «Ты на основе!»</div>
+                <p class="final-text">
+                    Тот самый момент, когда приходит уведомление: <strong>«Поздравляем! Вы зачислены на основное обучение»</strong>.
+                </p>
+                <div class="final-video">
+                    <iframe src="https://vk.com/clip_ext.php?oid=-231586725&id=456239040&autoplay=0" allow="autoplay; encrypted-media; fullscreen; picture-in-picture; screen-wake-lock;" frameborder="0" allowfullscreen></iframe>
+                </div>
+            </div>
+        </div>
+        </div>
+    </section>
+   
+</main>
+
+<footer class="footer">
+    <p>© 2023–2026 Ольга Кашина (Щербинина). Школа 21, Челябинск. Все права защищены.</p>
+</footer>
+
+<button class="upbtn" id="upbtn" onclick="window.scrollTo({top:0,behavior:'smooth'})">⬆</button>
+
+<div class="modal" id="certModal" onclick="closeModal()">
+    <button class="modal-close">&times;</button>
+    <img src="" alt="Фото" id="modalImg">
+</div>
+
+<script>
+    new Swiper('#mainSlider', {
+        loop: true,
+        autoplay: { delay: 4000 },
+        pagination: { el: '.swiper-pagination', clickable: true },
+        navigation: { nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' },
+    });
+
+    const upbtn = document.getElementById('upbtn');
+    window.addEventListener('scroll', () => {
+        upbtn.classList.toggle('show', window.scrollY > 400);
+    });
+
+    function openModal(src) {
+        document.getElementById('modalImg').src = src;
+        document.getElementById('certModal').classList.add('active');
+    }
+    function closeModal() {
+        document.getElementById('certModal').classList.remove('active');
+    }
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') closeModal();
+    });
+</script>
+</body>
+</html>
