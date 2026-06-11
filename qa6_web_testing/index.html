@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QA6_Web_testing | Тестирование «Школы 21»</title>
+    <meta name="description" content="Проект QA6_Web_testing — комплексное тестирование сайта Школы 21: кроссбраузерное, Cookies, UI, валидация HTML">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&family=Russo+One&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        :root {
+            --bg: #0a0a0f;
+            --surface: #13131f;
+            --surface-light: #1a1a2e;
+            --primary: #00ff88;
+            --secondary: #7b61ff;
+            --accent: #ff4757;
+            --accent-red: #FF033E;
+            --amber: #f1a700;
+            --teal: #049DBF;
+            --text: #ffffff;
+            --text-secondary: #a0a0b0;
+            --text-muted: #6b6b7b;
+            --border: rgba(255,255,255,0.06);
+            --border-light: rgba(255,255,255,0.08);
+            --radius: 20px;
+            --radius-sm: 12px;
+            --shadow: 0 8px 30px rgba(0,0,0,0.4);
+            --shadow-lg: 0 20px 50px rgba(0,0,0,0.5);
+            --transition: 0.3s cubic-bezier(0.4,0,0.2,1);
+            --gradient-hero: linear-gradient(135deg, #00ff88 0%, #7b61ff 50%, #ff4757 100%);
+            --success: #4CAF50;
+            --warning: #FF9800;
+            --error: #f44336;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* ========== ФОН В СТИЛЕ QA / ТЕСТИРОВАНИЯ ========== */
+        body::before {
+            content: '';
+            position: fixed; inset: 0;
+            background:
+                /* Сетка как таблица тест-кейсов */
+                linear-gradient(0deg, transparent 95%, rgba(0,255,136,0.04) 96%, rgba(0,255,136,0.04) 96.5%, transparent 97%) 0 0 / 40px 40px,
+                linear-gradient(90deg, transparent 95%, rgba(123,97,255,0.04) 96%, rgba(123,97,255,0.04) 96.5%, transparent 97%) 0 0 / 40px 40px,
+                /* Свечения — красное (баги) и зелёное (фиксы) */
+                radial-gradient(ellipse at 20% 15%, rgba(255,71,87,0.12) 0%, transparent 45%),
+                radial-gradient(ellipse at 80% 75%, rgba(0,255,136,0.1) 0%, transparent 45%),
+                radial-gradient(ellipse at 50% 50%, rgba(123,97,255,0.05) 0%, transparent 60%),
+                /* Точки как баги */
+                radial-gradient(circle at 15% 25%, rgba(255,71,87,0.2) 1.5px, transparent 1.5px),
+                radial-gradient(circle at 30% 60%, rgba(255,71,87,0.15) 1px, transparent 1px),
+                radial-gradient(circle at 55% 35%, rgba(255,152,0,0.18) 1.5px, transparent 1.5px),
+                radial-gradient(circle at 70% 55%, rgba(0,255,136,0.15) 1px, transparent 1px),
+                radial-gradient(circle at 85% 20%, rgba(255,71,87,0.12) 1.5px, transparent 1.5px),
+                radial-gradient(circle at 40% 80%, rgba(0,255,136,0.12) 1px, transparent 1px),
+                radial-gradient(circle at 10% 70%, rgba(123,97,255,0.1) 1.5px, transparent 1.5px),
+                /* Полосы как прогресс-бар */
+                linear-gradient(90deg, transparent 48%, rgba(255,152,0,0.03) 48%, rgba(255,152,0,0.03) 52%, transparent 52%) 30px 80px / 80px 80px,
+                linear-gradient(180deg, transparent 48%, rgba(0,255,136,0.025) 48%, rgba(0,255,136,0.025) 52%, transparent 52%) 120px 40px / 60px 60px;
+            pointer-events: none; z-index: 0;
+        }
+
+        /* Плавающие символы QA */
+        .side-symbols {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; z-index: 0; overflow: hidden;
+        }
+        .side-symbol {
+            position: absolute;
+            font-family: 'Russo One', sans-serif;
+            font-size: 5rem;
+            opacity: 0.05;
+            animation: floatSymbol 12s ease-in-out infinite;
+        }
+        .side-symbol:nth-child(1) { top: 10%; left: 2%; color: var(--accent); animation-delay: 0s; font-size: 6.5rem; }
+        .side-symbol:nth-child(2) { top: 30%; right: 2%; color: var(--primary); animation-delay: 3s; font-size: 5rem; }
+        .side-symbol:nth-child(3) { bottom: 25%; left: 3%; color: var(--amber); animation-delay: 6s; font-size: 5.5rem; }
+        .side-symbol:nth-child(4) { top: 55%; right: 3%; color: var(--secondary); animation-delay: 9s; font-size: 4.5rem; }
+        .side-symbol:nth-child(5) { top: 18%; right: 12%; color: var(--accent); animation-delay: 1.5s; font-size: 3rem; }
+        .side-symbol:nth-child(6) { bottom: 15%; right: 8%; color: var(--primary); animation-delay: 4.5s; font-size: 5rem; }
+        .side-symbol:nth-child(7) { top: 65%; left: 6%; color: var(--amber); animation-delay: 7.5s; font-size: 3.5rem; }
+        .side-symbol:nth-child(8) { bottom: 40%; left: 10%; color: var(--accent); animation-delay: 10.5s; font-size: 4rem; }
+        @keyframes floatSymbol {
+            0%, 100% { opacity: 0.04; transform: translateY(0) rotate(0deg); }
+            25% { opacity: 0.1; transform: translateY(-30px) rotate(3deg); }
+            50% { opacity: 0.06; transform: translateY(-60px) rotate(-3deg); }
+            75% { opacity: 0.12; transform: translateY(-30px) rotate(2deg); }
+        }
+
+        .container { max-width: 1100px; margin: 0 auto; padding: 0 16px; position: relative; z-index: 2; }
+        section { padding: 50px 0; position: relative; z-index: 2; }
+
+        .glow-divider {
+            border: none; height: 2px; margin: 30px 0;
+            background: linear-gradient(90deg, transparent, var(--primary), var(--secondary), transparent);
+            opacity: 0.5;
+        }
+
+        /* ========== HEADER ========== */
+        .header {
+            text-align: center; padding: 30px 16px;
+            background: linear-gradient(180deg, rgba(0,255,136,0.05) 0%, transparent 100%);
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            position: relative; min-height: auto;
+        }
+        .header .container { width: 100%; max-width: 1100px; }
+        .badge {
+            display: inline-block; background: var(--surface); color: var(--primary);
+            border: 1px solid var(--primary); padding: 6px 16px; border-radius: 50px;
+            font-size: 0.8rem; font-weight: 600; letter-spacing: 2px; margin-bottom: 10px;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(0,255,136,0.3); }
+            50% { box-shadow: 0 0 0 12px transparent; }
+        }
+        .hero-title {
+            font-family: 'Russo One', sans-serif;
+            font-size: clamp(1.8rem, 5vw, 3rem);
+            background: var(--gradient-hero);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.2; margin-bottom: 6px;
+        }
+        .hero-subtitle {
+            color: var(--text-secondary); font-size: 0.9rem; margin: 0 auto 8px;
+        }
+        .hero-subtitle a {
+            color: var(--secondary); text-decoration: underline;
+        }
+        .hero-subtitle a:hover { color: var(--primary); }
+        .hero-location {
+            display: inline-flex; align-items: center; gap: 6px;
+            background: var(--surface); color: var(--amber);
+            border: 1px solid var(--amber); padding: 6px 14px; border-radius: 50px;
+            font-size: 0.75rem; font-weight: 600; margin-bottom: 0;
+        }
+        .hero-location i { font-size: 0.85rem; }
+
+        /* ========== Общие стили ========== */
+        .section-title {
+            font-family: 'Russo One', sans-serif;
+            font-size: clamp(1.3rem, 3vw, 1.8rem); margin-bottom: 25px;
+            background: var(--gradient-hero);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background-clip: text;
+            display: flex; align-items: center; gap: 10px;
+        }
+        .section-title i { font-size: 1.4rem; background: none; -webkit-text-fill-color: var(--primary); }
+
+        .story-card {
+            background: var(--surface); border: 1px solid var(--border);
+            border-radius: var(--radius); padding: 22px 16px; margin-bottom: 18px;
+            transition: var(--transition);
+        }
+        .story-card:hover { border-color: var(--primary); }
+        .story-date {
+            display: inline-block; background: var(--primary); color: #000;
+            padding: 3px 10px; border-radius: 50px; font-size: 0.72rem;
+            font-weight: 700; margin-bottom: 12px;
+        }
+        .story-title { font-family: 'Russo One', sans-serif; font-size: 1.15rem; margin-bottom: 10px; color: var(--primary); }
+        .story-text { color: var(--text-secondary); font-size: 0.9rem; line-height: 1.65; }
+        .story-text strong { color: var(--text); }
+
+        /* ========== Карточки движков ========== */
+        .engines-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 16px; margin-bottom: 30px;
+        }
+        .engine-card {
+            background: var(--surface); border: 1px solid var(--border);
+            border-radius: var(--radius); padding: 22px 16px; text-align: center;
+            transition: var(--transition);
+        }
+        .engine-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); border-color: var(--primary); }
+        .engine-card .icon { font-size: 2.2rem; margin-bottom: 12px; }
+        .engine-card h3 { font-family: 'Russo One', sans-serif; font-size: 1rem; color: var(--primary); margin-bottom: 6px; }
+        .engine-card p { color: var(--text-secondary); font-size: 0.8rem; }
+
+        /* ========== Браузер-теги ========== */
+        .browser-tags {
+            display: flex; flex-wrap: wrap; gap: 10px; margin: 18px 0;
+        }
+        .browser-tag {
+            background: var(--surface); border: 1px solid var(--border);
+            border-radius: 50px; padding: 7px 14px; font-size: 0.82rem;
+            color: var(--text); display: flex; align-items: center; gap: 7px;
+        }
+        .browser-tag i { color: var(--primary); }
+
+        /* ========== Карточки результатов ========== */
+        .results-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 20px; margin: 25px 0;
+        }
+        .result-card {
+            background: var(--surface); border: 1px solid var(--border);
+            border-radius: var(--radius); overflow: hidden;
+            transition: var(--transition);
+        }
+        .result-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); border-color: var(--primary); }
+        .result-card__header {
+            background: var(--surface-light); padding: 14px 18px;
+            display: flex; align-items: center; gap: 10px;
+            border-bottom: 1px solid var(--border);
+        }
+        .result-card__header .browser-icon { font-size: 1.5rem; }
+        .result-card__header h3 { font-family: 'Russo One', sans-serif; font-size: 1rem; color: var(--text); }
+        .result-card__header .version { font-size: 0.75rem; color: var(--text-muted); margin-left: auto; }
+        .result-card__body { padding: 16px; }
+        .result-card__body h4 { color: var(--primary); margin-bottom: 8px; font-size: 0.9rem; }
+        .result-card__body img {
+            width: 100%; border-radius: var(--radius-sm); margin-bottom: 12px;
+            border: 1px solid var(--border);
+        }
+
+        /* ========== Списки ========== */
+        .check-list { list-style: none; padding: 0; }
+        .check-list li {
+            padding: 5px 0; font-size: 0.85rem; color: var(--text-secondary);
+            display: flex; align-items: center; gap: 8px;
+        }
+        .check-list li i.fa-check { color: var(--success); }
+        .check-list li i.fa-exclamation-triangle { color: var(--warning); }
+        .check-list li i.fa-times { color: var(--error); }
+
+        .problem-box {
+            background: rgba(244,67,54,0.08); border: 1px solid rgba(244,67,54,0.25);
+            border-radius: var(--radius-sm); padding: 12px 14px; margin-top: 12px;
+        }
+        .problem-box h4 { color: var(--error); margin-bottom: 6px; font-size: 0.85rem; }
+        .problem-box ul { list-style: none; padding: 0; }
+        .problem-box ul li { padding: 4px 0; font-size: 0.82rem; color: var(--text-secondary); }
+        .problem-box ul li::before { content: '⚠️ '; }
+
+        .conclusion {
+            background: var(--surface); border: 1px solid var(--border);
+            border-radius: var(--radius); padding: 24px 20px; margin: 30px 0;
+        }
+        .conclusion h3 { font-family: 'Russo One', sans-serif; color: var(--primary); margin-bottom: 16px; font-size: 1.3rem; }
+        .conclusion ol, .conclusion ul { padding-left: 20px; color: var(--text-secondary); }
+        .conclusion li { margin-bottom: 10px; line-height: 1.6; font-size: 0.9rem; }
+        .conclusion strong { color: var(--text); }
+
+        .recommendations {
+            background: rgba(0,255,136,0.05); border: 1px solid rgba(0,255,136,0.2);
+            border-radius: var(--radius); padding: 24px 20px; margin: 25px 0;
+        }
+        .recommendations h3 { font-family: 'Russo One', sans-serif; color: var(--primary); margin-bottom: 14px; font-size: 1.3rem; }
+        .recommendations ul { list-style: none; padding: 0; }
+        .recommendations ul li {
+            padding: 7px 0; color: var(--text-secondary); font-size: 0.9rem;
+            display: flex; align-items: flex-start; gap: 8px;
+        }
+        .recommendations ul li i { color: var(--primary); margin-top: 3px; }
+
+        /* ========== Баг-репорты ========== */
+        .bug-report {
+            background: var(--surface); border: 1px solid var(--border);
+            border-radius: var(--radius); padding: 22px 18px; margin: 20px 0;
+            transition: var(--transition);
+        }
+        .bug-report:hover { border-color: var(--primary); }
+        .bug-report h3 {
+            color: var(--primary); font-size: 1.1rem; margin-bottom: 12px;
+            display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+        }
+        .bug-report h3 .bug-id {
+            background: var(--accent); color: #fff; padding: 3px 10px;
+            border-radius: 6px; font-size: 0.8rem;
+        }
+        .bug-report img {
+            width: 100%; border-radius: var(--radius-sm); margin: 12px 0;
+            border: 1px solid var(--border);
+        }
+        .bug-meta {
+            display: flex; flex-wrap: wrap; gap: 10px; margin: 8px 0 14px; font-size: 0.8rem;
+        }
+        .bug-meta span {
+            background: rgba(255,255,255,0.04); padding: 3px 10px;
+            border-radius: 6px; color: var(--text-secondary);
+        }
+        .bug-meta .priority-high { color: var(--error); font-weight: 600; }
+        .bug-meta .priority-medium { color: var(--warning); font-weight: 600; }
+        .bug-meta .severity-major { color: var(--error); }
+        .bug-meta .severity-minor { color: var(--warning); }
+
+        .bug-report h4 { color: var(--primary); margin: 14px 0 6px; font-size: 0.95rem; }
+        .bug-report p, .bug-report li { color: var(--text-secondary); font-size: 0.87rem; line-height: 1.6; }
+        .bug-report a { color: var(--secondary); }
+        .bug-report a:hover { color: var(--primary); }
+
+        /* ========== Таблицы ========== */
+        .cookies-table-wrapper {
+            overflow-x: auto; -webkit-overflow-scrolling: touch;
+            margin: 18px 0; border-radius: var(--radius-sm);
+            border: 1px solid var(--border);
+        }
+        .cookies-table {
+            width: 100%; border-collapse: collapse; font-size: 0.8rem;
+            background: var(--surface); min-width: 700px;
+        }
+        .cookies-table th {
+            background: var(--surface-light); color: var(--primary);
+            padding: 12px 8px; text-align: left; font-weight: 600;
+            border-bottom: 1px solid var(--border);
+        }
+        .cookies-table td {
+            padding: 9px 8px; border-bottom: 1px solid var(--border);
+            color: var(--text-secondary);
+        }
+        .cookies-table tr:last-child td { border-bottom: none; }
+        .cookies-table code { color: var(--amber); font-size: 0.78rem; }
+
+        /* ========== Code Block ========== */
+        .code-block {
+            background: rgba(0,0,0,0.5); border: 1px solid rgba(123,97,255,0.3);
+            border-radius: 10px; padding: 12px 14px; margin: 10px 0;
+            overflow-x: auto; font-family: 'Courier New', monospace;
+            font-size: 0.8rem; color: var(--text-secondary);
+            white-space: pre-wrap; word-break: break-word;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .highlight-link {
+            display: inline-block; color: var(--secondary); text-decoration: none;
+            font-weight: 600; transition: color 0.3s; margin-top: 8px;
+        }
+        .highlight-link:hover { color: var(--primary); text-decoration: underline; }
+
+        .footer { text-align: center; padding: 30px 16px; border-top: 1px solid var(--border); color: var(--text-muted); font-size: 0.8rem; }
+
+        /* ========== Адаптивность ========== */
+        @media (max-width: 768px) {
+            .header { padding: 25px 14px; }
+            .hero-title { font-size: 1.5rem; }
+            .results-grid { grid-template-columns: 1fr; }
+            .engines-grid { grid-template-columns: repeat(2, 1fr); }
+            .cookies-table-wrapper { font-size: 0.7rem; }
+            .bug-report { padding: 16px 12px; }
+        }
+        @media (max-width: 480px) {
+            .header { padding: 20px 12px; }
+            .hero-title { font-size: 1.3rem; }
+            .hero-subtitle { font-size: 0.78rem; }
+            .section-title { font-size: 1.1rem; }
+            .engines-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+            .engine-card { padding: 14px 10px; }
+            .engine-card .icon { font-size: 1.6rem; }
+            .engine-card h3 { font-size: 0.85rem; }
+            .result-card__body { padding: 12px; }
+            .conclusion, .recommendations { padding: 16px 12px; }
+            .badge { font-size: 0.68rem; padding: 4px 10px; }
+            .browser-tag { font-size: 0.72rem; padding: 5px 10px; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Плавающие символы QA -->
+<div class="side-symbols">
+    <div class="side-symbol">BUG</div>
+    <div class="side-symbol">✓</div>
+    <div class="side-symbol">QA</div>
+    <div class="side-symbol">✗</div>
+    <div class="side-symbol">TEST</div>
+    <div class="side-symbol">⚠</div>
+    <div class="side-symbol">PASS</div>
+    <div class="side-symbol">FAIL</div>
+</div>
+
+<!-- ========== HEADER ========== -->
+<header class="header">
+    <div class="container">
+        <div class="badge">🧪 ПРОЕКТ ШКОЛЫ 21</div>
+        <h1 class="hero-title">QA6_WEB_TESTING</h1>
+        <p class="hero-subtitle">
+            Комплексное тестирование <a href="https://21-school.ru" target="_blank" rel="noopener noreferrer">сайта «Школы 21»</a>
+        </p>
+        <div class="hero-location">
+            <i class="fas fa-bug"></i> 7 заданий • Кроссбраузерное • Cookies • UI • Валидация
+        </div>
+    </div>
+</header>
+
+<main>
+    <div class="glow-divider"></div>
+
+    <!-- Описание -->
+    <section>
+        <div class="container">
+            <div class="story-card">
+                <span class="story-date">О проекте</span>
+                <div class="story-title">7 заданий по тестированию</div>
+                <p class="story-text">Проект <strong>QA6_Web_testing</strong> включает 7 заданий, направленных на комплексное тестирование веб-сайта «Школы 21». Ниже представлены ключевые задания: кроссбраузерное тестирование, анализ Cookies, UI-тестирование и валидация HTML.</p>
+            </div>
+        </div>
+    </section>
+
+    <div class="glow-divider"></div>
+
+    <!-- Задание 3: Движки браузеров -->
+    <section>
+        <div class="container">
+            <h2 class="section-title"><i class="fas fa-microchip"></i> Задание 3. Движки браузеров</h2>
+            <p style="color: var(--text-secondary); margin-bottom: 20px; font-size: 0.9rem;">
+                Современный интернет невозможен без специальных компонентов, называемых браузерными движками. Это программы, которые обрабатывают HTML, CSS и JavaScript, превращая их в интерактивные веб-интерфейсы.
+            </p>
+            <div class="engines-grid">
+                <div class="engine-card"><div class="icon">⚡</div><h3>Blink</h3><p>Chrome, Edge, Opera, Яндекс</p></div>
+                <div class="engine-card"><div class="icon">🧭</div><h3>WebKit</h3><p>Apple Safari</p></div>
+                <div class="engine-card"><div class="icon">🦎</div><h3>Gecko</h3><p>Mozilla Firefox</p></div>
+                <div class="engine-card"><div class="icon">📜</div><h3>EdgeHTML</h3><p>Устаревший (Edge)</p></div>
+                <div class="engine-card"><div class="icon">🔧</div><h3>Trident</h3><p>Internet Explorer</p></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Кроссбраузерное тестирование -->
+    <section>
+        <div class="container">
+            <h2 class="section-title"><i class="fas fa-globe"></i> Кроссбраузерное тестирование</h2>
+            <p style="color: var(--text-secondary); font-size: 0.9rem;">📌 Тестирование проводилось на разрешении <strong>1920×1080px</strong>:</p>
+            <div class="browser-tags">
+                <span class="browser-tag"><i class="fab fa-firefox-browser"></i> Firefox</span>
+                <span class="browser-tag"><i class="fab fa-chrome"></i> Chrome</span>
+                <span class="browser-tag"><i class="fab fa-edge"></i> Edge</span>
+                <span class="browser-tag"><i class="fas fa-shield-alt"></i> Avast</span>
+                <span class="browser-tag"><i class="fab fa-opera"></i> Opera</span>
+                <span class="browser-tag"><i class="fab fa-yandex"></i> Яндекс</span>
+            </div>
+
+            <div class="results-grid" id="browsers">
+                <!-- Карточки браузеров генерируются ниже -->
+            </div>
+
+            <div class="conclusion">
+                <h3>📋 Выводы</h3>
+                <ol>
+                    <li><strong>🦊 Firefox (Gecko)</strong> — лучшая адаптация под 1920×1080px. Единственное отклонение — оттенок кнопки (#00db01 вместо #00db00), не критично.</li>
+                    <li><strong>❌ Браузеры на Blink</strong> (Chrome, Edge, Opera, Яндекс, Avast) — общая проблема выхода контейнеров за область видимости. Нужны медиазапросы для больших экранов.</li>
+                </ol>
+            </div>
+            <div class="recommendations">
+                <h3>💡 Рекомендации</h3>
+                <ul>
+                    <li><i class="fas fa-lightbulb"></i> Добавить медиазапросы для 1920px</li>
+                    <li><i class="fas fa-lightbulb"></i> Пересмотреть отступы и поля контейнеров</li>
+                    <li><i class="fas fa-lightbulb"></i> Использовать vw/vh вместо фиксированных px</li>
+                </ul>
+                <p style="color: var(--text); font-weight: 500; margin-top: 12px; font-size: 0.9rem;">Это позволит сайту выглядеть одинаково качественно в любом браузере.</p>
+            </div>
+        </div>
+    </section>
+
+    <div class="glow-divider"></div>
+
+    <!-- Задание 5: Cookies -->
+    <section>
+        <div class="container">
+            <h2 class="section-title"><i class="fas fa-cookie-bite"></i> Задание 5. Cookies</h2>
+            <div class="story-card">
+                <span class="story-date">Анализ</span>
+                <div class="story-title">Cookies сайта М.ВИДЕО</div>
+                <p class="story-text" style="margin-bottom: 14px;">Обнаруженные Cookies с помощью Chrome DevTools (вкладка «Application»):</p>
+                <img src="https://sun9-17.userapi.com/s/v1/ig2/3sZrDLkavWozArp6WG1dy8xEyaTiMU9sMqVhSeEczhOiYHZ3qlpqEKt7V_xaOqxJOFtO4aOBFEtouM69M6YY91Ie.jpg?quality=95&as=32x32,48x48,72x72,108x108,160x160,240x240,360x360,480x480,540x540,640x640,720x720,1000x1000&from=bu&cs=1000x0" alt="Cookies MVIDEO" style="width:100%;max-width:700px;border-radius:12px;margin:10px 0;border:1px solid var(--border);" loading="lazy">
+                <div class="cookies-table-wrapper">
+                    <table class="cookies-table">
+                        <thead><tr><th>Name</th><th>Value</th><th>Domain</th><th>Expires</th><th>Size</th><th>HttpOnly</th><th>Secure</th><th>SameSite</th></tr></thead>
+                        <tbody>
+                            <tr><td><code>MVID_FILTER_CODES</code></td><td>true</td><td>.mvideo.ru</td><td>2026-08-25</td><td>21</td><td>-</td><td>-</td><td>-</td></tr>
+                            <tr><td><code>MVID_DEVICE_UUID</code></td><td>34c64863-ab79...</td><td>www.mvideo.ru</td><td>2026-07-21</td><td>52</td><td>🛡️✅</td><td>🔒✅</td><td>Strict</td></tr>
+                            <tr><td><code>PVID</code></td><td>0YTPgj1Ipr2X...</td><td>top-fwz1.mail.ru</td><td>2026-07-23</td><td>240</td><td>🛡️✅</td><td>🔒✅</td><td>None</td></tr>
+                            <tr><td><code>VID</code></td><td>0YTPgj1Ipr2X...</td><td>.mail.ru</td><td>2026-07-23</td><td>239</td><td>🛡️✅</td><td>🔒✅</td><td>None</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p class="story-text" style="margin-top: 12px;">
+                    <strong>🛡️ HttpOnly</strong> — защита от XSS-атак. <strong>🔒 Secure</strong> — только по HTTPS.<br>
+                    <strong>↔️ SameSite:</strong> Strict / Lax / None.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <div class="glow-divider"></div>
+
+    <!-- Задание 6: UI-тестирование -->
+    <section>
+        <div class="container">
+            <h2 class="section-title"><i class="fas fa-desktop"></i> Задание 6. UI-тестирование</h2>
+
+            <!-- Баг-репорты вставляются программно -->
+            <div id="bugReports"></div>
+
+            <div class="conclusion">
+                <h3>📋 Итоги UI-тестирования</h3>
+                <p style="color: var(--text-secondary); margin-bottom: 14px; font-size: 0.9rem;">Выявлено <strong>9 ключевых проблем</strong> на сайте «Школы 21».</p>
+                <p style="color: var(--text); font-weight: 600; font-size: 0.9rem;">Основные категории:</p>
+                <ol>
+                    <li><strong>Загрузка изображений</strong> (UI-001, 003, 005, 006) — некорректные пути. Заменить на абсолютные URL.</li>
+                    <li><strong>Вёрстка и позиционирование</strong> (UI-002, 004, 007) — несоответствие макету. Проверить CSS.</li>
+                    <li><strong>Лишние/отсутствующие элементы</strong> (UI-008, 009) — удалить лишнее, добавить блок «Кампусы».</li>
+                </ol>
+                <p style="color: var(--error); font-weight: 600; margin-top: 16px; font-size: 0.9rem;">Критично: отсутствие фонового изображения на главной (UI-001).</p>
+            </div>
+        </div>
+    </section>
+
+    <div class="glow-divider"></div>
+
+    <!-- Задание 7: Валидация HTML -->
+    <section>
+        <div class="container">
+            <h2 class="section-title"><i class="fas fa-code"></i> Задание 7. Валидация HTML</h2>
+            <div class="story-card">
+                <span class="story-date">Проверка</span>
+                <div class="story-title">Сайт М.Видео — результаты валидации</div>
+                <p class="story-text" style="margin-bottom: 14px;">
+                    <strong style="color: var(--error);">4 ошибки</strong> (отсутствие doctype, title, alt у img, лишний &lt;/div&gt;),
+                    <strong style="color: var(--warning);">1 предупреждение</strong> (не указан lang),
+                    <strong style="color: var(--teal);">2 info</strong> (избыточные косые черты).
+                </p>
+                <img src="https://sun9-49.userapi.com/s/v1/ig2/yjBUJpz_5AvMP0lGjEkbfXAlhTv6c3dsJ9ijKP5ksk2QkVT0M9Par4oKfajtBXRAgCwzj6HfDZrB9FoA_BMsuG28.jpg?quality=95&as=32x35,48x52,72x78,108x117,160x173,240x259,360x389,480x518,540x583,640x691,720x778,1080x1166,1280x1382,1440x1555,1788x1931&from=bu&cs=1788x0" alt="Результаты валидации" style="width:100%;max-width:700px;border-radius:12px;margin:10px 0;border:1px solid var(--border);" loading="lazy">
+                <p class="story-text" style="margin-top: 12px;">
+                    <strong>Рекомендация:</strong> добавить doctype, title, alt, исправить структуру, указать lang.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <div class="glow-divider"></div>
+
+    <footer class="footer">
+        <p>© 2023–2026 Ольга Кашина (Щербинина). Школа 21, Челябинск. Все права защищены.</p>
+        <p>Проект: QA6_Web_testing | Тестирование «Школа 21»</p>
+    </footer>
+</main>
+
+<script>
+    // ========== Данные браузеров ==========
+    const browsers = [
+        { name:'Mozilla Firefox', icon:'🦊', ver:'v140.0.4', engine:'Gecko', img1:'https://sun9-78.userapi.com/s/v1/if2/Av0rKCP21FS5xN1dHDUkFN9aVK7uQJer_2b6ivk4CiN_JGwB32ksaFuaRzUE1ppVbevhWiGhQ-PdVlK0YXLbFG0C.jpg?quality=95&as=32x18,48x27,72x40,108x61,160x90,240x135,360x202,480x270,540x304,640x360,720x405,1080x607,1280x720,1440x810,1920x1080&from=bu&cs=1920x0', img2:'https://sun9-53.userapi.com/s/v1/if2/pN_J4SYqHX7aKRe-VDYXeSOElBVh6cVr2FoH4GaOr4Gja9FVRtLJz8KgC_UWe6-j9Fd_otc5qdvMVJeWpTD-PFfl.jpg?quality=95&as=32x18,48x27,72x40,108x61,160x90,240x135,360x202,480x270,540x304,640x360,720x405,1080x607,1280x720,1440x810,1920x1080&from=bu&cs=1920x0',
+            checks:[
+                {icon:'fa-check',text:'Корректное отображение'},{icon:'fa-check',text:'Видео работает стабильно'},
+                {icon:'fa-check',text:'Формы работают корректно'},{icon:'fa-exclamation-triangle',text:'Цвет кнопки #00db01 (ожидалось #00db00)'}
+            ], note:'✅ Лучшая адаптация под 1920×1080px', noteColor:'var(--success)', problems:null },
+        { name:'Google Chrome', icon:'🌐', ver:'v138.0.7204.158', engine:'Blink', img1:'https://sun9-64.userapi.com/s/v1/if2/i6p3XQZ1tufGWWZN_AxyUL0RCDFbCAPUQ03MbkgY6fDtjJCdnvj90OMaZu7lrujaB3qzNdApyMtGRAvBJ3gqtWde.jpg?quality=95&as=32x17,48x26,72x39,108x58,160x86,240x129,360x193,480x258,540x290,640x344,720x387,962x517&from=bu&cs=962x0', img2:'https://sun9-31.userapi.com/s/v1/if2/tjV5szQnAxhtSJCWPBYgv2VPVGnxSoTXBMHbb7cwx81pv70ezqCSfGh00PODwfw9EuYnROjmmdEy9acaTINNR5SR.jpg?quality=95&as=32x20,48x30,72x45,108x67,160x100,240x150,360x225,480x300,540x337,640x400,720x450,1080x675,1280x800,1440x900,1920x1200&from=bu&cs=1920x0',
+            checks:[{icon:'fa-check',text:'Интерфейс корректен'},{icon:'fa-check',text:'Видео работает стабильно'},{icon:'fa-check',text:'Цвета соответствуют макету'}],
+            note:null, problems:['Контейнер .TopMain_root__94izh не входит по ширине','Кнопка "Поступить" отображается на половину'] },
+        { name:'Microsoft Edge', icon:'🪟', ver:'v138.0.3351.95', engine:'Blink', img1:'https://sun9-39.userapi.com/s/v1/if2/LdfRPKqT9mrXux2hrX9m5Tcdi5cVWF5D4UHLbIs1gNAGSMvDLpoSI_HxuRaReijxlP0zohtYDebSFTN5w3c8-9Ev.jpg?quality=95&as=32x17,48x26,72x39,108x58,160x86,240x129,360x193,480x258,540x290,640x344,720x387,962x517&from=bu&cs=962x0', img2:'https://sun9-69.userapi.com/s/v1/if2/M6WyNRRoIxumvbCEaJ_jk5vNldDziE3IAvLFBrEsD1vfl2rBy8ZhCShkMMmvnLlRG2x4x6Oox5zlOxgyEZ-2yPYN.jpg?quality=95&as=32x20,48x30,72x45,108x67,160x100,240x150,360x225,480x300,540x337,640x400,720x450,1080x675,1280x800,1440x900,1920x1200&from=bu&cs=1920x0',
+            checks:[{icon:'fa-check',text:'Интерфейс корректен'},{icon:'fa-check',text:'Видео работает стабильно'},{icon:'fa-check',text:'Цвета соответствуют макету'},{icon:'fa-check',text:'Кнопка "Поступить" отображается вся'}],
+            note:null, problems:['Контейнер .TopMain_root__94izh не входит по ширине'] },
+        { name:'Avast', icon:'🛡️', ver:'v111.0.20716.147', engine:'Blink', img1:'https://sun9-84.userapi.com/s/v1/if2/ZSM3tarL5Qdg8VcVOWFL4q2KQK06y2oc8GCCyARW-EyiLSpW_osqE1ff6yOJdwUEN8105AsWMmwbm2CsUeA6gWBL.jpg?quality=95&as=32x17,48x26,72x39,108x58,160x86,240x129,360x193,480x258,540x290,640x344,720x387,962x517&from=bu&cs=962x0', img2:'https://sun9-35.userapi.com/s/v1/if2/zKI1DtcgE8LJKuqcbgtDmGJ4QH8NOnbxeNerpcTJDxgRg6pfjLHYJYz-lbhDvlBkV5Dlb-SUDL2ZQZ3yivAKKAPZ.jpg?quality=95&as=32x20,48x30,72x45,108x67,160x100,240x150,360x225,480x300,540x337,640x400,720x450,1080x675,1280x800,1440x900,1920x1200&from=bu&cs=1920x0',
+            checks:[{icon:'fa-check',text:'Интерфейс корректен'},{icon:'fa-check',text:'Видео работает стабильно'},{icon:'fa-check',text:'Цвета соответствуют макету'}],
+            note:null, problems:['Контейнер не входит по ширине','Кнопка "Поступить" отображается не полностью'] },
+        { name:'Opera One', icon:'🔴', ver:'v120.0.5543.93', engine:'Blink', img1:'https://sun9-13.userapi.com/s/v1/if2/tEQ6Bns--LkW1VussXcN8rLPumuej3pXXtEgf_ULSvw4EOpBzCXPWxredbQFh_j0t1UJ0wFOhdhxc8R4HoO-Yofi.jpg?quality=95&as=32x17,48x26,72x39,108x58,160x86,240x129,360x193,480x257,540x290,640x343,720x386,960x515&from=bu&cs=960x0', img2:'https://sun9-80.userapi.com/s/v1/if2/sViv46LbbzoQ13gY-fBXkFcfOLCFbjbT-y0l9KMIW9ReavP6mkDeD7zZx58sIwJKPFiqjJjPMsiEE9Ko4o1mn0gD.jpg?quality=95&as=32x20,48x30,72x45,108x67,160x100,240x150,360x225,480x300,540x337,640x400,720x450,1080x675,1280x800,1440x900,1920x1200&from=bu&cs=1920x0',
+            checks:[{icon:'fa-check',text:'Интерфейс корректен'},{icon:'fa-check',text:'Видео работает стабильно'},{icon:'fa-check',text:'Цвета соответствуют макету'}],
+            note:null, problems:['Контейнер не входит по ширине','Кнопка меньше половины','Раскрывающийся список городов обрезан'] },
+        { name:'Яндекс.Браузер', icon:'🔍', ver:'v25.6.2.425', engine:'Blink', img1:'https://sun9-37.userapi.com/s/v1/if2/NfgFR77O-0B9hs1WF5VEvjw2f4E0xicKk8tyTaT5QvoOGSnvvqOIZ-lFjgPJZwfAm40xU0ELd9zta_JvPK94-_Qt.jpg?quality=95&as=32x17,48x26,72x39,108x58,160x86,240x129,360x193,480x258,540x290,640x344,720x387,962x517&from=bu&cs=962x0', img2:'https://sun9-40.userapi.com/s/v1/if2/agaMUiKp1Gfqwt_oW2PqCgF2Rh0BfiW2Ldxed8Q0jSw73CsDpalEAbqkPQGrQSv6H3ggtdj1-OQI3as2Bf5kIa_e.jpg?quality=95&as=32x20,48x30,72x45,108x67,160x100,240x150,360x225,480x300,540x337,640x400,720x450,1080x675,1280x800,1440x900,1920x1200&from=bu&cs=1920x0',
+            checks:[{icon:'fa-check',text:'Интерфейс корректен'},{icon:'fa-check',text:'Видео работает стабильно'},{icon:'fa-check',text:'Цвета соответствуют макету'},{icon:'fa-check',text:'Кнопка отображается полностью'}],
+            note:null, problems:['Контейнер не входит по ширине'] }
+    ];
+
+    const resultsGrid = document.getElementById('browsers');
+    browsers.forEach(b => {
+        let checksHTML = b.checks.map(c => `<li><i class="fas ${c.icon}"></i> ${c.text}</li>`).join('');
+        let problemsHTML = b.problems ? `<div class="problem-box"><h4>Проблемы:</h4><ul>${b.problems.map(p => `<li>${p}</li>`).join('')}</ul></div>` : '';
+        let noteHTML = b.note ? `<p style="color:${b.noteColor || 'var(--success)'};margin-top:10px;font-weight:600;font-size:0.85rem;">${b.note}</p>` : '';
+        resultsGrid.innerHTML += `
+            <div class="result-card">
+                <div class="result-card__header"><span class="browser-icon">${b.icon}</span><h3>${b.name}</h3><span class="version">${b.ver}</span></div>
+                <div class="result-card__body">
+                    <h4>Движок: ${b.engine}</h4>
+                    <img src="${b.img1}" alt="${b.name}" loading="lazy"><img src="${b.img2}" alt="${b.name} кнопка" loading="lazy">
+                    <ul class="check-list">${checksHTML}</ul>
+                    ${noteHTML}${problemsHTML}
+                </div>
+            </div>`;
+    });
+
+    // ========== Данные баг-репортов (сокращённо) ==========
+    const bugs = [
+        { id:'UI-001', title:'Отсутствие фонового изображения', priority:'High', severity:'Major', desc:'На главной странице отсутствует фоновое изображение девушки.',
+            steps:'Открыть сайт «Школы 21» → Осмотреть верхнюю часть.', expected:'Отображается фоновое изображение.', actual:'Фоновое изображение отсутствует.',
+            img:'https://sun9-66.userapi.com/s/v1/ig2/zwLjaU0o3i1ZKG_5ElbApLpPzRopLN0y8cQb9_-by_PB8TaZWMJ_ouoOtAHPXeFwWpOKa9XMrE9asyOq2LUKhViF.jpg?quality=95&as=32x32,48x48,72x72,108x108,160x160,240x240,360x360,480x480,540x540,640x640,720x720,1000x1000&from=bu&cs=1000x0',
+            code:`.TopMain_inner__EKfjy {\n  background-image: image-set(url("/images/top-main-bg-2.webp") type("image/webp"), url("/images/top-main-bg-2.jpg") type("image/jpeg"));\n}`,
+            fix:`Заменить пути на абсолютные:\n.TopMain_inner__EKfjy {\n  background-image: image-set(url(https://21-school.ru/images/top-main-bg-2.webp) type("image/webp"), url(https://21-school.ru/images/top-main-bg-2.jpg) type("image/jpeg"));\n}` },
+        { id:'UI-002', title:'Отсутствие заголовка блока', priority:'Medium', severity:'Minor', desc:'В блоке выбора города отсутствует заголовок "Ближайший набор".',
+            steps:'Открыть сайт → Найти блок выбора города.', expected:'Над селектором отображается "Ближайший набор".', actual:'Заголовок визуально отсутствует.',
+            img:'https://sun9-55.userapi.com/s/v1/ig2/AR0nfsR038-MySE4JSoy0m1SDFhP8kpRgbQbFfwaywLTiZn5uTPzxiRuLIGbbOVnITYavnjpuD_4j_7NKaOIfQ8W.jpg?quality=95&as=32x32,48x48,72x72,108x108,160x160,240x240,360x360,480x480,540x540,640x640,720x720,1000x1000&from=bu&cs=1000x0',
+            code:`.SelectorCity_title__zkj3u { color: #fff; font-weight: 400; font-size: clamp(14px,1.0416666667vw,20px); }`,
+            fix:'Решить проблему с фоновым изображением (UI-001) — заголовок станет видимым.' },
+        { id:'UI-003', title:'Системная проблема с загрузкой иконок', priority:'Medium', severity:'Minor', desc:'Отсутствуют тематические иконки в информационных блоках.',
+            steps:'Прокрутить до блоков "Подробнее о поступлении" и основной информационный блок.', expected:'Иконки отображаются.', actual:'Графика отсутствует.',
+            img:'https://sun9-52.userapi.com/s/v1/if2/PMuXneZ5kiUAqWNm_uKsgv1dRETvVsIP4FwnBxNJyCCtRbKloonnozGb55f6rlh3rEEgAjPmQbCFm2yXttVsutOj.jpg?quality=95&as=32x20,48x30,72x45,108x67,160x100,240x150,360x225,480x300,540x337,640x400,720x450,1080x675,1280x800,1440x900,2560x1600&from=bu&cs=2560x0',
+            code:`background-image: url(/images/advantage-icon-1.svg);`,
+            fix:`Заменить на: background-image: url(https://21-school.ru/images/advantage-icon-1.svg);` },
+        { id:'UI-008', title:'Лишние элементы', priority:'Medium', severity:'Minor', desc:'Присутствуют элементы, которых нет в макете: swiper, кнопка "Подробнее о методике", кнопки "Поступление"/"Обучение".',
+            steps:'Проверить блоки "Участники", "Методология", "Ответы на вопросы".', expected:'Лишних элементов нет.', actual:'Лишние элементы присутствуют.',
+            img:'https://sun9-50.userapi.com/s/v1/ig2/0M9KDI3s55f_Gtek0AOj2UXeaMZ85P7W7h2iFz8ca5UNx-HRRHTia0gM7172yHCfCdrSo_i5Y7qwl_wN-bEhfUJG.jpg?quality=95&as=32x32,48x48,72x72,108x108,160x160,240x240,360x360,480x480,540x540,640x640,720x720,1000x1000&from=bu&cs=1000x0',
+            code:'', fix:'Удалить лишние элементы из DOM.' },
+        { id:'UI-009', title:'Отсутствие блока "Кампусы"', priority:'Medium', severity:'Minor', desc:'После "Методологии" пустое пространство вместо блока "Кампусы".',
+            steps:'Прокрутить до пустого пространства после "Методологии".', expected:'Отображается блок "Кампусы".', actual:'Пустое пространство.',
+            img:'https://sun9-13.userapi.com/s/v1/ig2/4cxcxfwBoq3gjw87oOaZCXlRsezNZv2PNwCEQs9p_Gtc2LPTYouu3b6Vt6kuikSsdv0kAZsagmvQalj2OhuRldyE.jpg?quality=95&as=32x32,48x48,72x72,108x108,160x160,240x240,360x360,480x480,540x540,640x640,720x720,1000x1000&from=bu&cs=1000x0',
+            code:`.CampusesMap_root__oNGyl { -webkit-mask-image: url(/_next/static/media/campuses-map-mask.9907036e.svg); }`,
+            fix:'Отключить -webkit-mask-image и сверить блок с макетом.' }
+    ];
+
+    const bugContainer = document.getElementById('bugReports');
+    bugs.forEach(b => {
+        bugContainer.innerHTML += `
+            <div class="bug-report">
+                <h3><span class="bug-id">${b.id}</span> ${b.title}</h3>
+                <div class="bug-meta">
+                    <span>Статус: <strong>Open</strong></span>
+                    <span class="priority-${b.priority.toLowerCase()}">Приоритет: ${b.priority}</span>
+                    <span class="severity-${b.severity.toLowerCase()}">Серьёзность: ${b.severity}</span>
+                    <span>Окружение: Все браузеры</span>
+                </div>
+                <h4>📝 Описание</h4><p>${b.desc}</p>
+                <h4>👣 Шаги</h4><p>${b.steps}</p>
+                <h4>✅ Ожидаемый результат</h4><p>${b.expected}</p>
+                <h4>❌ Фактический результат</h4><p>${b.actual}</p>
+                ${b.img ? `<h4>🖼️ Вложения</h4><img src="${b.img}" alt="${b.id}" loading="lazy">` : ''}
+                ${b.code ? `<h4>📄 Код</h4><div class="code-block">${b.code.replace(/\n/g,'<br>')}</div>` : ''}
+                ${b.fix ? `<h4>💡 Рекомендации</h4><div class="code-block">${b.fix.replace(/\n/g,'<br>')}</div>` : ''}
+            </div>`;
+    });
+</script>
+</body>
+</html>
