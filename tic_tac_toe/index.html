@@ -3,239 +3,478 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Крестики-Нолики | Backend + Frontend</title>
+    <title>Крестики-Нолики | Backend + Frontend | Школа 21</title>
+    <meta name="description" content="Веб-приложение Крестики-Нолики на Spring Boot с JWT-авторизацией и PostgreSQL">
 
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Russo+One&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&family=Russo+One&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
     <style>
         :root {
-            --primary-orange: #F27405;
-            --deep-orange: #BF491F;
-            --warm-orange: #F28627;
-            --teal: #049DBF;
-            --off-white: #FFFAFA;
-            --page-bg: #0A151B;
-            --card-bg: #141a1f;
-            --text-primary: #f0f0f0;
-            --text-secondary: #b0b0b0;
-            --shadow-md: 0 20px 40px rgba(0,0,0,0.4);
-            --border-light: rgba(242,134,39,0.25);
+            --bg: #0a0a0f;
+            --surface: #13131f;
+            --surface-light: #1a1a2e;
+            --primary: #00ff88;
+            --secondary: #7b61ff;
+            --accent: #ff4757;
+            --accent-red: #FF033E;
+            --amber: #f1a700;
+            --text: #ffffff;
+            --text-secondary: #a0a0b0;
+            --text-muted: #6b6b7b;
+            --border: rgba(255,255,255,0.06);
+            --radius: 20px;
+            --shadow: 0 8px 30px rgba(0,0,0,0.4);
+            --transition: 0.3s cubic-bezier(0.4,0,0.2,1);
+            --gradient-hero: linear-gradient(135deg, #00ff88 0%, #7b61ff 50%, #ff4757 100%);
         }
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: 'Montserrat', sans-serif;
-            background-color: #000;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='360' height='360' viewBox='0 0 360 360'%3E%3Cpath fill='%23f6d8c8' fill-opacity='0.18' d='M0 85.02l4.62-4.27a49.09 49.09 0 0 0 7.33 3.74l-1.2 10.24 2.66.87 5.05-9c2.62.65 5.34 1.08 8.12 1.28L28.6 98h2.8l2.02-10.12c2.74-.2 5.46-.62 8.12-1.28l5.05 8.99 2.66-.86-1.2-10.24c2.55-1.03 5-2.29 7.33-3.74l7.58 7 2.26-1.65-4.3-9.38a48.3 48.3 0 0 0 5.8-5.8l9.38 4.3 1.65-2.26-7-7.58a49.09 49.09 0 0 0 3.74-7.33l10.24 1.2.87-2.66-9-5.05a48.07 48.07 0 0 0 1.28-8.12L88 41.4v-2.8l-10.12-2.02c-.2-2.74-.62-5.46-1.28-8.12l8.99-5.05-.86-2.66-10.24 1.2c-1.03-2.55-2.29-5-3.74-7.33l7-7.58-1.65-2.26-9.38 4.3a48.3 48.3 0 0 0-5.8-5.8L62.42 0h2.16l-1.25 2.72a50.31 50.31 0 0 1 3.95 3.95l9.5-4.36 3.52 4.85-7.08 7.68c.94 1.6 1.79 3.27 2.54 4.98l10.38-1.21 1.85 5.7-9.11 5.12c.39 1.8.68 3.65.87 5.52L90 37v6l-10.25 2.05a49.9 49.9 0 0 1-.87 5.52l9.11 5.12-1.85 5.7-10.38-1.21c-.75 1.7-1.6 3.37-2.54 4.98l7.08 7.68-3.52 4.85-9.5-4.36a50.31 50.31 0 0 1-3.95 3.95l4.36 9.5-4.85 3.52-7.68-7.08c-1.6.94-3.27 1.79-4.98 2.54l1.21 10.38-5.7 1.85-5.12-9.11c-1.8.39-3.65.68-5.52.87L33 100h-6l-2.05-10.25a49.9 49.9 0 0 1-5.52-.87l-5.12 9.11-5.7-1.85 1.21-10.38c-1.7-.75-3.37-1.6-4.98-2.54L0 87.68v-2.66z'%3E%3C/path%3E%3C/svg%3E");
-            color: var(--text-primary);
-            line-height: 1.7;
-            padding: 30px 15px;
-        }
-        .container { max-width: 1200px; margin: 0 auto; }
-        .header { text-align: center; margin-bottom: 50px; }
-        .header h1 { font-family: 'Russo One', sans-serif; font-size: clamp(2rem,5vw,3rem); color: var(--warm-orange); }
-        .section-title { font-family: 'Russo One', sans-serif; font-size: 1.6rem; color: var(--deep-orange); margin: 40px 0 20px; padding-bottom: 12px; border-bottom: 3px solid var(--warm-orange); }
-        .highlight { background: rgba(242,134,39,0.15); border-left: 4px solid var(--warm-orange); padding: 15px 20px; border-radius: 0 10px 10px 0; margin: 20px 0; }
-        .code-block { background: rgba(0,0,0,0.5); border: 1px solid var(--border-light); border-radius: 8px; padding: 15px; margin: 10px 0; overflow-x: auto; font-family: 'Courier New', monospace; font-size: 0.85rem; color: var(--text-secondary); white-space: pre-wrap; }
-        .footer { text-align: center; margin-top: 60px; padding-top: 30px; border-top: 1px solid var(--border-light); color: var(--text-secondary); font-size: 0.9rem; }
 
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
+            position: relative;
+        }
+        body::before {
+            content: '';
+            position: fixed; inset: 0;
+            background:
+                radial-gradient(circle at 10% 20%, rgba(0,255,136,0.05) 1px, transparent 1px),
+                radial-gradient(circle at 25% 50%, rgba(123,97,255,0.05) 1px, transparent 1px),
+                radial-gradient(circle at 40% 80%, rgba(0,255,136,0.04) 1px, transparent 1px),
+                radial-gradient(circle at 60% 15%, rgba(255,71,87,0.04) 1px, transparent 1px),
+                radial-gradient(circle at 75% 45%, rgba(0,255,136,0.05) 1px, transparent 1px),
+                radial-gradient(circle at 90% 75%, rgba(123,97,255,0.04) 1px, transparent 1px),
+                linear-gradient(135deg, transparent 48%, rgba(0,255,136,0.03) 48%, rgba(0,255,136,0.03) 52%, transparent 52%) 50px 50px / 100px 100px,
+                linear-gradient(135deg, transparent 48%, rgba(123,97,255,0.025) 48%, rgba(123,97,255,0.025) 52%, transparent 52%) 100px 150px / 150px 150px,
+                linear-gradient(45deg, transparent 48%, rgba(0,255,136,0.025) 48%, rgba(0,255,136,0.025) 52%, transparent 52%) 80px 200px / 120px 120px;
+            pointer-events: none; z-index: 0;
+        }
+
+        .side-symbols {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; z-index: 0; overflow: hidden;
+        }
+        .side-symbol {
+            position: absolute;
+            font-family: 'Russo One', sans-serif;
+            font-size: 5rem;
+            opacity: 0.06;
+            animation: floatSymbol 10s ease-in-out infinite;
+        }
+        .side-symbol:nth-child(1) { top: 10%; left: 2%; color: var(--primary); animation-delay: 0s; font-size: 6rem; }
+        .side-symbol:nth-child(2) { top: 35%; right: 2%; color: var(--secondary); animation-delay: 2.5s; font-size: 4.5rem; }
+        .side-symbol:nth-child(3) { bottom: 30%; left: 3%; color: var(--accent); animation-delay: 5s; font-size: 5.5rem; }
+        .side-symbol:nth-child(4) { top: 60%; right: 3%; color: var(--primary); animation-delay: 7.5s; font-size: 7rem; }
+        .side-symbol:nth-child(5) { top: 15%; right: 12%; color: var(--amber); animation-delay: 1.5s; font-size: 3rem; }
+        .side-symbol:nth-child(6) { bottom: 20%; right: 8%; color: var(--secondary); animation-delay: 4s; font-size: 3.5rem; }
+        .side-symbol:nth-child(7) { top: 70%; left: 5%; color: var(--primary); animation-delay: 6s; font-size: 4rem; }
+        .side-symbol:nth-child(8) { bottom: 10%; left: 8%; color: var(--amber); animation-delay: 3s; font-size: 5rem; }
+        @keyframes floatSymbol {
+            0%, 100% { opacity: 0.05; transform: translateY(0) rotate(0deg); }
+            25% { opacity: 0.12; transform: translateY(-25px) rotate(2deg); }
+            50% { opacity: 0.08; transform: translateY(-50px) rotate(-2deg); }
+            75% { opacity: 0.15; transform: translateY(-25px) rotate(1deg); }
+        }
+
+        .container { max-width: 1100px; margin: 0 auto; padding: 0 16px; position: relative; z-index: 2; }
+        section { padding: 50px 0; position: relative; z-index: 2; }
+
+        .glow-divider {
+            border: none; height: 2px; margin: 30px 0;
+            background: linear-gradient(90deg, transparent, var(--primary), var(--secondary), transparent);
+            opacity: 0.5;
+        }
+
+        .header {
+            text-align: center; padding: 30px 16px;
+            background: linear-gradient(180deg, rgba(0,255,136,0.05) 0%, transparent 100%);
+            min-height: 100vh;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            position: relative;
+        }
+        .header .container { width: 100%; max-width: 1100px; }
+        .badge {
+            display: inline-block; background: var(--surface); color: var(--primary);
+            border: 1px solid var(--primary); padding: 6px 16px; border-radius: 50px;
+            font-size: 0.8rem; font-weight: 600; letter-spacing: 2px; margin-bottom: 16px;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(0,255,136,0.3); }
+            50% { box-shadow: 0 0 0 12px transparent; }
+        }
+        .hero-title {
+            font-family: 'Russo One', sans-serif;
+            font-size: clamp(2rem, 7vw, 4.5rem);
+            background: var(--gradient-hero);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.2; margin-bottom: 10px;
+        }
+        .hero-subtitle { color: var(--text-secondary); font-size: 1rem; margin: 0 auto 14px; }
+        .hero-location {
+            display: inline-flex; align-items: center; gap: 6px;
+            background: var(--surface); color: var(--amber);
+            border: 1px solid var(--amber); padding: 8px 16px; border-radius: 50px;
+            font-size: 0.8rem; font-weight: 600; margin-top: 4px; margin-bottom: 24px;
+        }
+        .hero-location i { font-size: 0.9rem; }
+
+        .section-title {
+            font-family: 'Russo One', sans-serif;
+            font-size: clamp(1.4rem, 3.5vw, 2rem); text-align: center; margin-bottom: 30px;
+            background: var(--gradient-hero);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 14px; margin: 20px 0; }
+        .stat-card {
+            background: var(--surface); border: 1px solid var(--border);
+            border-radius: var(--radius); padding: 20px 14px; text-align: center;
+            transition: var(--transition); position: relative; overflow: hidden;
+        }
+        .stat-card:hover { transform: translateY(-3px); box-shadow: var(--shadow); }
+        .stat-number { font-family: 'Russo One', sans-serif; font-size: 2.4rem; margin-bottom: 2px; }
+        .stat-number.green { color: var(--primary); }
+        .stat-number.purple { color: var(--secondary); }
+        .stat-label { color: var(--text-secondary); font-size: 0.8rem; font-weight: 500; }
+
+        .story-card {
+            background: var(--surface); border: 1px solid var(--border);
+            border-radius: var(--radius); padding: 22px 16px; margin-bottom: 18px;
+            transition: var(--transition);
+        }
+        .story-card:hover { border-color: var(--primary); }
+        .story-date {
+            display: inline-block; background: var(--primary); color: #000;
+            padding: 3px 10px; border-radius: 50px; font-size: 0.72rem;
+            font-weight: 700; margin-bottom: 12px;
+        }
+        .story-title { font-family: 'Russo One', sans-serif; font-size: 1.15rem; margin-bottom: 10px; color: var(--primary); }
+        .story-text { color: var(--text-secondary); font-size: 0.9rem; line-height: 1.65; }
+        .story-text strong { color: var(--text); }
+
+        .highlight-link {
+            display: inline-block; color: var(--secondary); text-decoration: none;
+            font-weight: 600; transition: color 0.3s; margin-top: 8px;
+        }
+        .highlight-link:hover { color: var(--primary); text-decoration: underline; }
+
+        .code-block {
+            background: rgba(0,0,0,0.5); border: 1px solid rgba(123,97,255,0.3);
+            border-radius: 10px; padding: 15px; margin: 10px 0; overflow-x: auto;
+            font-family: 'Courier New', monospace; font-size: 0.85rem; color: var(--text-secondary);
+            white-space: pre-wrap; word-break: break-word;
+        }
+
+        /* Video Preview */
         .video-preview {
-    background: var(--card-bg);
-    border-radius: 16px;
-    overflow: hidden;
-    cursor: pointer;
-    border: 1px solid var(--border-light);
-    transition: transform 0.3s, box-shadow 0.3s;
-    margin: 25px 0;
-}
-.video-preview:hover {
-    transform: translateY(-5px);
-    box-shadow: var(--shadow-lg);
-    border-color: var(--warm-orange);
-}
-.video-preview__thumb {
-    position: relative;
-    aspect-ratio: 16/9;
-    overflow: hidden;
-    background: #000;
-}
-.video-preview__thumb img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    opacity: 0.6;
-    transition: opacity 0.3s;
-}
-.video-preview:hover .video-preview__thumb img {
-    opacity: 0.8;
-}
-.video-preview__play {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: rgba(0,0,0,0.3);
-    transition: background 0.3s;
-}
-.video-preview__play i {
-    font-size: 4rem;
-    color: var(--off-white);
-    opacity: 0.9;
-    transition: transform 0.3s, opacity 0.3s;
-    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.5));
-}
-.video-preview:hover .video-preview__play {
-    background: rgba(0,0,0,0.5);
-}
-.video-preview:hover .video-preview__play i {
-    transform: scale(1.15);
-    opacity: 1;
-}
-.video-preview__info {
-    padding: 18px 22px;
-}
-.video-preview__info h4 {
-    font-family: 'Russo One', sans-serif;
-    color: var(--warm-orange);
-    margin-bottom: 6px;
-    font-size: 1.1rem;
-}
-.video-preview__info p {
-    color: var(--text-secondary);
-    font-size: 0.9rem;
-    line-height: 1.4;
-}
+            background: var(--surface); border: 1px solid var(--border);
+            border-radius: var(--radius); overflow: hidden; cursor: pointer;
+            transition: var(--transition); margin: 25px 0;
+        }
+        .video-preview:hover { transform: translateY(-5px); box-shadow: var(--shadow); border-color: var(--primary); }
+        .video-preview__thumb {
+            position: relative; aspect-ratio: 16/9; overflow: hidden; background: #000;
+        }
+        .video-preview__thumb img {
+            width: 100%; height: 100%; object-fit: cover; opacity: 0.6;
+            transition: opacity 0.4s, transform 0.4s;
+        }
+        .video-preview:hover .video-preview__thumb img { opacity: 0.8; transform: scale(1.05); }
+        .video-preview__play {
+            position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+            background: rgba(0,0,0,0.3); transition: background 0.4s;
+        }
+        .video-preview__play i {
+            font-size: clamp(2.5rem, 5vw, 4rem); color: #fff; opacity: 0.9;
+            transition: transform 0.4s, opacity 0.4s;
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.5));
+        }
+        .video-preview:hover .video-preview__play { background: rgba(0,0,0,0.5); }
+        .video-preview:hover .video-preview__play i { transform: scale(1.15); opacity: 1; }
+        .video-preview__info { padding: 18px 22px; }
+        .video-preview__info h4 {
+            font-family: 'Russo One', sans-serif; color: var(--primary);
+            margin-bottom: 6px; font-size: clamp(1rem, 1.3vw, 1.1rem);
+        }
+        .video-preview__info p { color: var(--text-secondary); font-size: clamp(0.8rem, 1vw, 0.9rem); line-height: 1.4; margin: 0; }
+
+        /* Modal */
         .modal {
-    display: none;
-    position: fixed;
-    top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(0,0,0,0.9);
-    z-index: 10000;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-}
-.modal.active { display: flex; }
-.modal-content--video {
-    width: 90%;
-    max-width: 1000px;
-    aspect-ratio: 16/9;
-    background: #000;
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 0 50px rgba(242, 134, 39, 0.3);
-    border: 2px solid var(--warm-orange);
-}
-.modal-content--video iframe {
-    width: 100%;
-    height: 100%;
-    border: none;
-}
-.modal-close {
-    position: absolute;
-    top: 20px; right: 20px;
-    width: 45px; height: 45px;
-    background: var(--deep-orange);
-    color: white;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 22px;
-    cursor: pointer;
-    transition: 0.3s;
-    z-index: 10001;
-}
-.modal-close:hover {
-    background: var(--warm-orange);
-    transform: rotate(90deg);
-}
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.95); z-index: 10000;
+            align-items: center; justify-content: center; padding: 20px;
+            animation: fadeIn 0.3s ease-out;
+        }
+        .modal.active { display: flex; }
+        .modal-content--video {
+            width: 90%; max-width: 1000px; aspect-ratio: 16/9;
+            background: #000; border-radius: 12px; overflow: hidden;
+            box-shadow: 0 0 50px rgba(0,255,136,0.3);
+            border: 2px solid var(--primary); animation: scaleIn 0.3s ease-out;
+        }
+        .modal-content--video video {
+            width: 100%; height: 100%; display: block; object-fit: contain; background: #000;
+        }
+        .modal-close {
+            position: absolute; top: 20px; right: 20px; width: 45px; height: 45px;
+            background: var(--accent); color: white; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 22px; cursor: pointer; transition: background 0.3s, transform 0.3s;
+            z-index: 10001; border: none; outline: none;
+        }
+        .modal-close:hover { background: var(--secondary); transform: rotate(90deg); }
+
+        .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; align-items: start; margin-bottom: 20px; }
+        .task-list { list-style: none; padding: 0; }
+        .task-list li {
+            padding: 10px 0 10px 28px; position: relative; color: var(--text-secondary);
+            font-size: 0.9rem; transition: color 0.3s, transform 0.3s;
+        }
+        .task-list li::before {
+            content: "▹"; position: absolute; left: 0; color: var(--primary);
+            font-weight: bold; font-size: 1.2em; line-height: 1; top: 10px;
+        }
+        .task-list li:hover { color: var(--text); transform: translateX(5px); }
+
+        .footer { text-align: center; padding: 30px 16px; border-top: 1px solid var(--border); color: var(--text-muted); font-size: 0.8rem; }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes scaleIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
+
+        @media (max-width: 768px) {
+            .header { min-height: auto; padding: 40px 14px 30px; }
+            .two-col { grid-template-columns: 1fr; gap: 20px; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .modal-close { width: 40px; height: 40px; font-size: 18px; top: 15px; right: 15px; }
+        }
+        @media (max-width: 480px) {
+            .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+            .stat-card { padding: 14px 10px; }
+            .stat-number { font-size: 1.8rem; }
+            .stat-label { font-size: 0.7rem; }
+            .hero-title { font-size: 1.6rem; }
+            .section-title { font-size: 1.2rem; margin-bottom: 20px; }
+            .story-card { padding: 14px 12px; }
+            .story-title { font-size: 1rem; }
+            .badge { font-size: 0.7rem; padding: 5px 12px; }
+        }
     </style>
 </head>
 <body>
-<div class="container">
-    <div class="header">
-        <h1>🎮 Крестики-Нолики</h1>
-        <p class="subtitle">AP1-Jv-T05B | Backend + Frontend</p>
-    </div>
 
-    <div class="highlight">
-        <strong>📁 Проект:</strong> <a href="https://drive.google.com/file/d/1PdGhQTmKgTxt2ka4YozuA0OFQe9eWqLk/view?usp=drive_link" target="_blank" style="color: var(--teal);">Скачать архив</a><br>
-        <strong>📌 Стек:</strong> Java, Spring Boot, JWT, PostgreSQL, HTML/CSS/JS
-    </div>
-
-    <h2 class="section-title">📋 Резюме проекта</h2>
-    <p>Веб-приложение «Крестики-Нолики» с серверной частью на Spring Framework, JWT-авторизацией, базой данных PostgreSQL. Поддержка многопользовательской игры, таблицы лидеров и истории завершённых игр.</p>
-    <!-- Видео Крестики-Нолики -->
-    <div class="video-preview" onclick="openVideoModal('https://drive.google.com/file/d/1PdGhQTmKgTxt2ka4YozuA0OFQe9eWqLk/preview')">
-        <div class="video-preview__thumb">
-            <img src="https://sun9-53.userapi.com/s/v1/ig2/5arMExS-gIitNiEul_PyxLG4jPIUHyVCFfaiC3OjgPKDokKsXjotMgPidXso0sY5oGswOoZxKe1jhi9zOS0sL30z.jpg?quality=95&as=32x18,48x27,72x40,108x60,160x89,240x133,360x199,480x266,540x299,640x354,720x398,1080x598,1280x708,1440x797,1751x969&from=bu&u=eyL-NLlC4K4QWbp5NJ_gTv94Qyl8q1kLdID6X85kZ4w&cs=1751x0" alt="Крестики-Нолики Demo">
-            <div class="video-preview__play"><i class="fas fa-play"></i></div>
-        </div>
-        <div class="video-preview__info">
-            <h4>🎮 Крестики-Нолики — Демонстрация игры</h4>
-            <p>Веб-приложение на Spring Boot • JWT-авторизация • PostgreSQL</p>
-        </div>
-    </div>
-    <!-- Модальное окно для видео -->
-    <div class="modal" id="videoModal">
-        <div class="modal-content modal-content--video">
-            <iframe id="videoFrame" src="" frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
-        </div>
-        <div class="modal-close" onclick="closeVideoModal()">
-            <i class="fas fa-times"></i>
-        </div>
-    </div>
-    <script>function openVideoModal(url) {
-    document.getElementById('videoFrame').src = url + '?autoplay=1';
-    document.getElementById('videoModal').classList.add('active');
-}
-
-function closeVideoModal() {
-    document.getElementById('videoFrame').src = '';
-    document.getElementById('videoModal').classList.remove('active');
-}
-
-// Закрытие по клику на фон
-document.getElementById('videoModal').addEventListener('click', function(e) {
-    if (e.target === this) closeVideoModal();
-});
-
-// Закрытие по клавише Escape
-document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape') closeVideoModal();
-});</script>
-
-    <h2 class="section-title">🔐 Задание 1. JWT-авторизация</h2>
-    <ul>
-        <li>Переход с Basic Auth на JWT (access + refresh токены)</li>
-        <li>Роли пользователей (USER) с наследованием от GrantedAuthority</li>
-        <li>Модели: JwtRequest, JwtResponse, RefreshJwtRequest</li>
-        <li>JwtProvider: генерация, валидация, получение claims</li>
-        <li>JwtAuthentication, JwtUtil, обновлённый AuthFilter</li>
-    </ul>
-
-    <h2 class="section-title">📊 Задание 2. История игр</h2>
-    <ul>
-        <li>Дата создания игры</li>
-        <li>Запрос завершённых игр (X_WON, O_WON, DRAW)</li>
-        <li>Endpoint для получения истории по accessToken</li>
-    </ul>
-
-    <h2 class="section-title">🏆 Задание 3. Таблица лидеров</h2>
-    <ul>
-        <li>Соотношение побед к поражениям/ничьим</li>
-        <li>Сортировка по убыванию</li>
-        <li>Endpoint: топ-N игроков (только для авторизованных)</li>
-    </ul>
-
-    <div class="footer">
-        <p>Проект: AP1-Jv-T05B | Backend + Frontend</p>
-        <p>© 2025–2026 Ольга Кашина</p>
-    </div>
+<!-- Плавающие символы Школы 21 -->
+<div class="side-symbols">
+    <div class="side-symbol">21</div>
+    <div class="side-symbol">◆</div>
+    <div class="side-symbol">21</div>
+    <div class="side-symbol">◆</div>
+    <div class="side-symbol">21</div>
+    <div class="side-symbol">◆</div>
+    <div class="side-symbol">21</div>
+    <div class="side-symbol">◆</div>
 </div>
+
+<header class="header">
+    <div class="container">
+        <div class="badge">🎮 ПРОЕКТ ШКОЛЫ 21</div>
+        <h1 class="hero-title">КРЕСТИКИ-НОЛИКИ</h1>
+        <p class="hero-subtitle">Веб-приложение с JWT-авторизацией, Spring Boot и PostgreSQL</p>
+        <div class="hero-location">
+            <i class="fas fa-code"></i> AP1-Jv-T05B • Backend + Frontend
+        </div>
+    </div>
+</header>
+
+<main>
+    <div class="glow-divider"></div>
+
+    <!-- О проекте -->
+    <section>
+        <div class="container">
+            <h2 class="section-title">📋 О проекте</h2>
+            <div class="story-card">
+                <span class="story-date">Стек технологий</span>
+                <div class="story-title">Java • Spring Boot • JWT • PostgreSQL</div>
+                <p class="story-text">Веб-приложение «Крестики-Нолики» с серверной частью на <strong>Spring Framework</strong>, JWT-авторизацией, базой данных <strong>PostgreSQL</strong>. Поддержка многопользовательской игры, таблицы лидеров и истории завершённых игр.</p>
+                <a href="https://drive.google.com/file/d/1PdGhQTmKgTxt2ka4YozuA0OFQe9eWqLk/view?usp=drive_link" target="_blank" rel="noopener noreferrer" class="highlight-link">
+                    <i class="fas fa-download"></i> Скачать архив проекта
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Видео демонстрация -->
+    <section>
+        <div class="container">
+            <div class="video-preview" onclick="openVideoModal()" role="button" tabindex="0" aria-label="Открыть видео демонстрации игры Крестики-Нолики">
+                <div class="video-preview__thumb">
+                    <img src="https://sun9-53.userapi.com/s/v1/ig2/5arMExS-gIitNiEul_PyxLG4jPIUHyVCFfaiC3OjgPKDokKsXjotMgPidXso0sY5oGswOoZxKe1jhi9zOS0sL30z.jpg?quality=95&as=32x18,48x27,72x40,108x60,160x89,240x133,360x199,480x266,540x299,640x354,720x398,1080x598,1280x708,1440x797,1751x969&from=bu&u=eyL-NLlC4K4QWbp5NJ_gTv94Qyl8q1kLdID6X85kZ4w&cs=1751x0" alt="Превью видео Крестики-Нолики" loading="lazy">
+                    <div class="video-preview__play">
+                        <i class="fas fa-play-circle"></i>
+                    </div>
+                </div>
+                <div class="video-preview__info">
+                    <h4>🎮 Крестики-Нолики — Демонстрация игры</h4>
+                    <p>Веб-приложение на Spring Boot • JWT-авторизация • PostgreSQL</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Модальное окно с видео -->
+    <div class="modal" id="videoModal" aria-hidden="true">
+        <div class="modal-content modal-content--video">
+            <video id="videoPlayer" controls playsinline preload="metadata">
+                <source src="https://olga555scherbinina-cell.github.io/tomokoom/tic_tac_toe/video/tic_tac_toe.mp4" type="video/mp4">
+                Ваш браузер не поддерживает воспроизведение видео.
+            </video>
+        </div>
+        <button class="modal-close" onclick="closeVideoModal()" aria-label="Закрыть модальное окно">
+            <i class="fas fa-times"></i>
+        </button>
+    </div>
+
+    <div class="glow-divider"></div>
+
+    <!-- Статистика проекта -->
+    <section>
+        <div class="container">
+            <h2 class="section-title">📊 Характеристики проекта</h2>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number green">3</div>
+                    <div class="stat-label">Основных задания</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number purple">JWT</div>
+                    <div class="stat-label">Тип авторизации</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number green">2</div>
+                    <div class="stat-label">Типа токенов</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number purple">SQL</div>
+                    <div class="stat-label">База данных</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="glow-divider"></div>
+
+    <!-- Задания -->
+    <section>
+        <div class="container">
+            <h2 class="section-title">🔐 Задание 1. JWT-авторизация</h2>
+            <div class="story-card">
+                <span class="story-date">Безопасность</span>
+                <div class="story-title">Access + Refresh токены</div>
+                <ul class="task-list">
+                    <li>Переход с Basic Auth на JWT (access + refresh токены)</li>
+                    <li>Роли пользователей (USER) с наследованием от GrantedAuthority</li>
+                    <li>Модели: JwtRequest, JwtResponse, RefreshJwtRequest</li>
+                    <li>JwtProvider: генерация, валидация, получение claims</li>
+                    <li>JwtAuthentication, JwtUtil, обновлённый AuthFilter</li>
+                </ul>
+            </div>
+
+            <h2 class="section-title">📊 Задание 2. История игр</h2>
+            <div class="story-card">
+                <span class="story-date">Данные</span>
+                <div class="story-title">Хранение завершённых игр</div>
+                <ul class="task-list">
+                    <li>Дата создания игры</li>
+                    <li>Запрос завершённых игр (X_WON, O_WON, DRAW)</li>
+                    <li>Endpoint для получения истории по accessToken</li>
+                </ul>
+            </div>
+
+            <h2 class="section-title">🏆 Задание 3. Таблица лидеров</h2>
+            <div class="story-card">
+                <span class="story-date">Рейтинг</span>
+                <div class="story-title">Топ игроков</div>
+                <ul class="task-list">
+                    <li>Соотношение побед к поражениям/ничьим</li>
+                    <li>Сортировка по убыванию</li>
+                    <li>Endpoint: топ-N игроков (только для авторизованных)</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <div class="glow-divider"></div>
+
+    <footer class="footer">
+        <p>© 2023–2026 Ольга Кашина (Щербинина). Школа 21, Челябинск. Все права защищены.</p>
+        <p>Проект: AP1-Jv-T05B | Backend + Frontend</p>
+    </footer>
+</main>
+
+<script>
+    (function() {
+        'use strict';
+
+        var videoModal = document.getElementById('videoModal');
+        var videoPlayer = document.getElementById('videoPlayer');
+
+        window.openVideoModal = function() {
+            if (!videoModal || !videoPlayer) return;
+            videoModal.classList.add('active');
+            videoModal.setAttribute('aria-hidden', 'false');
+            var playPromise = videoPlayer.play();
+            if (playPromise !== undefined) {
+                playPromise.catch(function(error) {
+                    console.log('Автовоспроизведение заблокировано: ', error);
+                });
+            }
+            document.body.style.overflow = 'hidden';
+        };
+
+        window.closeVideoModal = function() {
+            if (!videoModal || !videoPlayer) return;
+            videoPlayer.pause();
+            videoPlayer.currentTime = 0;
+            videoModal.classList.remove('active');
+            videoModal.setAttribute('aria-hidden', 'true');
+            document.body.style.overflow = '';
+        };
+
+        if (videoModal) {
+            videoModal.addEventListener('click', function(event) {
+                if (event.target === videoModal) closeVideoModal();
+            });
+        }
+
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape' && videoModal && videoModal.classList.contains('active')) {
+                closeVideoModal();
+            }
+        });
+
+        var videoPreview = document.querySelector('.video-preview');
+        if (videoPreview) {
+            videoPreview.addEventListener('keydown', function(event) {
+                if (event.key === 'Enter' || event.key === ' ') {
+                    event.preventDefault();
+                    openVideoModal();
+                }
+            });
+        }
+    })();
+</script>
 </body>
 </html>
