@@ -1,1 +1,500 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rogue 1980 | Командный проект Java Bootcamp | Школа 21</title>
+    <meta name="description" content="Консольное roguelike-приложение Rogue 1980 на Java 21 с JCurses. Командный проект.">
 
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&family=Russo+One&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        :root {
+            --bg: #0a0a0f;
+            --surface: #13131f;
+            --surface-light: #1a1a2e;
+            --primary: #00ff88;
+            --secondary: #7b61ff;
+            --accent: #ff4757;
+            --accent-red: #FF033E;
+            --amber: #f1a700;
+            --text: #ffffff;
+            --text-secondary: #a0a0b0;
+            --text-muted: #6b6b7b;
+            --border: rgba(255,255,255,0.06);
+            --radius: 20px;
+            --shadow: 0 8px 30px rgba(0,0,0,0.4);
+            --transition: 0.3s cubic-bezier(0.4,0,0.2,1);
+            --gradient-hero: linear-gradient(135deg, #00ff88 0%, #7b61ff 50%, #ff4757 100%);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* ========== УНИКАЛЬНЫЙ ФОН ДЛЯ ROGUE (не клон pool) ========== */
+        body::before {
+            content: '';
+            position: fixed; inset: 0;
+            background:
+                /* Сетка в стиле подземелья */
+                linear-gradient(0deg, transparent 24%, rgba(123,97,255,0.08) 25%, rgba(123,97,255,0.08) 26%, transparent 27%, transparent 74%, rgba(123,97,255,0.08) 75%, rgba(123,97,255,0.08) 76%, transparent 77%) 0 0 / 60px 60px,
+                linear-gradient(90deg, transparent 24%, rgba(123,97,255,0.08) 25%, rgba(123,97,255,0.08) 26%, transparent 27%, transparent 74%, rgba(123,97,255,0.08) 75%, rgba(123,97,255,0.08) 76%, transparent 77%) 0 0 / 60px 60px,
+                /* Свечения по углам */
+                radial-gradient(ellipse at 15% 20%, rgba(0,255,136,0.1) 0%, transparent 50%),
+                radial-gradient(ellipse at 85% 80%, rgba(255,71,87,0.08) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 50%, rgba(123,97,255,0.06) 0%, transparent 70%),
+                /* Мелкие точки как пиксели */
+                radial-gradient(circle at 20% 30%, rgba(0,255,136,0.15) 1px, transparent 1px),
+                radial-gradient(circle at 70% 60%, rgba(0,255,136,0.12) 1px, transparent 1px),
+                radial-gradient(circle at 40% 80%, rgba(241,167,0,0.1) 1px, transparent 1px),
+                radial-gradient(circle at 80% 25%, rgba(255,71,87,0.1) 1px, transparent 1px),
+                radial-gradient(circle at 10% 70%, rgba(123,97,255,0.12) 1px, transparent 1px),
+                radial-gradient(circle at 60% 15%, rgba(0,255,136,0.1) 1px, transparent 1px);
+            pointer-events: none; z-index: 0;
+        }
+
+        /* Плавающие символы в стиле Rogue */
+        .side-symbols {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; z-index: 0; overflow: hidden;
+        }
+        .side-symbol {
+            position: absolute;
+            font-family: 'Russo One', sans-serif;
+            opacity: 0.05;
+            animation: floatSymbol 12s ease-in-out infinite;
+        }
+        .side-symbol:nth-child(1) { top: 8%; left: 3%; color: var(--primary); animation-delay: 0s; font-size: 7rem; content: '@'; }
+        .side-symbol:nth-child(2) { top: 30%; right: 2%; color: var(--accent); animation-delay: 3s; font-size: 5rem; }
+        .side-symbol:nth-child(3) { bottom: 25%; left: 2%; color: var(--amber); animation-delay: 6s; font-size: 6rem; }
+        .side-symbol:nth-child(4) { top: 55%; right: 3%; color: var(--secondary); animation-delay: 9s; font-size: 4.5rem; }
+        .side-symbol:nth-child(5) { top: 20%; right: 15%; color: var(--primary); animation-delay: 1.5s; font-size: 3.5rem; }
+        .side-symbol:nth-child(6) { bottom: 15%; right: 10%; color: var(--accent); animation-delay: 4.5s; font-size: 5.5rem; }
+        .side-symbol:nth-child(7) { top: 65%; left: 7%; color: var(--primary); animation-delay: 7.5s; font-size: 4rem; }
+        .side-symbol:nth-child(8) { bottom: 40%; left: 12%; color: var(--amber); animation-delay: 10.5s; font-size: 3rem; }
+        @keyframes floatSymbol {
+            0%, 100% { opacity: 0.04; transform: translateY(0) rotate(0deg); }
+            25% { opacity: 0.1; transform: translateY(-30px) rotate(3deg); }
+            50% { opacity: 0.06; transform: translateY(-60px) rotate(-3deg); }
+            75% { opacity: 0.12; transform: translateY(-30px) rotate(2deg); }
+        }
+
+        .container { max-width: 1100px; margin: 0 auto; padding: 0 16px; position: relative; z-index: 2; }
+        section { padding: 50px 0; position: relative; z-index: 2; }
+
+        .glow-divider {
+            border: none; height: 2px; margin: 30px 0;
+            background: linear-gradient(90deg, transparent, var(--primary), var(--secondary), transparent);
+            opacity: 0.5;
+        }
+
+        /* ========== HEADER + VIDEO ========== */
+        .header {
+            text-align: center; padding: 30px 16px;
+            background: linear-gradient(180deg, rgba(0,255,136,0.05) 0%, transparent 100%);
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            position: relative; min-height: auto;
+        }
+        .header .container { width: 100%; max-width: 1100px; }
+        .badge {
+            display: inline-block; background: var(--surface); color: var(--primary);
+            border: 1px solid var(--primary); padding: 6px 16px; border-radius: 50px;
+            font-size: 0.8rem; font-weight: 600; letter-spacing: 2px; margin-bottom: 10px;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(0,255,136,0.3); }
+            50% { box-shadow: 0 0 0 12px transparent; }
+        }
+        .hero-title {
+            font-family: 'Russo One', sans-serif;
+            font-size: clamp(1.8rem, 5vw, 3rem);
+            background: var(--gradient-hero);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.2; margin-bottom: 6px;
+        }
+        .hero-subtitle { color: var(--text-secondary); font-size: 0.9rem; margin: 0 auto 8px; }
+        .hero-location {
+            display: inline-flex; align-items: center; gap: 6px;
+            background: var(--surface); color: var(--amber);
+            border: 1px solid var(--amber); padding: 6px 14px; border-radius: 50px;
+            font-size: 0.75rem; font-weight: 600; margin-bottom: 24px;
+        }
+        .hero-location i { font-size: 0.85rem; }
+
+        /* ========== Общие стили ========== */
+        .section-title {
+            font-family: 'Russo One', sans-serif;
+            font-size: clamp(1.4rem, 3.5vw, 2rem); text-align: center; margin-bottom: 30px;
+            background: var(--gradient-hero);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 14px; margin: 20px 0; }
+        .stat-card {
+            background: var(--surface); border: 1px solid var(--border);
+            border-radius: var(--radius); padding: 20px 14px; text-align: center;
+            transition: var(--transition); position: relative; overflow: hidden;
+        }
+        .stat-card:hover { transform: translateY(-3px); box-shadow: var(--shadow); }
+        .stat-number { font-family: 'Russo One', sans-serif; font-size: 2.4rem; margin-bottom: 2px; }
+        .stat-number.green { color: var(--primary); }
+        .stat-number.purple { color: var(--secondary); }
+        .stat-number.amber { color: var(--amber); }
+        .stat-label { color: var(--text-secondary); font-size: 0.8rem; font-weight: 500; }
+
+        .story-card {
+            background: var(--surface); border: 1px solid var(--border);
+            border-radius: var(--radius); padding: 22px 16px; margin-bottom: 18px;
+            transition: var(--transition);
+        }
+        .story-card:hover { border-color: var(--primary); }
+        .story-date {
+            display: inline-block; background: var(--primary); color: #000;
+            padding: 3px 10px; border-radius: 50px; font-size: 0.72rem;
+            font-weight: 700; margin-bottom: 12px;
+        }
+        .story-title { font-family: 'Russo One', sans-serif; font-size: 1.15rem; margin-bottom: 10px; color: var(--primary); }
+        .story-text { color: var(--text-secondary); font-size: 0.9rem; line-height: 1.65; }
+        .story-text strong { color: var(--text); }
+
+        .highlight-link {
+            display: inline-block; color: var(--secondary); text-decoration: none;
+            font-weight: 600; transition: color 0.3s; margin-top: 8px;
+        }
+        .highlight-link:hover { color: var(--primary); text-decoration: underline; }
+
+        /* ========== Video Preview ========== */
+        .video-preview {
+            background: var(--surface); border: 1px solid var(--border);
+            border-radius: var(--radius); overflow: hidden; cursor: pointer;
+            transition: var(--transition); margin: 0 auto; max-width: 800px;
+        }
+        .video-preview:hover { transform: translateY(-5px); box-shadow: var(--shadow); border-color: var(--primary); }
+        .video-preview__thumb {
+            position: relative; aspect-ratio: 16/9; overflow: hidden; background: #000;
+        }
+        .video-preview__thumb img {
+            width: 100%; height: 100%; object-fit: cover; opacity: 0.6;
+            transition: opacity 0.4s, transform 0.4s;
+        }
+        .video-preview:hover .video-preview__thumb img { opacity: 0.8; transform: scale(1.05); }
+        .video-preview__play {
+            position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+            background: rgba(0,0,0,0.3); transition: background 0.4s;
+        }
+        .video-preview__play i {
+            font-size: clamp(2.5rem, 5vw, 4rem); color: #fff; opacity: 0.9;
+            transition: transform 0.4s, opacity 0.4s;
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.5));
+        }
+        .video-preview:hover .video-preview__play { background: rgba(0,0,0,0.5); }
+        .video-preview:hover .video-preview__play i { transform: scale(1.15); opacity: 1; }
+        .video-preview__info { padding: 14px 18px; }
+        .video-preview__info h4 {
+            font-family: 'Russo One', sans-serif; color: var(--primary);
+            margin-bottom: 4px; font-size: 1rem;
+        }
+        .video-preview__info p { color: var(--text-secondary); font-size: 0.85rem; line-height: 1.4; margin: 0; }
+
+        /* ========== Modal ========== */
+        .modal {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.95); z-index: 10000;
+            align-items: center; justify-content: center; padding: 20px;
+            animation: fadeIn 0.3s ease-out;
+        }
+        .modal.active { display: flex; }
+        .modal-content--video {
+            width: 90%; max-width: 1000px; aspect-ratio: 16/9;
+            background: #000; border-radius: 12px; overflow: hidden;
+            box-shadow: 0 0 50px rgba(0,255,136,0.3);
+            border: 2px solid var(--primary); animation: scaleIn 0.3s ease-out;
+        }
+        .modal-content--video video {
+            width: 100%; height: 100%; display: block; object-fit: contain; background: #000;
+        }
+        .modal-close {
+            position: absolute; top: 20px; right: 20px; width: 45px; height: 45px;
+            background: var(--accent); color: white; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 22px; cursor: pointer; transition: background 0.3s, transform 0.3s;
+            z-index: 10001; border: none; outline: none;
+        }
+        .modal-close:hover { background: var(--secondary); transform: rotate(90deg); }
+
+        .task-list { list-style: none; padding: 0; }
+        .task-list li {
+            padding: 10px 0 10px 28px; position: relative; color: var(--text-secondary);
+            font-size: 0.9rem; transition: color 0.3s, transform 0.3s;
+        }
+        .task-list li::before {
+            content: "▹"; position: absolute; left: 0; color: var(--primary);
+            font-weight: bold; font-size: 1.2em; line-height: 1; top: 10px;
+        }
+        .task-list li:hover { color: var(--text); transform: translateX(5px); }
+
+        .task-list ol { list-style: none; padding: 0; counter-reset: task-counter; }
+        .task-list ol li {
+            counter-increment: task-counter;
+            padding: 10px 0 10px 40px; position: relative; color: var(--text-secondary);
+            font-size: 0.9rem; transition: color 0.3s, transform 0.3s;
+        }
+        .task-list ol li::before {
+            content: counter(task-counter);
+            position: absolute; left: 0; top: 10px;
+            width: 26px; height: 26px;
+            background: var(--surface); color: var(--primary);
+            border: 1px solid var(--primary); border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-family: 'Russo One', sans-serif; font-size: 0.8rem;
+        }
+        .task-list ol li:hover { color: var(--text); transform: translateX(5px); }
+
+        .footer { text-align: center; padding: 30px 16px; border-top: 1px solid var(--border); color: var(--text-muted); font-size: 0.8rem; }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes scaleIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
+
+        @media (max-width: 768px) {
+            .header { padding: 25px 14px; }
+            .hero-title { font-size: 1.6rem; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .modal-close { width: 40px; height: 40px; font-size: 18px; top: 15px; right: 15px; }
+        }
+        @media (max-width: 480px) {
+            .header { padding: 20px 12px; }
+            .hero-title { font-size: 1.4rem; }
+            .hero-subtitle { font-size: 0.8rem; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+            .stat-card { padding: 14px 10px; }
+            .stat-number { font-size: 1.8rem; }
+            .stat-label { font-size: 0.7rem; }
+            .section-title { font-size: 1.2rem; margin-bottom: 20px; }
+            .story-card { padding: 14px 12px; }
+            .story-title { font-size: 1rem; }
+            .badge { font-size: 0.7rem; padding: 5px 12px; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Плавающие символы Rogue -->
+<div class="side-symbols">
+    <div class="side-symbol">@</div>
+    <div class="side-symbol">Z</div>
+    <div class="side-symbol">V</div>
+    <div class="side-symbol">G</div>
+    <div class="side-symbol">O</div>
+    <div class="side-symbol">S</div>
+    <div class="side-symbol">M</div>
+    <div class="side-symbol">◆</div>
+</div>
+
+<!-- ========== ЕДИНАЯ СЕКЦИЯ: заголовок + видео ========== -->
+<header class="header">
+    <div class="container">
+        <div class="badge">🐉 ПРОЕКТ ШКОЛЫ 21</div>
+        <h1 class="hero-title">ROGUE 1980</h1>
+        <p class="hero-subtitle">Консольное roguelike-приложение на Java 21 • Командный проект</p>
+        <div class="hero-location">
+            <i class="fas fa-users"></i> AP1-Jv-P01 • Java Bootcamp
+        </div>
+
+        <!-- Видео -->
+        <div class="video-preview" onclick="openVideoModal()" role="button" tabindex="0" aria-label="Открыть видео демонстрации игры Rogue 1980">
+            <div class="video-preview__thumb">
+                <img src="https://sun9-85.userapi.com/s/v1/ig2/U1Vmxm98hiAcLI0nekBsgphkzM4BDNn33BZ7z64gEJ508xIr-pjVYi3vF1zTLr0RjlG8230WpN3BpgTj-Xhmkcyv.jpg?quality=95&as=32x18,48x27,72x40,108x60,160x89,240x133,360x200,480x267,540x300,640x356,720x400,1080x601,1280x712,1440x801,1746x971&from=bu&u=EWHzCwSN8fM3w0AFt7NN5ZieP5Hkhhi31V5zn3HbSEU&cs=1746x0" alt="Превью видео Rogue 1980" loading="lazy">
+                <div class="video-preview__play">
+                    <i class="fas fa-play-circle"></i>
+                </div>
+            </div>
+            <div class="video-preview__info">
+                <h4>🐉 Rogue 1980 — Демонстрация игры</h4>
+                <p>Консольное roguelike-приложение на Java 21 • JCurses • Командный проект</p>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Модальное окно с видео -->
+<div class="modal" id="videoModal" aria-hidden="true">
+    <div class="modal-content modal-content--video">
+        <video id="videoPlayer" controls playsinline preload="metadata">
+            <source src="https://olga555scherbinina-cell.github.io/tomokoom/rogue_1980/video/rogue.mp4" type="video/mp4">
+            Ваш браузер не поддерживает воспроизведение видео.
+        </video>
+    </div>
+    <button class="modal-close" onclick="closeVideoModal()" aria-label="Закрыть модальное окно">
+        <i class="fas fa-times"></i>
+    </button>
+</div>
+
+<main>
+    <div class="glow-divider"></div>
+
+    <!-- О проекте -->
+    <section>
+        <div class="container">
+            <h2 class="section-title">📋 О проекте</h2>
+            <div class="story-card">
+                <span class="story-date">Стек технологий</span>
+                <div class="story-title">Java 21 • JCurses • ООП • Алгоритмы</div>
+                <p class="story-text">Консольное roguelike-приложение в духе классической игры <strong>Rogue 1980 года</strong>. Игра поддерживает разделение на слои (domain, presentation, datalayer), генерацию подземелий, пошаговый режим, 5 типов противников с уникальным поведением, систему боя, инвентарь и туман войны.</p>
+                <a href="https://drive.google.com/file/d/1fVZHHSaOvhWo33wYV2SsBZR03kt14RvI/view?usp=drive_link" target="_blank" rel="noopener noreferrer" class="highlight-link">
+                    <i class="fas fa-download"></i> Скачать архив проекта
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <div class="glow-divider"></div>
+
+    <!-- Статистика -->
+    <section>
+        <div class="container">
+            <h2 class="section-title">📊 Характеристики проекта</h2>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number green">21</div>
+                    <div class="stat-label">Уровень подземелий</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number purple">5</div>
+                    <div class="stat-label">Типов противников</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number amber">8</div>
+                    <div class="stat-label">Заданий в проекте</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number green">3</div>
+                    <div class="stat-label">Слоя архитектуры</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="glow-divider"></div>
+
+    <!-- Игровые механики -->
+    <section>
+        <div class="container">
+            <h2 class="section-title">🎮 Игровые механики</h2>
+            <div class="story-card">
+                <span class="story-date">Геймплей</span>
+                <div class="story-title">Что внутри игры</div>
+                <ul class="task-list">
+                    <li><strong>21 уровень</strong> подземелий, каждый состоит из 9 комнат, соединённых коридорами</li>
+                    <li><strong>5 типов противников:</strong> Зомби, Вампир, Привидение, Огр, Змей-маг — каждый с уникальным паттерном</li>
+                    <li><strong>Пошаговый бой:</strong> проверка на попадание → расчёт урона → применение урона</li>
+                    <li><strong>Инвентарь:</strong> еда, эликсиры, свитки, оружие, сокровища</li>
+                    <li><strong>Туман войны:</strong> Ray Casting + алгоритм Брезенхэма</li>
+                    <li><strong>Сохранение:</strong> JSON-файл с полным состоянием игры</li>
+                    <li><strong>Таблица лидеров:</strong> сортировка по количеству сокровищ</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <div class="glow-divider"></div>
+
+    <!-- Задания -->
+    <section>
+        <div class="container">
+            <h2 class="section-title">📦 Задания проекта</h2>
+            <div class="story-card">
+                <span class="story-date">AP1-Jv-P01</span>
+                <div class="story-title">8 заданий Java Bootcamp</div>
+                <ol class="task-list">
+                    <li><strong>Сущностные сущности</strong> — доменный слой: игровая сессия, уровень, комната, персонаж, противники, предметы, рюкзак</li>
+                    <li><strong>Бодрый геймплей</strong> — логика игры: 21 уровень, 9 комнат, 5 типов врагов, пошаговый бой, инвентарь</li>
+                    <li><strong>Сгенерированный мир</strong> — генерация уровней: 9 секций, случайные комнаты, связный граф</li>
+                    <li><strong>Ламповое 2D</strong> — рендеринг с JCurses: стены, пол, акторы, туман войны, управление WASD</li>
+                    <li><strong>Картридж с батарейкой</strong> — сохранение/загрузка прогресса в JSON</li>
+                    <li><strong>Ты не пройдёшь!</strong> — двери и ключи (как в DOOM)</li>
+                    <li><strong>Искусство баланса</strong> — авто-подстройка сложности</li>
+                    <li><strong>Представь, что ты стол</strong> — противник Мимик</li>
+                </ol>
+            </div>
+        </div>
+    </section>
+
+    <div class="glow-divider"></div>
+
+    <footer class="footer">
+        <p>© 2023–2026 Ольга Кашина (Щербинина). Школа 21, Челябинск. Все права защищены.</p>
+        <p>Проект: AP1-Jv-P01 | Java Bootcamp</p>
+    </footer>
+</main>
+
+<script>
+    (function() {
+        'use strict';
+
+        var videoModal = document.getElementById('videoModal');
+        var videoPlayer = document.getElementById('videoPlayer');
+
+        window.openVideoModal = function() {
+            if (!videoModal || !videoPlayer) return;
+            videoModal.classList.add('active');
+            videoModal.setAttribute('aria-hidden', 'false');
+            var playPromise = videoPlayer.play();
+            if (playPromise !== undefined) {
+                playPromise.catch(function(error) {
+                    console.log('Автовоспроизведение заблокировано: ', error);
+                });
+            }
+            document.body.style.overflow = 'hidden';
+        };
+
+        window.closeVideoModal = function() {
+            if (!videoModal || !videoPlayer) return;
+            videoPlayer.pause();
+            videoPlayer.currentTime = 0;
+            videoModal.classList.remove('active');
+            videoModal.setAttribute('aria-hidden', 'true');
+            document.body.style.overflow = '';
+        };
+
+        if (videoModal) {
+            videoModal.addEventListener('click', function(event) {
+                if (event.target === videoModal) closeVideoModal();
+            });
+        }
+
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape' && videoModal && videoModal.classList.contains('active')) {
+                closeVideoModal();
+            }
+        });
+
+        var videoPreview = document.querySelector('.video-preview');
+        if (videoPreview) {
+            videoPreview.addEventListener('keydown', function(event) {
+                if (event.key === 'Enter' || event.key === ' ') {
+                    event.preventDefault();
+                    openVideoModal();
+                }
+            });
+        }
+    })();
+</script>
+</body>
+</html>
