@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Подготовка к экзамену по Java: REST API, HTTP, JSON, ООП, тест с пояснениями">
-    <meta name="keywords" content="Java, экзамен, REST API, HTTP, JSON, ООП, тест, подготовка, портфолио, Ольга Кашина">
+    <meta name="description" content="Подготовка к экзамену по Java: HTTP, ООП, Enum, Generics, Память, тесты">
+    <meta name="keywords" content="Java, экзамен, HTTP, ООП, Enum, Generics, тест, подготовка, портфолио, Ольга Кашина">
     <meta name="robots" content="index, follow">
     <title>Подготовка к экзамену по Java | Ольга Кашина</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -163,7 +163,6 @@
             border: 1px solid var(--border-light); transition: all 0.3s; color: var(--text-secondary);
         }
         .skill-card:hover { transform: translateY(-5px); border-color: #F28627; }
-        .skill-card h3 { color: #BF491F; font-size: 1.3rem; margin-bottom: 1rem; }
         .quiz-question {
             background: rgba(0,0,0,0.85); padding: 1.5rem; border-radius: 16px;
             border: 1px solid var(--border-light); margin-bottom: 1rem;
@@ -281,8 +280,9 @@
         <a href="#java-syntax"><i class="fas fa-code"></i> Синтаксис Java</a>
         <a href="#oop-section"><i class="fas fa-cubes"></i> ООП, Enum, Generics</a>
         <a href="#memory-section"><i class="fas fa-memory"></i> Память (Stack/Heap/GC)</a>
-        <span class="nav-section">ТЕСТ</span>
+        <span class="nav-section">ТЕСТЫ</span>
         <a href="#exam-test"><i class="fas fa-question-circle"></i> Экзаменационный тест (55 вопр.)</a>
+        <a href="#advanced-test"><i class="fas fa-question-circle"></i> Продвинутый тест (60 вопр.)</a>
     </nav>
     <div class="sidebar-footer"><p class="copyright">© 2023–2026<br>Ольга Кашина (Щербинина)</p></div>
 </aside>
@@ -313,80 +313,52 @@
         <tr><td><strong>PATCH</strong></td><td>✏️ Частичное обновление</td><td>Нет</td><td>Нет</td></tr>
         <tr><td><strong>DELETE</strong></td><td>❌ Удаление ресурса</td><td>Да</td><td>Нет</td></tr></table>
         <h3>Статус-коды</h3>
-        <ul><li><strong>200 OK</strong> — успешный запрос</li><li><strong>300 Multiple Choices</strong> — несколько вариантов</li><li><strong>301 Moved Permanently</strong> — перемещено навсегда</li><li><strong>401 Unauthorized</strong> — не авторизован</li><li><strong>403 Forbidden</strong> — нет прав</li><li><strong>404 Not Found</strong> — не найдено</li><li><strong>500 Internal Server Error</strong> — ошибка сервера</li></ul>
-        <h3>Основные определения</h3>
+        <ul><li><strong>200 OK</strong> — успех</li><li><strong>300 Multiple Choices</strong></li><li><strong>301 Moved Permanently</strong></li><li><strong>401 Unauthorized</strong></li><li><strong>403 Forbidden</strong></li><li><strong>404 Not Found</strong></li><li><strong>500 Internal Server Error</strong></li></ul>
+        <h3>Определения</h3>
         <ul>
-            <li><strong>HTTP</strong> — сетевой протокол передачи данных (прикладной уровень)</li>
+            <li><strong>HTTP</strong> — сетевой протокол (прикладной уровень)</li>
             <li><strong>TCP/IP</strong> — сетевая модель передачи данных</li>
-            <li><strong>IP-адрес (ID)</strong> — уникальный числовой идентификатор устройства в сети</li>
-            <li><strong>Маска подсети (маска сети)</strong> — 32-битное число, разделяющее IP на адрес подсети и адрес узла</li>
-            <li><strong>Веб-стандарты</strong> — создаёт Консорциум всемирной паутины (W3C)</li>
-            <li><strong>Бизнес-логика</strong> — система правил поведения объектов предметной области</li>
+            <li><strong>IP-адрес (ID)</strong> — уникальный идентификатор устройства</li>
+            <li><strong>Маска подсети (маска сети)</strong> — 32-битное число, разделяющее IP</li>
+            <li><strong>Веб-стандарты</strong> — W3C</li>
+            <li><strong>Бизнес-логика</strong> — правила предметной области</li>
         </ul>
     </div></div></section>
     <div class="section-divider"></div>
 
     <!-- ===== СИНТАКСИС JAVA ===== -->
     <section class="section" id="java-syntax"><div class="container"><h2 class="section-title">Синтаксис Java</h2><div class="article-content">
-        <h3>Базовые конструкции</h3>
         <pre>public class MyClass {}
 public static void main(String[] args) {}
-System.out.println("Hello");</pre>
-        <h3>Переменные и операторы</h3>
-        <pre>int number = 10;           // 4 байта
-boolean isTrue = true;
-String text = "Hello";
-+ - * / = ==               // = присваивание, == равенство</pre>
-        <h3>Развилки</h3>
-        <pre>if (x > 0) { } else { }
-switch (value) { case 1: ... break; default: ... }</pre>
-        <h3>Циклы</h3>
-        <pre>for (int i = 0; i < 5; i++) {}
-while (x < 5) {}</pre>
-        <h3>Массивы</h3>
-        <pre>int[] arr = new int[3];          // одномерный
-int[][] arr2 = new int[3][4];    // двумерный
-int[] arr = {1, 3, 0, 6};
-System.out.println(arr[3]);      // 6 (индексация с 0)
-System.out.println(arr.length);  // длина массива</pre>
-        <h3>ArrayIndexOutOfBoundsException</h3>
-        <p>Выход за границы массива (например, <code>arr[5]</code> при длине 3).</p>
-        <h3>Scanner</h3>
-        <pre>Scanner scanner = new Scanner(System.in);</pre>
-        <h3>Число в двоичном виде</h3>
-        <pre>int x = 0b11011;  // 27</pre>
-        <h3>try-catch (базовый синтаксис)</h3>
-        <pre>try {
-    // код с возможным исключением
-} catch (Exception e) {
-    // обработка исключения
-} finally {
-    // выполняется всегда (необязательно)
-}</pre>
+System.out.println("Hello");
+int number = 10; boolean isTrue = true; String text = "Hello";
++ - * / = ==
+if (x > 0) { } else { }
+switch (value) { case 1: ... break; default: ... }
+for (int i = 0; i < 5; i++) {}
+while (x < 5) {}
+int[] arr = new int[3]; int[][] arr2 = new int[3][4];
+int[] arr = {1, 3, 0, 6}; System.out.println(arr[3]); // 6
+System.out.println(arr.length);
+ArrayIndexOutOfBoundsException — выход за границы массива
+Scanner scanner = new Scanner(System.in);
+int x = 0b11011; // 27
+try { ... } catch (Exception e) { ... } finally { ... }</pre>
     </div></div></section>
     <div class="section-divider"></div>
 
-    <!-- ===== ООП, ENUM, GENERICS ===== -->
+    <!-- ===== ООП ===== -->
     <section class="section" id="oop-section"><div class="container"><h2 class="section-title">ООП в Java, Enum, Generics</h2><div class="article-content">
-        <h3>ООП (объектно-ориентированное программирование)</h3>
-        <ul>
-            <li><strong>Инкапсуляция</strong> — скрытие внутренних деталей реализации, доступ через public-методы. Модификатор <code>private</code> делает член класса доступным только внутри самого класса.</li>
-            <li><strong>Наследование</strong> — создание нового класса на основе существующего: <code>class Child extends Parent {}</code></li>
-            <li><strong>Полиморфизм</strong> — способность объектов разных классов обрабатываться через общий тип (родительский класс или интерфейс).</li>
-            <li><strong>Абстракция</strong> — выделение существенных характеристик объекта.</li>
-        </ul>
-        <h3>Интерфейсы</h3>
-        <pre>public class ConcreteData implements Data {}</pre>
-        <h3>Enum (перечисления)</h3>
+        <h3>ООП</h3>
+        <ul><li><strong>Инкапсуляция</strong> — скрытие реализации (private + public методы)</li>
+        <li><strong>Наследование</strong> — <code>class Child extends Parent {}</code></li>
+        <li><strong>Полиморфизм</strong> — объекты разных классов через общий тип</li></ul>
+        <h3>Enum</h3>
         <pre>public enum Day { MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY, SUNDAY }
-
-Day day = Day.WEDNESDAY;
-System.out.println(day.ordinal());      // 2 (порядковый номер, с 0)
-Day d = Day.valueOf("WEDNESDAY");       // регистр важен! "wednesday" — ошибка</pre>
-        <p><strong>valueOf()</strong> — статический метод, возвращает константу enum по строковому имени (с учётом регистра).</p>
+Day day = Day.WEDNESDAY; day.ordinal(); // 2
+Day d = Day.valueOf("WEDNESDAY"); // регистр важен!</pre>
         <h3>Generics</h3>
-        <pre>class Box&lt;T&gt; { private T value; }
-interface Container&lt;T&gt; { T get(); }
+        <pre>class Box&lt;T&gt; {}; interface Container&lt;T&gt; {}
 public &lt;T&gt; void print(T item) {}
 class Child&lt;T&gt; extends Parent&lt;T&gt; {}
 class Impl&lt;T&gt; implements Container&lt;T&gt; {}</pre>
@@ -394,36 +366,33 @@ class Impl&lt;T&gt; implements Container&lt;T&gt; {}</pre>
     <div class="section-divider"></div>
 
     <!-- ===== ПАМЯТЬ ===== -->
-    <section class="section" id="memory-section"><div class="container"><h2 class="section-title">Память в Java (Stack, Heap, Garbage Collector)</h2><div class="article-content">
-        <h3>Stack</h3>
-        <ul>
-            <li>LIFO (Last In, First Out) — последний пришёл, первый ушёл</li>
-            <li>Статическая память: примитивы, ссылки на объекты</li>
-            <li>Выделяется и освобождается <strong>автоматически</strong> при входе/выходе из метода</li>
-        </ul>
-        <h3>Heap (Куча)</h3>
-        <ul>
-            <li>Динамическая память: Java-объекты, JRE классы</li>
-            <li><strong>Young Generation</strong> (Eden + Survivor spaces) — новые объекты</li>
-            <li><strong>Old Generation</strong> — долгоживущие объекты</li>
-        </ul>
-        <h3>Garbage Collector (сборщик мусора)</h3>
-        <ul>
-            <li>Автоматически удаляет объекты, на которые больше нет ссылок</li>
-            <li>Работает в Heap, освобождая неиспользуемую память</li>
-            <li>Типы: Serial GC, Parallel GC, G1 GC, ZGC</li>
-        </ul>
+    <section class="section" id="memory-section"><div class="container"><h2 class="section-title">Память в Java</h2><div class="article-content">
+        <h3>Stack</h3><ul><li>LIFO</li><li>Статическая память, примитивы, ссылки</li><li>Автоматически при входе/выходе из метода</li></ul>
+        <h3>Heap</h3><ul><li>Динамическая память, объекты</li><li>Young Generation — новые объекты</li><li>Old Generation — долгоживущие</li></ul>
+        <h3>Garbage Collector</h3><ul><li>Автоматически удаляет неиспользуемые объекты</li></ul>
     </div></div></section>
     <div class="section-divider"></div>
 
-    <!-- ===== ЭКЗАМЕНАЦИОННЫЙ ТЕСТ (55 вопросов) ===== -->
+    <!-- ===== ЭКЗАМЕНАЦИОННЫЙ ТЕСТ (55 вопросов, порог 82%) ===== -->
     <section class="section" id="exam-test"><div class="container"><h2 class="section-title">Экзаменационный тест (55 вопросов)</h2><div class="article-content">
-        <p>Порог сдачи: <strong>82%</strong> (не менее 45 правильных из 55). Все вопросы основаны на реальном экзамене.</p>
+        <p>Порог сдачи: <strong>82%</strong> (не менее 45 правильных из 55).</p>
         <div id="exam-questions"></div>
         <div style="text-align:center; margin-top: 2rem;">
-            <button class="btn" onclick="finishExam()" style="font-size: 1.2rem; padding: 1rem 3rem;">Завершить тест</button>
+            <button class="btn" onclick="finishTest('exam')" style="font-size: 1.2rem; padding: 1rem 3rem;">Завершить тест</button>
         </div>
-        <div class="result-block" id="resultExam"><h3>Результат</h3><div class="percent" id="resultExamPercent">0%</div><div class="status" id="resultExamStatus"></div><div class="details" id="resultExamDetails"></div><button class="retry-btn" onclick="retryExam()">Пройти заново</button></div>
+        <div class="result-block" id="resultExam"><h3>Результат</h3><div class="percent" id="resultExamPercent">0%</div><div class="status" id="resultExamStatus"></div><div class="details" id="resultExamDetails"></div><button class="retry-btn" onclick="retryTest('exam')">Пройти заново</button></div>
+    </div></div></section>
+
+    <div class="section-divider"></div>
+
+    <!-- ===== ПРОДВИНУТЫЙ ТЕСТ (60 вопросов, порог 80%) ===== -->
+    <section class="section" id="advanced-test"><div class="container"><h2 class="section-title">Продвинутый тест (60 вопросов)</h2><div class="article-content">
+        <p>Порог сдачи: <strong>80%</strong> (не менее 48 правильных из 60).</p>
+        <div id="advanced-questions"></div>
+        <div style="text-align:center; margin-top: 2rem;">
+            <button class="btn" onclick="finishTest('advanced')" style="font-size: 1.2rem; padding: 1rem 3rem;">Завершить тест</button>
+        </div>
+        <div class="result-block" id="resultAdvanced"><h3>Результат</h3><div class="percent" id="resultAdvancedPercent">0%</div><div class="status" id="resultAdvancedStatus"></div><div class="details" id="resultAdvancedDetails"></div><button class="retry-btn" onclick="retryTest('advanced')">Пройти заново</button></div>
     </div></div></section>
 
 </main>
@@ -477,190 +446,150 @@ class Impl&lt;T&gt; implements Container&lt;T&gt; {}</pre>
         }
     }
 
-    const questions = [
-        {q:'1. Какая организация отвечает за веб-стандарт?', exp:'W3C (Консорциум всемирной паутины) разрабатывает веб-стандарты.', opts:[
-            {t:'A) Консорциум всемирной паутины (W3C)', c:true},{t:'B) IETF', c:false},{t:'C) ISO', c:false},{t:'D) ECMA', c:false}
-        ]},
-        {q:'2. Что такое HTTP?', exp:'HTTP — сетевой протокол передачи данных между клиентом и сервером.', opts:[
-            {t:'A) Язык разметки', c:false},{t:'B) Сетевой протокол передачи данных', c:true},{t:'C) Операционная система', c:false},{t:'D) База данных', c:false}
-        ]},
-        {q:'3. Какому уровню принадлежит HTTP?', exp:'HTTP работает на прикладном уровне модели OSI.', opts:[
-            {t:'A) Транспортный', c:false},{t:'B) Сетевой', c:false},{t:'C) Прикладной', c:true},{t:'D) Канальный', c:false}
-        ]},
-        {q:'4. Что такое IP-адрес (ID)?', exp:'IP-адрес — уникальный числовой идентификатор устройства в сети.', opts:[
-            {t:'A) Имя домена', c:false},{t:'B) MAC-адрес', c:false},{t:'C) URL-адрес', c:false},{t:'D) Уникальный числовой идентификатор устройства', c:true}
-        ]},
-        {q:'5. Что такое маска подсети (маска сети)?', exp:'Маска подсети — 32-битное число, разделяющее IP на адрес подсети и адрес узла. Да, маска подсети и маска сети — одно и то же.', opts:[
-            {t:'A) 32-битное число, разделяющее IP на адрес подсети и узла', c:true},{t:'B) DNS-сервер', c:false},{t:'C) Фильтр контента', c:false},{t:'D) Брандмауэр', c:false}
-        ]},
-        {q:'6. Что такое TCP/IP?', exp:'TCP/IP — сетевая модель передачи данных.', opts:[
-            {t:'A) Для веб-страниц', c:false},{t:'B) Для баз данных', c:false},{t:'C) Сетевая модель передачи данных', c:true},{t:'D) Для компиляции', c:false}
-        ]},
-        {q:'7. Определение GET:', exp:'GET — запрос получения данных с сервера (параметры в URL, без тела запроса).', opts:[
-            {t:'A) Запрос на удаление', c:false},{t:'B) Запрос получения данных с сервера', c:true},{t:'C) Запрос с передачей данных в теле', c:false},{t:'D) Запрос на обновление', c:false}
-        ]},
-        {q:'8. Определение POST:', exp:'POST — запрос изменения, хранения и отправления данных (данные в теле запроса).', opts:[
-            {t:'A) Запрос на чтение', c:false},{t:'B) Запрос на удаление', c:false},{t:'C) Запрос изменения, хранения и отправления данных', c:true},{t:'D) Запрос метаданных', c:false}
-        ]},
-        {q:'9. Определение PUT:', exp:'PUT — запрос для полной замены или создания ресурса.', opts:[
-            {t:'A) Частичное обновление', c:false},{t:'B) Удаление', c:false},{t:'C) Метаданные', c:false},{t:'D) Полная замена или создание ресурса', c:true}
-        ]},
-        {q:'10. Определение PATCH:', exp:'PATCH — запрос для частичной замены ресурса.', opts:[
-            {t:'A) Полная замена', c:false},{t:'B) Частичная замена ресурса', c:true},{t:'C) Чтение', c:false},{t:'D) Удаление', c:false}
-        ]},
-        {q:'11. Определение DELETE:', exp:'DELETE — запрос удаления данных.', opts:[
-            {t:'A) Удаление данных', c:true},{t:'B) Чтение данных', c:false},{t:'C) Метаданные', c:false},{t:'D) Создание', c:false}
-        ]},
-        {q:'12. Каким типом является 404?', exp:'404 Not Found — ошибка клиента (ресурс не найден).', opts:[
-            {t:'A) Ошибка сервера', c:false},{t:'B) Успех', c:false},{t:'C) Не нашёл ресурс', c:true},{t:'D) Перенаправление', c:false}
-        ]},
-        {q:'13. Что такое 401?', exp:'401 Unauthorized — не авторизован.', opts:[
-            {t:'A) Запрещено', c:false},{t:'B) Не авторизован', c:true},{t:'C) Не найдено', c:false},{t:'D) Ошибка сервера', c:false}
-        ]},
-        {q:'14. Что такое 403?', exp:'403 Forbidden — сервер понял запрос, но не хватает прав доступа.', opts:[
-            {t:'A) Не авторизован', c:false},{t:'B) Ресурс не найден', c:false},{t:'C) Нет прав доступа', c:true},{t:'D) Внутренняя ошибка', c:false}
-        ]},
-        {q:'15. Что такое 200?', exp:'200 OK — ответ при успешном запросе данных.', opts:[
-            {t:'A) Ответ при успешном запросе данных', c:true},{t:'B) Ошибка клиента', c:false},{t:'C) Перенаправление', c:false},{t:'D) Ошибка сервера', c:false}
-        ]},
-        {q:'16. Что такое 300?', exp:'300 Multiple Choices — несколько вариантов предоставления ресурса.', opts:[
-            {t:'A) Перемещено навсегда', c:false},{t:'B) Несколько вариантов ресурса', c:true},{t:'C) Успех', c:false},{t:'D) Ошибка авторизации', c:false}
-        ]},
-        {q:'17. Что такое 301?', exp:'301 Moved Permanently — ресурс перемещён навсегда.', opts:[
-            {t:'A) Перемещено навсегда', c:true},{t:'B) Временное перенаправление', c:false},{t:'C) Не найдено', c:false},{t:'D) Успех', c:false}
-        ]},
-        {q:'18. Что такое 500?', exp:'500 Internal Server Error — любая внутренняя ошибка сервера.', opts:[
-            {t:'A) Ресурс не найден', c:false},{t:'B) Внутренняя ошибка сервера', c:true},{t:'C) Не авторизован', c:false},{t:'D) Перенаправление', c:false}
-        ]},
-        {q:'19. Что такое бизнес-логика?', exp:'Система правил и принципов, описывающая поведение объектов и процессов предметной области.', opts:[
-            {t:'A) Система правил и принципов предметной области', c:true},{t:'B) Код для БД', c:false},{t:'C) Интерфейс пользователя', c:false},{t:'D) Протокол передачи', c:false}
-        ]},
-        {q:'20. Сколько занимает int в Java?', exp:'int всегда занимает 4 байта (32 бита).', opts:[
-            {t:'A) 2 байта', c:false},{t:'B) 4 байта', c:true},{t:'C) 8 байт', c:false},{t:'D) 1 байт', c:false}
-        ]},
-        {q:'21. Как представить число 27 в Java в двоичном виде?', exp:'0b11011 = 27 (префикс 0b для двоичной системы).', opts:[
-            {t:'A) 0x1B', c:false},{t:'B) 0b11011', c:true},{t:'C) 27b', c:false},{t:'D) bin27', c:false}
-        ]},
-        {q:'22. Цикл с предусловием в Java?', exp:'while — цикл с предусловием (проверка перед выполнением тела цикла).', opts:[
-            {t:'A) for', c:false},{t:'B) do-while', c:false},{t:'C) while', c:true},{t:'D) loop', c:false}
-        ]},
-        {q:'23. Инструкция-развилка в Java?', exp:'if-else — базовая развилка в Java.', opts:[
-            {t:'A) switch', c:false},{t:'B) case', c:false},{t:'C) if-else', c:true},{t:'D) for', c:false}
-        ]},
-        {q:'24. Правильный синтаксис switch?', exp:'switch (value) { case 1: ... break; default: ... }', opts:[
-            {t:'A) switch value { case 1: }', c:false},{t:'B) switch (value) { case 1: ... break; default: ... }', c:true},{t:'C) switch (value) { case 1 ... default ... }', c:false},{t:'D) switch { value: case 1 }', c:false}
-        ]},
-        {q:'25. Как объявить одномерный массив?', exp:'int[] arr = new int[3]; — правильный синтаксис.', opts:[
-            {t:'A) int arr = new int[];', c:false},{t:'B) int arr = [3];', c:false},{t:'C) int[] arr = new int[3];', c:true},{t:'D) array int[] = new int;', c:false}
-        ]},
-        {q:'26. Как объявить двумерный массив?', exp:'int[][] arr = new int[3][4]; — правильный синтаксис.', opts:[
-            {t:'A) int[][] arr = new int[3][4];', c:true},{t:'B) int[3][4] arr;', c:false},{t:'C) int arr = new int[3,4];', c:false},{t:'D) array[3][4] int;', c:false}
-        ]},
-        {q:'27. Что выведет: <code>int arr[] = {1, 3, 0, 6}; System.out.println(arr[3]);</code>', exp:'arr[3] = 6 (индексация массива с нуля, четвёртый элемент). Синтаксис int arr[] допустим в Java.', opts:[
-            {t:'A) 1', c:false},{t:'B) 3', c:false},{t:'C) 0', c:false},{t:'D) 6', c:true}
-        ]},
-        {q:'28. Что выведет: <code>int[] arr = {10, 20, 30, 40, 50}; System.out.println(arr.length);</code>', exp:'arr.length = 5 (свойство length возвращает длину массива).', opts:[
-            {t:'A) 4', c:false},{t:'B) 5', c:true},{t:'C) 50', c:false},{t:'D) Ошибка компиляции', c:false}
-        ]},
-        {q:'29. Причина ArrayIndexOutOfBoundsException?', exp:'Выход за границы массива (например, arr[5] при длине 3).', opts:[
-            {t:'A) Деление на ноль', c:false},{t:'B) Null pointer', c:false},{t:'C) Выход за границы массива', c:true},{t:'D) Ошибка ввода-вывода', c:false}
-        ]},
-        {q:'30. Правильный синтаксис Scanner?', exp:'Scanner scanner = new Scanner(System.in); — правильный вариант.', opts:[
-            {t:'A) Scanner = new Scanner(System.in);', c:false},{t:'B) Scanner scanner = System.in;', c:false},{t:'C) Scanner scanner = new Scanner(System.in);', c:true},{t:'D) scanner = Scanner(System.in);', c:false}
-        ]},
-        {q:'31. Базовый синтаксис try-catch?', exp:'try { ... } catch (Exception e) { ... } — правильный синтаксис. finally необязателен.', opts:[
-            {t:'A) try { } error { }', c:false},{t:'B) try { } catch (Exception e) { }', c:true},{t:'C) try { } except { }', c:false},{t:'D) try { } handle (Exception e) { }', c:false}
-        ]},
-        {q:'32. Какой блок выполняется всегда?', exp:'finally выполняется всегда, независимо от того, было ли исключение.', opts:[
-            {t:'A) try', c:false},{t:'B) catch', c:false},{t:'C) finally', c:true},{t:'D) end', c:false}
-        ]},
-        {q:'33. Как найти порядковый номер константы enum?', exp:'Метод ordinal() возвращает порядковый номер константы (начиная с 0).', opts:[
-            {t:'A) day.number()', c:false},{t:'B) day.index()', c:false},{t:'C) day.ordinal()', c:true},{t:'D) day.position()', c:false}
-        ]},
-        {q:'34. Что делает метод valueOf() у enum?', exp:'valueOf("NAME") возвращает константу enum по строковому имени. Регистр важен!', opts:[
-            {t:'A) Возвращает порядковый номер', c:false},{t:'B) Возвращает константу по строковому имени', c:true},{t:'C) Преобразует enum в строку', c:false},{t:'D) Создаёт новый enum', c:false}
-        ]},
-        {q:'35. Ключевое слово наследования в ООП Java?', exp:'extends используется для наследования класса.', opts:[
-            {t:'A) implements', c:false},{t:'B) super', c:false},{t:'C) extends', c:true},{t:'D) this', c:false}
-        ]},
-        {q:'36. Ключевое слово реализации интерфейса?', exp:'implements используется для реализации интерфейса.', opts:[
-            {t:'A) extends', c:false},{t:'B) implements', c:true},{t:'C) interface', c:false},{t:'D) abstract', c:false}
-        ]},
-        {q:'37. Инкапсуляция — это?', exp:'Скрытие внутренних деталей реализации и предоставление доступа через public-методы.', opts:[
-            {t:'A) Создание класса на основе другого', c:false},{t:'B) Способность объектов обрабатываться через общий тип', c:false},{t:'C) Выделение существенных характеристик', c:false},{t:'D) Скрытие внутренних деталей реализации', c:true}
-        ]},
-        {q:'38. Полиморфизм — это?', exp:'Способность объектов разных классов обрабатываться через общий тип (родительский класс или интерфейс).', opts:[
-            {t:'A) Создание класса на основе другого', c:false},{t:'B) Скрытие внутренних деталей реализации', c:false},{t:'C) Способность объектов обрабатываться через общий тип', c:true},{t:'D) Выделение существенных характеристик', c:false}
-        ]},
-        {q:'39. Модификатор доступа — только внутри класса?', exp:'private — доступ только внутри самого класса.', opts:[
-            {t:'A) protected', c:false},{t:'B) public', c:false},{t:'C) default', c:false},{t:'D) private', c:true}
-        ]},
-        {q:'40. Правильный generic-класс?', exp:'class Box<T> {} — правильный синтаксис generic-класса.', opts:[
-            {t:'A) class Box T {}', c:false},{t:'B) class Box with T {}', c:false},{t:'C) class Box&lt;T&gt; {}', c:true},{t:'D) class Box(T) {}', c:false}
-        ]},
-        {q:'41. Правильный generic-интерфейс?', exp:'interface Container<T> {} — правильный синтаксис.', opts:[
-            {t:'A) interface Container&lt;T&gt; {}', c:true},{t:'B) interface Container T {}', c:false},{t:'C) interface Container with T {}', c:false},{t:'D) interface Container(T) {}', c:false}
-        ]},
-        {q:'42. Generic-метод?', exp:'public <T> void print(T item) {} — правильный синтаксис generic-метода.', opts:[
-            {t:'A) public T void print(T item) {}', c:false},{t:'B) public void print(T item) {}', c:false},{t:'C) public &lt;T&gt; void print(T item) {}', c:true},{t:'D) public print&lt;T&gt;(T item) {}', c:false}
-        ]},
-        {q:'43. Наследование generic-класса?', exp:'class Child<T> extends Parent<T> {}', opts:[
-            {t:'A) class Child extends Parent&lt;T&gt; {}', c:false},{t:'B) class Child&lt;T&gt; extends Parent&lt;T&gt; {}', c:true},{t:'C) class Child&lt;T&gt; extends Parent {}', c:false},{t:'D) class Child extends Parent(T) {}', c:false}
-        ]},
-        {q:'44. Реализация generic-интерфейса?', exp:'class Impl<T> implements Container<T> {}', opts:[
-            {t:'A) class Impl implements Container&lt;T&gt; {}', c:false},{t:'B) class Impl&lt;T&gt; implements Container&lt;T&gt; {}', c:true},{t:'C) class Impl&lt;T&gt; implements Container {}', c:false},{t:'D) class Impl implements Container(T) {}', c:false}
-        ]},
-        {q:'45. Для чего Stack в Java?', exp:'Stack — для выделения статической памяти и запуска потока. Работает по принципу LIFO.', opts:[
-            {t:'A) Для выделения статической памяти и запуска потока', c:true},{t:'B) Для хранения объектов', c:false},{t:'C) Для работы с БД', c:false},{t:'D) Для сетевых соединений', c:false}
-        ]},
-        {q:'46. Для чего Heap в Java?', exp:'Heap — для выделения динамической памяти, Java-объектов и JRE классов.', opts:[
-            {t:'A) Для запуска потоков', c:false},{t:'B) Для хранения примитивов', c:false},{t:'C) Для выделения динамической памяти и объектов', c:true},{t:'D) Для компиляции кода', c:false}
-        ]},
-        {q:'47. По какой схеме работает Stack?', exp:'LIFO (Last In, First Out) — последний пришёл, первый ушёл.', opts:[
-            {t:'A) FIFO', c:false},{t:'B) LIFO', c:true},{t:'C) Random', c:false},{t:'D) Priority', c:false}
-        ]},
-        {q:'48. Когда выделяется/освобождается Stack?', exp:'Автоматически при входе/выходе из метода.', opts:[
-            {t:'A) При создании объекта', c:false},{t:'B) Автоматически при входе/выходе из метода', c:true},{t:'C) Только через GC', c:false},{t:'D) Вручную', c:false}
-        ]},
-        {q:'49. Young Generation в Heap — это?', exp:'Young Generation (Eden + Survivor spaces) — область для новых объектов.', opts:[
-            {t:'A) Область для новых объектов', c:true},{t:'B) Область для долгоживущих объектов', c:false},{t:'C) Статическая память', c:false},{t:'D) Область для GC', c:false}
-        ]},
-        {q:'50. Old Generation в Heap — это?', exp:'Old Generation — область для долгоживущих объектов.', opts:[
-            {t:'A) Область для новых объектов', c:false},{t:'B) Область для долгоживущих объектов', c:true},{t:'C) Область для примитивов', c:false},{t:'D) Область для стека', c:false}
-        ]},
-        {q:'51. Для чего нужен Garbage Collector?', exp:'Garbage Collector автоматически удаляет объекты, на которые больше нет ссылок, освобождая память в Heap.', opts:[
-            {t:'A) Автоматически удаляет неиспользуемые объекты', c:true},{t:'B) Выделяет память в Stack', c:false},{t:'C) Компилирует код', c:false},{t:'D) Управляет потоками', c:false}
-        ]},
-        {q:'52. Для чего double вместо float в Java?', exp:'Увеличение точности чисел (double — 8 байт, float — 4 байта).', opts:[
-            {t:'A) Уменьшение памяти', c:false},{t:'B) Увеличение точности чисел', c:true},{t:'C) Увеличение скорости', c:false},{t:'D) Совместимость', c:false}
-        ]},
-        {q:'53. Как объявить массив в Java (без инициализации)?', exp:'int[] arr; — правильное объявление массива без инициализации.', opts:[
-            {t:'A) int arr[];', c:false},{t:'B) int[] arr;', c:true},{t:'C) array int arr;', c:false},{t:'D) int arr = [];', c:false}
-        ]},
-        {q:'54. Чем PUT отличается от PATCH?', exp:'PUT полностью заменяет ресурс (все поля), PATCH — частично обновляет (только изменения).', opts:[
-            {t:'A) PUT безопасный, PATCH нет', c:false},{t:'B) PUT полностью заменяет, PATCH частично обновляет', c:true},{t:'C) Оба идентичны', c:false},{t:'D) PATCH только для удаления', c:false}
-        ]},
-        {q:'55. Конструктор по умолчанию в Java?', exp:'Если в классе не объявлен ни один конструктор, компилятор создаст конструктор по умолчанию без параметров.', opts:[
-            {t:'A) Конструктор не будет создан', c:false},{t:'B) Конструктор с параметрами по умолчанию', c:false},{t:'C) Конструктор с одним параметром', c:false},{t:'D) Конструктор по умолчанию без параметров', c:true}
-        ]}
+    // Экзаменационные вопросы (55)
+    const examQuestions = [
+        {q:'1. Какая организация отвечает за веб-стандарт?', exp:'W3C (Консорциум всемирной паутины).', opts:[{t:'A) Консорциум всемирной паутины (W3C)', c:true},{t:'B) IETF', c:false},{t:'C) ISO', c:false},{t:'D) ECMA', c:false}]},
+        {q:'2. Что такое HTTP?', exp:'HTTP — сетевой протокол передачи данных.', opts:[{t:'A) Язык разметки', c:false},{t:'B) Сетевой протокол передачи данных', c:true},{t:'C) ОС', c:false},{t:'D) БД', c:false}]},
+        {q:'3. Какому уровню принадлежит HTTP?', exp:'Прикладной уровень OSI.', opts:[{t:'A) Транспортный', c:false},{t:'B) Сетевой', c:false},{t:'C) Прикладной', c:true},{t:'D) Канальный', c:false}]},
+        {q:'4. Что такое IP-адрес (ID)?', exp:'Уникальный числовой идентификатор устройства.', opts:[{t:'A) Имя домена', c:false},{t:'B) MAC-адрес', c:false},{t:'C) URL', c:false},{t:'D) Уникальный числовой идентификатор устройства', c:true}]},
+        {q:'5. Что такое маска подсети (маска сети)?', exp:'32-битное число, разделяющее IP на адрес подсети и узла.', opts:[{t:'A) 32-битное число, разделяющее IP', c:true},{t:'B) DNS-сервер', c:false},{t:'C) Фильтр', c:false},{t:'D) Брандмауэр', c:false}]},
+        {q:'6. Что такое TCP/IP?', exp:'Сетевая модель передачи данных.', opts:[{t:'A) Веб-страницы', c:false},{t:'B) БД', c:false},{t:'C) Сетевая модель передачи данных', c:true},{t:'D) Компиляция', c:false}]},
+        {q:'7. Определение GET:', exp:'Запрос получения данных с сервера (параметры в URL, без тела).', opts:[{t:'A) Удаление', c:false},{t:'B) Получение данных с сервера', c:true},{t:'C) Передача в теле', c:false},{t:'D) Обновление', c:false}]},
+        {q:'8. Определение POST:', exp:'Запрос изменения, хранения и отправления данных.', opts:[{t:'A) Чтение', c:false},{t:'B) Удаление', c:false},{t:'C) Изменение, хранение и отправка', c:true},{t:'D) Метаданные', c:false}]},
+        {q:'9. Определение PUT:', exp:'Полная замена или создание ресурса.', opts:[{t:'A) Частичное', c:false},{t:'B) Удаление', c:false},{t:'C) Метаданные', c:false},{t:'D) Полная замена или создание', c:true}]},
+        {q:'10. Определение PATCH:', exp:'Частичная замена ресурса.', opts:[{t:'A) Полная', c:false},{t:'B) Частичная замена', c:true},{t:'C) Чтение', c:false},{t:'D) Удаление', c:false}]},
+        {q:'11. Определение DELETE:', exp:'Удаление данных.', opts:[{t:'A) Удаление', c:true},{t:'B) Чтение', c:false},{t:'C) Метаданные', c:false},{t:'D) Создание', c:false}]},
+        {q:'12. 404 — это?', exp:'Не нашёл ресурс (ошибка клиента).', opts:[{t:'A) Сервер', c:false},{t:'B) Успех', c:false},{t:'C) Не нашёл ресурс', c:true},{t:'D) Перенаправление', c:false}]},
+        {q:'13. 401 — это?', exp:'Не авторизован.', opts:[{t:'A) Запрещено', c:false},{t:'B) Не авторизован', c:true},{t:'C) Не найдено', c:false},{t:'D) Ошибка сервера', c:false}]},
+        {q:'14. 403 — это?', exp:'Нет прав доступа.', opts:[{t:'A) Не авторизован', c:false},{t:'B) Не найдено', c:false},{t:'C) Нет прав доступа', c:true},{t:'D) Ошибка', c:false}]},
+        {q:'15. 200 — это?', exp:'Успешный запрос.', opts:[{t:'A) Успешный запрос', c:true},{t:'B) Ошибка', c:false},{t:'C) Перенаправление', c:false},{t:'D) Сервер', c:false}]},
+        {q:'16. 300 — это?', exp:'Несколько вариантов ресурса.', opts:[{t:'A) Навсегда', c:false},{t:'B) Несколько вариантов', c:true},{t:'C) Успех', c:false},{t:'D) Авторизация', c:false}]},
+        {q:'17. 301 — это?', exp:'Перемещено навсегда.', opts:[{t:'A) Перемещено навсегда', c:true},{t:'B) Временно', c:false},{t:'C) Не найдено', c:false},{t:'D) Успех', c:false}]},
+        {q:'18. 500 — это?', exp:'Внутренняя ошибка сервера.', opts:[{t:'A) Не найдено', c:false},{t:'B) Внутренняя ошибка сервера', c:true},{t:'C) Не авторизован', c:false},{t:'D) Перенаправление', c:false}]},
+        {q:'19. Бизнес-логика — это?', exp:'Система правил предметной области.', opts:[{t:'A) Система правил предметной области', c:true},{t:'B) Код БД', c:false},{t:'C) UI', c:false},{t:'D) Протокол', c:false}]},
+        {q:'20. Сколько занимает int?', exp:'4 байта.', opts:[{t:'A) 2', c:false},{t:'B) 4 байта', c:true},{t:'C) 8', c:false},{t:'D) 1', c:false}]},
+        {q:'21. Число 27 в двоичном виде?', exp:'0b11011.', opts:[{t:'A) 0x1B', c:false},{t:'B) 0b11011', c:true},{t:'C) 27b', c:false},{t:'D) bin27', c:false}]},
+        {q:'22. Цикл с предусловием?', exp:'while.', opts:[{t:'A) for', c:false},{t:'B) do-while', c:false},{t:'C) while', c:true},{t:'D) loop', c:false}]},
+        {q:'23. Развилка в Java?', exp:'if-else.', opts:[{t:'A) switch', c:false},{t:'B) case', c:false},{t:'C) if-else', c:true},{t:'D) for', c:false}]},
+        {q:'24. Синтаксис switch?', exp:'switch (value) { case 1: ... break; default: ... }', opts:[{t:'A) switch value {}', c:false},{t:'B) switch (value) { case 1: break; default: }', c:true},{t:'C) switch { value }', c:false},{t:'D) switch value case 1', c:false}]},
+        {q:'25. Объявление одномерного массива?', exp:'int[] arr = new int[3];', opts:[{t:'A) int arr = new int[];', c:false},{t:'B) int arr = [3];', c:false},{t:'C) int[] arr = new int[3];', c:true},{t:'D) array int[]', c:false}]},
+        {q:'26. Объявление двумерного массива?', exp:'int[][] arr = new int[3][4];', opts:[{t:'A) int[][] arr = new int[3][4];', c:true},{t:'B) int[3][4] arr;', c:false},{t:'C) int arr = new int[3,4];', c:false},{t:'D) array[3][4]', c:false}]},
+        {q:'27. Вывод: int arr[] = {1, 3, 0, 6}; arr[3]?', exp:'arr[3] = 6 (индексация с 0).', opts:[{t:'A) 1', c:false},{t:'B) 3', c:false},{t:'C) 0', c:false},{t:'D) 6', c:true}]},
+        {q:'28. Вывод: arr.length для {10,20,30,40,50}?', exp:'5.', opts:[{t:'A) 4', c:false},{t:'B) 5', c:true},{t:'C) 50', c:false},{t:'D) Ошибка', c:false}]},
+        {q:'29. ArrayIndexOutOfBoundsException?', exp:'Выход за границы массива.', opts:[{t:'A) Деление на 0', c:false},{t:'B) Null', c:false},{t:'C) Выход за границы', c:true},{t:'D) IO', c:false}]},
+        {q:'30. Правильный Scanner?', exp:'Scanner scanner = new Scanner(System.in);', opts:[{t:'A) Scanner = new Scanner();', c:false},{t:'B) Scanner scanner = System.in;', c:false},{t:'C) Scanner scanner = new Scanner(System.in);', c:true},{t:'D) scanner = Scanner();', c:false}]},
+        {q:'31. Базовый try-catch?', exp:'try { } catch (Exception e) { }', opts:[{t:'A) try { } error { }', c:false},{t:'B) try { } catch (Exception e) { }', c:true},{t:'C) try { } except { }', c:false},{t:'D) try { } handle { }', c:false}]},
+        {q:'32. Блок, выполняемый всегда?', exp:'finally.', opts:[{t:'A) try', c:false},{t:'B) catch', c:false},{t:'C) finally', c:true},{t:'D) end', c:false}]},
+        {q:'33. Порядковый номер enum?', exp:'ordinal() (с 0).', opts:[{t:'A) number()', c:false},{t:'B) index()', c:false},{t:'C) ordinal()', c:true},{t:'D) position()', c:false}]},
+        {q:'34. valueOf() у enum?', exp:'Возвращает константу по имени (регистр важен).', opts:[{t:'A) Номер', c:false},{t:'B) Константу по имени', c:true},{t:'C) Строку', c:false},{t:'D) Создаёт', c:false}]},
+        {q:'35. Наследование в ООП?', exp:'extends.', opts:[{t:'A) implements', c:false},{t:'B) super', c:false},{t:'C) extends', c:true},{t:'D) this', c:false}]},
+        {q:'36. Реализация интерфейса?', exp:'implements.', opts:[{t:'A) extends', c:false},{t:'B) implements', c:true},{t:'C) interface', c:false},{t:'D) abstract', c:false}]},
+        {q:'37. Инкапсуляция — это?', exp:'Скрытие внутренних деталей реализации.', opts:[{t:'A) Создание класса', c:false},{t:'B) Общий тип', c:false},{t:'C) Выделение характеристик', c:false},{t:'D) Скрытие деталей реализации', c:true}]},
+        {q:'38. Полиморфизм — это?', exp:'Объекты разных классов через общий тип.', opts:[{t:'A) Создание класса', c:false},{t:'B) Скрытие', c:false},{t:'C) Объекты через общий тип', c:true},{t:'D) Характеристики', c:false}]},
+        {q:'39. Модификатор private?', exp:'Доступ только внутри класса.', opts:[{t:'A) protected', c:false},{t:'B) public', c:false},{t:'C) default', c:false},{t:'D) private', c:true}]},
+        {q:'40. Generic-класс?', exp:'class Box<T> {}', opts:[{t:'A) class Box T {}', c:false},{t:'B) class Box with T {}', c:false},{t:'C) class Box&lt;T&gt; {}', c:true},{t:'D) class Box(T) {}', c:false}]},
+        {q:'41. Generic-интерфейс?', exp:'interface Container<T> {}', opts:[{t:'A) interface Container&lt;T&gt; {}', c:true},{t:'B) interface Container T {}', c:false},{t:'C) interface Container with T {}', c:false},{t:'D) interface Container(T) {}', c:false}]},
+        {q:'42. Generic-метод?', exp:'public <T> void print(T item) {}', opts:[{t:'A) public T void print(T) {}', c:false},{t:'B) public void print(T) {}', c:false},{t:'C) public &lt;T&gt; void print(T item) {}', c:true},{t:'D) public print&lt;T&gt;(T) {}', c:false}]},
+        {q:'43. Наследование generic?', exp:'class Child<T> extends Parent<T> {}', opts:[{t:'A) class Child extends Parent&lt;T&gt;', c:false},{t:'B) class Child&lt;T&gt; extends Parent&lt;T&gt; {}', c:true},{t:'C) class Child&lt;T&gt; extends Parent {}', c:false},{t:'D) class Child extends Parent(T) {}', c:false}]},
+        {q:'44. Реализация generic-интерфейса?', exp:'class Impl<T> implements Container<T> {}', opts:[{t:'A) class Impl implements Container&lt;T&gt;', c:false},{t:'B) class Impl&lt;T&gt; implements Container&lt;T&gt; {}', c:true},{t:'C) class Impl&lt;T&gt; implements Container {}', c:false},{t:'D) class Impl implements Container(T) {}', c:false}]},
+        {q:'45. Stack в Java?', exp:'Статическая память, запуск потока (LIFO).', opts:[{t:'A) Статическая память и запуск потока', c:true},{t:'B) Объекты', c:false},{t:'C) БД', c:false},{t:'D) Сеть', c:false}]},
+        {q:'46. Heap в Java?', exp:'Динамическая память, объекты, JRE классы.', opts:[{t:'A) Потоки', c:false},{t:'B) Примитивы', c:false},{t:'C) Динамическая память и объекты', c:true},{t:'D) Компиляция', c:false}]},
+        {q:'47. Схема Stack?', exp:'LIFO.', opts:[{t:'A) FIFO', c:false},{t:'B) LIFO', c:true},{t:'C) Random', c:false},{t:'D) Priority', c:false}]},
+        {q:'48. Выделение/освобождение Stack?', exp:'Автоматически при входе/выходе из метода.', opts:[{t:'A) При создании объекта', c:false},{t:'B) Автоматически при входе/выходе', c:true},{t:'C) Только GC', c:false},{t:'D) Вручную', c:false}]},
+        {q:'49. Young Generation?', exp:'Новые объекты (Eden + Survivor).', opts:[{t:'A) Новые объекты', c:true},{t:'B) Долгоживущие', c:false},{t:'C) Статика', c:false},{t:'D) GC', c:false}]},
+        {q:'50. Old Generation?', exp:'Долгоживущие объекты.', opts:[{t:'A) Новые', c:false},{t:'B) Долгоживущие объекты', c:true},{t:'C) Примитивы', c:false},{t:'D) Стек', c:false}]},
+        {q:'51. Garbage Collector?', exp:'Автоматически удаляет неиспользуемые объекты.', opts:[{t:'A) Автоматически удаляет объекты', c:true},{t:'B) Выделяет Stack', c:false},{t:'C) Компилирует', c:false},{t:'D) Управляет потоками', c:false}]},
+        {q:'52. double vs float?', exp:'Увеличение точности.', opts:[{t:'A) Меньше памяти', c:false},{t:'B) Увеличение точности', c:true},{t:'C) Скорость', c:false},{t:'D) Совместимость', c:false}]},
+        {q:'53. Объявление массива?', exp:'int[] arr;', opts:[{t:'A) int arr[];', c:false},{t:'B) int[] arr;', c:true},{t:'C) array int arr;', c:false},{t:'D) int arr = [];', c:false}]},
+        {q:'54. PUT vs PATCH?', exp:'PUT — полная замена, PATCH — частичная.', opts:[{t:'A) PUT безопасный', c:false},{t:'B) PUT полностью, PATCH частично', c:true},{t:'C) Одинаковы', c:false},{t:'D) PATCH удаляет', c:false}]},
+        {q:'55. Конструктор по умолчанию?', exp:'Без параметров, создаётся компилятором.', opts:[{t:'A) Не создаётся', c:false},{t:'B) С параметрами', c:false},{t:'C) Один параметр', c:false},{t:'D) Без параметров', c:true}]}
     ];
 
-    function buildExam() {
-        const container = document.getElementById('exam-questions');
+    // Продвинутые вопросы (60)
+    const advQuestions = [
+        {q:'1. Правильный синтаксис объявления класса?', opts:[{t:'A) class MyClass {}', c:false},{t:'B) class public MyClass {}', c:false},{t:'C) public class MyClass {}', c:true},{t:'D) MyClass class {}', c:false}]},
+        {q:'2. Точка входа в Java программу?', opts:[{t:'A) public void main(String[] args)', c:false},{t:'B) public static main(String[] args)', c:false},{t:'C) public static void main(String[] args)', c:true},{t:'D) static void main(String[] args)', c:false}]},
+        {q:'3. Вывод текста в консоль?', opts:[{t:'A) console.log()', c:false},{t:'B) print()', c:false},{t:'C) System.print()', c:false},{t:'D) System.out.println()', c:true}]},
+        {q:'4. Объявление целочисленной переменной?', opts:[{t:'A) int number = 10;', c:true},{t:'B) integer number = 10;', c:false},{t:'C) number = 10 int;', c:false},{t:'D) int number = "10";', c:false}]},
+        {q:'5. Тип данных для целых чисел?', opts:[{t:'A) float', c:false},{t:'B) int', c:true},{t:'C) String', c:false},{t:'D) boolean', c:false}]},
+        {q:'6. Объявление boolean?', opts:[{t:'A) boolean isTrue = true;', c:true},{t:'B) boolean isTrue = "true";', c:false},{t:'C) Boolean isTrue = true;', c:false},{t:'D) bool isTrue = true;', c:false}]},
+        {q:'7. Оператор сложения?', opts:[{t:'A) -', c:false},{t:'B) +', c:true},{t:'C) *', c:false},{t:'D) /', c:false}]},
+        {q:'8. Оператор присваивания?', opts:[{t:'A) ===', c:false},{t:'B) :=', c:false},{t:'C) =', c:true},{t:'D) ==', c:false}]},
+        {q:'9. Оператор равенства?', opts:[{t:'A) =', c:false},{t:'B) equals', c:false},{t:'C) ==', c:true},{t:'D) ===', c:false}]},
+        {q:'10. Класс для строк?', opts:[{t:'A) String', c:true},{t:'B) str', c:false},{t:'C) Text', c:false},{t:'D) string', c:false}]},
+        {q:'11. Объявление строки?', opts:[{t:'A) String text = "Hello";', c:true},{t:'B) text = "Hello" String;', c:false},{t:'C) string text = "Hello";', c:false},{t:'D) String text = \'Hello\';', c:false}]},
+        {q:'12. Конкатенация строк?', opts:[{t:'A) +', c:true},{t:'B) .', c:false},{t:'C) &', c:false},{t:'D) concat', c:false}]},
+        {q:'13. Оператор условия?', opts:[{t:'A) switch', c:false},{t:'B) else', c:false},{t:'C) if', c:true},{t:'D) for', c:false}]},
+        {q:'14. Синтаксис if?', opts:[{t:'A) if (x>0) then ...', c:false},{t:'B) if (x>0) { ... }', c:true},{t:'C) if x>0 then ...', c:false},{t:'D) if x>0 { ... }', c:false}]},
+        {q:'15. Когда if не выполняется?', opts:[{t:'A) else', c:true},{t:'B) else if', c:false},{t:'C) otherwise', c:false},{t:'D) default', c:false}]},
+        {q:'16. Синтаксис for?', opts:[{t:'A) for i in range(5) {}', c:false},{t:'B) for i=0 to 5 {}', c:false},{t:'C) for (int i=0; i<5; i++) {}', c:true},{t:'D) for (int i=0; i<5) {}', c:false}]},
+        {q:'17. Синтаксис while?', opts:[{t:'A) while x<5 {}', c:false},{t:'B) do while (x<5) {}', c:false},{t:'C) while: x<5 {}', c:false},{t:'D) while (x<5) {}', c:true}]},
+        {q:'18. Объявление массива?', opts:[{t:'A) int[] numbers = new int[5];', c:true},{t:'B) int numbers = new int[5];', c:false},{t:'C) int numbers[] = new int[5];', c:false},{t:'D) Array numbers = new Array(5);', c:false}]},
+        {q:'19. Объявление метода?', opts:[{t:'A) method myMethod() {}', c:false},{t:'B) public myMethod void() {}', c:false},{t:'C) void myMethod public() {}', c:false},{t:'D) public void myMethod() {}', c:true}]},
+        {q:'20. Метод, возвращающий int?', opts:[{t:'A) public int getNumber() { return 5; }', c:true},{t:'B) int public getNumber() { return 5; }', c:false},{t:'C) public int getNumber() { }', c:false},{t:'D) public getNumber() int { return 5; }', c:false}]},
+        {q:'21. Оператор создания объекта?', opts:[{t:'A) new', c:true},{t:'B) create', c:false},{t:'C) instantiate', c:false},{t:'D) object', c:false}]},
+        {q:'22. Метод при создании объекта?', opts:[{t:'A) Конструктор', c:true},{t:'B) Деструктор', c:false},{t:'C) Инициализатор', c:false},{t:'D) Создатель', c:false}]},
+        {q:'23. Конструктор по умолчанию?', opts:[{t:'A) Не создаётся', c:false},{t:'B) С параметрами', c:false},{t:'C) Один параметр', c:false},{t:'D) Без параметров', c:true}]},
+        {q:'24. Наследование в Java?', opts:[{t:'A) inherits', c:false},{t:'B) implements', c:false},{t:'C) extends', c:true},{t:'D) super', c:false}]},
+        {q:'25. Полиморфизм — это?', opts:[{t:'A) Наследование', c:false},{t:'B) Абстракция', c:false},{t:'C) Объекты через общий тип', c:true},{t:'D) Инкапсуляция', c:false}]},
+        {q:'26. Инкапсуляция — это?', opts:[{t:'A) Скрытие реализации', c:true},{t:'B) Наследование', c:false},{t:'C) Полиморфизм', c:false},{t:'D) Абстракция', c:false}]},
+        {q:'27. Модификатор private?', opts:[{t:'A) protected', c:false},{t:'B) public', c:false},{t:'C) default', c:false},{t:'D) private', c:true}]},
+        {q:'28. Блок обработки исключений?', opts:[{t:'A) catch-error', c:false},{t:'B) try-handle', c:false},{t:'C) try-catch', c:true},{t:'D) error-handler', c:false}]},
+        {q:'29. Блок finally?', opts:[{t:'A) finally', c:true},{t:'B) always', c:false},{t:'C) end', c:false},{t:'D) complete', c:false}]},
+        {q:'30. Интерфейс List?', opts:[{t:'A) List', c:true},{t:'B) Map', c:false},{t:'C) Queue', c:false},{t:'D) Set', c:false}]},
+        {q:'31. Реализация List?', opts:[{t:'A) LinkedList', c:false},{t:'B) ArrayList', c:true},{t:'C) Vector', c:false},{t:'D) Stack', c:false}]},
+        {q:'32. Интерфейс Set?', opts:[{t:'A) Queue', c:false},{t:'B) Map', c:false},{t:'C) Set', c:true},{t:'D) List', c:false}]},
+        {q:'33. Реализация Set?', opts:[{t:'A) HashSet', c:true},{t:'B) ArraySet', c:false},{t:'C) LinkedHashSet', c:false},{t:'D) TreeSet', c:false}]},
+        {q:'34. Интерфейс Map?', opts:[{t:'A) List', c:false},{t:'B) Set', c:false},{t:'C) Queue', c:false},{t:'D) Map', c:true}]},
+        {q:'35. Реализация Map?', opts:[{t:'A) HashMap', c:true},{t:'B) HashTable', c:false},{t:'C) LinkedHashMap', c:false},{t:'D) TreeMap', c:false}]},
+        {q:'36. Параметр типа в дженериках?', opts:[{t:'A) G', c:false},{t:'B) Type', c:false},{t:'C) T', c:true},{t:'D) E', c:false}]},
+        {q:'37. Generic-класс?', opts:[{t:'A) class Box {}', c:false},{t:'B) class Box with T {}', c:false},{t:'C) class Box&lt;T&gt; {}', c:true},{t:'D) class Box(T) {}', c:false}]},
+        {q:'38. Реализация интерфейса?', opts:[{t:'A) implement', c:false},{t:'B) interface', c:false},{t:'C) implements', c:true},{t:'D) extends', c:false}]},
+        {q:'39. Абстрактный класс?', opts:[{t:'A) abstract', c:true},{t:'B) interface', c:false},{t:'C) virtual', c:false},{t:'D) abstract class', c:false}]},
+        {q:'40. Абстрактный метод?', opts:[{t:'A) interface', c:false},{t:'B) abstract method', c:false},{t:'C) virtual', c:false},{t:'D) abstract', c:true}]},
+        {q:'41. Интерфейс для потока?', opts:[{t:'A) Executable', c:false},{t:'B) Thread', c:false},{t:'C) Callable', c:false},{t:'D) Runnable', c:true}]},
+        {q:'42. Класс потока?', opts:[{t:'A) Process', c:false},{t:'B) Runnable', c:false},{t:'C) Thread', c:true},{t:'D) Executor', c:false}]},
+        {q:'43. Ключевое слово synchronized?', opts:[{t:'A) synchronized', c:true},{t:'B) mutex', c:false},{t:'C) sync', c:false},{t:'D) lock', c:false}]},
+        {q:'44. Интерфейс Stream?', opts:[{t:'A) Stream', c:true},{t:'B) Iterator', c:false},{t:'C) Sequence', c:false},{t:'D) Collection', c:false}]},
+        {q:'45. Оператор в лямбде?', opts:[{t:'A) =>', c:false},{t:'B) ->>', c:false},{t:'C) ::', c:false},{t:'D) ->', c:true}]},
+        {q:'46. Checked исключения?', opts:[{t:'A) Проверяемые (checked)', c:true},{t:'B) Unchecked', c:false},{t:'C) Errors', c:false},{t:'D) Все', c:false}]},
+        {q:'47. Родитель checked?', opts:[{t:'A) Exception', c:true},{t:'B) RuntimeException', c:false},{t:'C) Error', c:false},{t:'D) Throwable', c:false}]},
+        {q:'48. JVM?', opts:[{t:'A) Java Variable Machine', c:false},{t:'B) Java Virtual Machine', c:true},{t:'C) Java Version Manager', c:false},{t:'D) Java Virtual Memory', c:false}]},
+        {q:'49. JRE?', opts:[{t:'A) Java Resource Environment', c:false},{t:'B) Java Runtime Environment', c:true},{t:'C) Java Runtime Extension', c:false},{t:'D) Java Runtime Engine', c:false}]},
+        {q:'50. JDK?', opts:[{t:'A) Java Deployment Kit', c:false},{t:'B) Java Design Kit', c:false},{t:'C) Java Debugging Kit', c:false},{t:'D) Java Development Kit', c:true}]},
+        {q:'51. Символ аннотации?', opts:[{t:'A) #', c:false},{t:'B) @', c:true},{t:'C) $', c:false},{t:'D) &', c:false}]},
+        {q:'52. Аннотация @Override?', opts:[{t:'A) @Inherit', c:false},{t:'B) @Overwrite', c:false},{t:'C) @Super', c:false},{t:'D) @Override', c:true}]},
+        {q:'53. Класс Class?', opts:[{t:'A) Reflection', c:false},{t:'B) Class', c:true},{t:'C) Type', c:false},{t:'D) Object', c:false}]},
+        {q:'54. Родитель потоков I/O?', opts:[{t:'A) Reader/Writer', c:false},{t:'B) InputStream/OutputStream', c:true},{t:'C) Stream', c:false},{t:'D) File', c:false}]},
+        {q:'55. Интерфейс Serializable?', opts:[{t:'A) Externalizable', c:false},{t:'B) SerializableInterface', c:false},{t:'C) Serialize', c:false},{t:'D) Serializable', c:true}]},
+        {q:'56. Ключевое слово enum?', opts:[{t:'A) enumeration', c:false},{t:'B) enum', c:true},{t:'C) Enum', c:false},{t:'D) Enumerate', c:false}]},
+        {q:'57. Интерфейс Function?', opts:[{t:'A) Function', c:true},{t:'B) Predicate', c:false},{t:'C) Consumer', c:false},{t:'D) Supplier', c:false}]},
+        {q:'58. Класс Optional?', opts:[{t:'A) Nullable', c:false},{t:'B) Maybe', c:false},{t:'C) Value', c:false},{t:'D) Optional', c:true}]},
+        {q:'59. Класс LocalDate?', opts:[{t:'A) Date', c:false},{t:'B) DateTime', c:false},{t:'C) Calendar', c:false},{t:'D) LocalDate', c:true}]},
+        {q:'60. Файл модуля Java 9+?', opts:[{t:'A) module.java', c:false},{t:'B) build.gradle', c:false},{t:'C) pom.xml', c:false},{t:'D) module-info.java', c:true}]}
+    ];
+
+    function buildQuestions(containerId, questionsArray) {
+        const container = document.getElementById(containerId);
         let html = '';
-        questions.forEach((q, i) => {
-            html += `<div class="quiz-question" data-exp="${q.exp}"><h4>${q.q}</h4><div class="quiz-options">`;
+        questionsArray.forEach((q, i) => {
+            const name = containerId + 'q' + i;
+            html += `<div class="quiz-question" data-exp="${q.exp||''}"><h4>${q.q}</h4><div class="quiz-options">`;
             q.opts.forEach(o => {
-                html += `<label class="quiz-option" data-correct="${o.c}"><input type="radio" name="eq${i}" value="${o.t.charAt(0)}"> ${o.t}</label>`;
+                html += `<label class="quiz-option" data-correct="${o.c}"><input type="radio" name="${name}" value="${o.t.charAt(0)}"> ${o.t}</label>`;
             });
             html += `</div><button class="check-btn" onclick="checkSingle(this)">Проверить</button><div class="explanation"></div></div>`;
         });
         container.innerHTML = html;
     }
-    buildExam();
 
-    function finishExam() {
-        const allRadios = document.querySelectorAll('#exam-questions input[type="radio"]');
+    buildQuestions('exam-questions', examQuestions);
+    buildQuestions('advanced-questions', advQuestions);
+
+    function finishTest(type) {
+        const containerId = type === 'exam' ? 'exam-questions' : 'advanced-questions';
+        const prefix = containerId + 'q';
+        const allRadios = document.querySelectorAll(`#${containerId} input[type="radio"]`);
         const names = new Set();
         allRadios.forEach(r => names.add(r.name));
         const total = names.size;
@@ -673,26 +602,30 @@ class Impl&lt;T&gt; implements Container&lt;T&gt; {}</pre>
         });
         if (unanswered > 0) { alert('⚠️ Осталось: ' + unanswered + ' вопросов!'); return; }
         const percent = Math.round((correct / total) * 100);
-        const block = document.getElementById('resultExam');
-        document.getElementById('resultExamPercent').textContent = percent + '%';
-        document.getElementById('resultExamDetails').textContent = 'Правильных: ' + correct + ' из ' + total + '. Ошибок: ' + (total - correct) + '.';
-        if (percent >= 82) {
+        const blockId = type === 'exam' ? 'resultExam' : 'resultAdvanced';
+        const block = document.getElementById(blockId);
+        document.getElementById(blockId + 'Percent').textContent = percent + '%';
+        document.getElementById(blockId + 'Details').textContent = 'Правильных: ' + correct + ' из ' + total + '. Ошибок: ' + (total - correct) + '.';
+        const threshold = type === 'exam' ? 82 : 80;
+        if (percent >= threshold) {
             block.className = 'result-block passed show';
-            document.getElementById('resultExamStatus').textContent = '✅ Тест пройден! (порог 82%)';
-            document.getElementById('resultExamStatus').style.color = '#4CAF50';
+            document.getElementById(blockId + 'Status').textContent = '✅ Тест пройден! (порог ' + threshold + '%)';
+            document.getElementById(blockId + 'Status').style.color = '#4CAF50';
         } else {
             block.className = 'result-block failed show';
-            document.getElementById('resultExamStatus').textContent = '❌ Тест не пройден! Нужно 82%+.';
-            document.getElementById('resultExamStatus').style.color = '#f44336';
+            document.getElementById(blockId + 'Status').textContent = '❌ Тест не пройден! Нужно ' + threshold + '%+.';
+            document.getElementById(blockId + 'Status').style.color = '#f44336';
         }
         block.scrollIntoView({ behavior: 'smooth' });
     }
 
-    function retryExam() {
-        document.querySelectorAll('#exam-questions input[type="radio"]').forEach(r => r.checked = false);
-        document.querySelectorAll('#exam-questions .quiz-option').forEach(o => o.classList.remove('correct', 'incorrect'));
-        document.querySelectorAll('#exam-questions .explanation').forEach(e => { e.textContent = ''; e.className = 'explanation'; });
-        document.getElementById('resultExam').className = 'result-block';
+    function retryTest(type) {
+        const containerId = type === 'exam' ? 'exam-questions' : 'advanced-questions';
+        document.querySelectorAll(`#${containerId} input[type="radio"]`).forEach(r => r.checked = false);
+        document.querySelectorAll(`#${containerId} .quiz-option`).forEach(o => o.classList.remove('correct', 'incorrect'));
+        document.querySelectorAll(`#${containerId} .explanation`).forEach(e => { e.textContent = ''; e.className = 'explanation'; });
+        const blockId = type === 'exam' ? 'resultExam' : 'resultAdvanced';
+        document.getElementById(blockId).className = 'result-block';
     }
 </script>
 </body>
