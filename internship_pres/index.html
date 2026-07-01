@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Отчет о стажировке | Щербинина Ольга | QA-стажёр в SkillSpace</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Russo+One&display=swap" rel="stylesheet">
+    <style>
+        :root {
+          --skillspace-blue: #526EFF;
+          --skillspace-blue-light: #7B8FFF;
+          --skillspace-blue-glow: rgba(82, 110, 255, 0.25);
+          --skillspace-green: #34C759;
+          --skillspace-green-light: #25b99a;
+          --skillspace-orange: #FF6B35;
+          --skillspace-dark: #141822;
+          --skillspace-surface: #1E2330;
+          --skillspace-text: #FFFFFF;
+          --skillspace-text-secondary: #C0C5D0;
+          --skillspace-text-muted: #8B8FA0;
+          --skillspace-border: rgba(255, 255, 255, 0.08);
+          --skillspace-border-hover: rgba(82, 110, 255, 0.5);
+          --radius-2xl: 32px;
+          --radius-xl: 24px;
+          --radius-md: 12px;
+          --radius-full: 50%;
+          --transition-smooth: 0.3s cubic-bezier(0.33, 1, 0.68, 1);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+        body {
+          font-family: 'Inter', system-ui, -apple-system, sans-serif;
+          background: #0B0D14;
+          color: var(--skillspace-text);
+          line-height: 1.6;
+          min-height: 100vh;
+          overflow-x: hidden;
+          position: relative;
+        }
+        body::before {
+          content: '';
+          position: fixed; inset: 0; z-index: 0; pointer-events: none;
+          background-image: radial-gradient(ellipse at 20% 20%, rgba(82, 110, 255, 0.15) 0%, transparent 50%), radial-gradient(ellipse at 80% 80%, rgba(52, 199, 89, 0.1) 0%, transparent 50%), radial-gradient(ellipse at 50% 50%, rgba(255, 107, 53, 0.08) 0%, transparent 50%), linear-gradient(rgba(82, 110, 255, 0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(82, 110, 255, 0.04) 1px, transparent 1px);
+          background-size: 100% 100%, 100% 100%, 100% 100%, 50px 50px, 50px 50px;
+          animation: bgMove 20s ease-in-out infinite;
+        }
+        @keyframes bgMove {
+          0%, 100% { background-position: 0% 0%, 100% 100%, 50% 50%, 0 0, 0 0; }
+          50% { background-position: 5% 5%, 95% 95%, 45% 55%, 10px 10px, 10px 10px; }
+        }
+        .bg-logo {
+          position: fixed; pointer-events: none; z-index: 0; opacity: 0.08;
+          font-size: 12rem; font-weight: 900; color: var(--skillspace-blue);
+          animation: floatAround 25s ease-in-out infinite; user-select: none;
+        }
+        .bg-logo:nth-child(1) { top: 5%; left: 13%; animation-delay: 0s; writing-mode: vertical-lr; text-orientation: upright; font-size: 4rem; }
+        .bg-logo:nth-child(2) { top: 45%; right: 2%; animation-delay: -8s; color: var(--skillspace-green); font-size: 8rem; }
+        .bg-logo:nth-child(3) { bottom: 10%; left: 5%; animation-delay: -16s; color: var(--skillspace-orange); font-size: 9rem; }
+        @keyframes floatAround {
+          0%, 100% { transform: translate(0, 0) rotate(0deg); }
+          33% { transform: translate(20px, -25px) rotate(2deg); }
+          66% { transform: translate(-15px, -50px) rotate(-2deg); }
+        }
+        .side-stripe {
+          position: fixed; top: 0; width: 2px; height: 100%; z-index: 0; pointer-events: none;
+          background: linear-gradient(180deg, var(--skillspace-blue), var(--skillspace-green), var(--skillspace-orange));
+          opacity: 0.3;
+        }
+        .side-stripe.left { left: 12px; }
+        .side-stripe.right { right: 12px; }
+        .app { max-width: 1400px; margin: 0 auto; padding: 20px 24px 60px; position: relative; z-index: 2; }
+        .nav-dots {
+          position: fixed; right: 20px; top: 50%; transform: translateY(-50%);
+          z-index: 100; display: flex; flex-direction: column; gap: 10px;
+        }
+        .nav-dot {
+          width: 10px; height: 10px; border-radius: var(--radius-full);
+          background: rgba(255, 255, 255, 0.25); border: none; cursor: pointer;
+          transition: all var(--transition-smooth); position: relative;
+        }
+        .nav-dot:hover, .nav-dot.active {
+          background: var(--skillspace-blue);
+          box-shadow: 0 0 14px var(--skillspace-blue-glow); transform: scale(1.35);
+        }
+        .nav-dot::after {
+          content: attr(data-label); position: absolute; right: 20px; top: 50%;
+          transform: translateY(-50%); background: var(--skillspace-surface); color: #fff;
+          padding: 4px 12px; border-radius: 6px; font-size: 12px; font-weight: 600;
+          white-space: nowrap; opacity: 0; pointer-events: none; transition: opacity var(--transition-smooth);
+        }
+        .nav-dot:hover::after { opacity: 1; }
+        @media (max-width: 768px) {
+          .nav-dots { display: none; }
+          .app { padding: 12px 14px 40px; }
+          .side-stripe.left { left: 6px; }
+          .side-stripe.right { right: 6px; }
+          .bg-logo { font-size: 6rem !important; }
+        }
+        .header {
+          text-align: center; padding: 30px 20px 20px;
+          background: linear-gradient(135deg, rgba(82, 110, 255, 0.12) 0%, rgba(52, 199, 89, 0.08) 50%, rgba(255, 107, 53, 0.06) 100%);
+          position: relative; overflow: hidden;
+          border: 1px solid rgba(255, 255, 255, 0.06);
+          border-radius: var(--radius-2xl); margin-bottom: 28px;
+        }
+        .header::before {
+          content: '';
+          position: absolute; inset: 0;
+          background: linear-gradient(rgba(82, 110, 255, 0.08) 1px, transparent 1px), linear-gradient(90deg, rgba(82, 110, 255, 0.08) 1px, transparent 1px);
+          background-size: 35px 35px;
+          animation: cellShift 15s linear infinite;
+          pointer-events: none;
+        }
+        #slide7 .slide7-image-wrapper {
+          position: relative; border-radius: var(--radius-md); overflow: hidden;
+          background: linear-gradient(135deg, rgba(82, 110, 255, 0.12) 0%, rgba(52, 199, 89, 0.08) 50%, rgba(42, 103, 101, 0.86) 100%);
+        }
+        #slide7 .slide7-image-wrapper::before {
+          content: '';
+          position: absolute; inset: 0;
+          background: linear-gradient(rgba(255, 250, 250, 0.08) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 250, 250, 0.08) 1px, transparent 1px);
+          background-size: 35px 35px;
+          animation: cellShift 15s linear infinite;
+          pointer-events: none; z-index: 1;
+        }
+        #slide7 .slide7-image-wrapper img {
+          display: block; width: 100%; height: auto; position: relative; z-index: 0;
+        }
+        .header-badge {
+          display: inline-flex; align-items: center; gap: 8px; justify-content: center;
+          background: rgba(82, 110, 255, 0.15); border: 1px solid rgba(82, 110, 255, 0.6);
+          border-radius: 20px; padding: 8px 20px; font-size: 13px; font-weight: 700;
+          letter-spacing: 0.03em; color: var(--skillspace-blue-light); text-transform: uppercase;
+          margin-bottom: 24px; position: relative; z-index: 1;
+        }
+        .header-badge .dot {
+          width: 7px; height: 7px; border-radius: var(--radius-full);
+          background: var(--skillspace-green); box-shadow: 0 0 10px rgba(52, 199, 89, 0.5);
+          animation: pulse-dot 2s ease-in-out infinite;
+        }
+        @keyframes pulse-dot {
+          0%, 100% { box-shadow: 0 0 6px rgba(52, 199, 89, 0.4); }
+          50% { box-shadow: 0 0 18px rgba(52, 199, 89, 0.8); }
+        }
+        h1 {
+          display: flex; align-items: center; justify-content: center; gap: 8px; flex-wrap: wrap;
+          font-size: clamp(1.5rem, 3vw, 2.3rem); font-weight: 900; letter-spacing: -0.02em;
+          margin: 0 310px 12px 0; position: relative; z-index: 1;
+          background: linear-gradient(135deg, #FFFFFF 0%, #A8B8FF 25%, #526EFF 50%, #34C759 75%, #FFD60A 100%);
+          -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+          background-size: 400% 400%; background-clip: text;
+          filter: drop-shadow(0 2px 8px rgba(82, 110, 255, 0.3));
+          animation: gradientShift 6s ease infinite;
+        }
+        @keyframes gradientShift {
+          0%, 100% { background-position: 0% 50%; }
+          50% { background-position: 100% 50%; }
+        }
+        .header .subtitle {
+          font-size: 1.1rem; color: rgba(255,255,255,0.8); font-weight: 500;
+          position: relative; z-index: 1;
+        }
+        .header .meta {
+          display: flex; justify-content: center; flex-wrap: wrap; gap: 12px;
+          margin-top: 20px; font-size: 14px; color: rgba(255,255,255,0.7); font-weight: 500;
+          position: relative; z-index: 1;
+        }
+        .header .meta span {
+          background: rgba(255,255,255,0.08); padding: 6px 16px; border-radius: 50px;
+          border: 1px solid rgba(255,255,255,0.15); white-space: nowrap;
+        }
+        .slides-container { display: flex; flex-direction: column; gap: 24px; margin-top: 20px; }
+        .slide {
+          background: var(--skillspace-surface); border-radius: var(--radius-2xl);
+          padding: 36px 32px; border: 1px solid var(--skillspace-border);
+          transition: all var(--transition-smooth); position: relative; overflow: hidden;
+          color: var(--skillspace-text);
+        }
+        article#slide1.slide {
+          background-image: url("https://rrllc.ru/upload/000/u6/2/5/skillspace-platforma-dlja-onlain-shkol-image-in-card-big.webp");
+          background-repeat: no-repeat; background-position: top right; background-size: 35%;
+        }
+        .slide:hover {
+          border-color: var(--skillspace-border-hover);
+          transform: translateY(-2px); box-shadow: 0 12px 40px rgba(0,0,0,0.4);
+        }
+        .slide-number {
+          display: inline-flex; align-items: center; justify-content: center;
+          width: 38px; height: 38px; border-radius: var(--radius-full);
+          background: var(--skillspace-blue); color: #fff; font-weight: 800;
+          font-size: 15px; margin-bottom: 16px; box-shadow: 0 0 20px var(--skillspace-blue-glow);
+          position: relative; z-index: 2;
+        }
+        .slide h2 { font-size: 1.5rem; font-weight: 700; margin-bottom: 16px; color: #25b99a; text-shadow: #25b99a -1px -1px 0, #25b99a 1px 1px 0; }
+        .slide h3 { font-size: 1.05rem; font-weight: 700; margin: 20px 0 8px; color: var(--skillspace-blue-light); }
+        .slide ul { list-style: none; padding: 0; margin: 12px 0; }
+        .slide ul li {
+          position: relative; padding-left: 22px; margin-bottom: 8px;
+          color: var(--skillspace-text-secondary); font-size: 0.95rem; line-height: 1.5;
+        }
+        .slide ul li::before {
+          content: ''; position: absolute; left: 0; top: 8px;
+          width: 6px; height: 6px; border-radius: var(--radius-full);
+          background: var(--skillspace-blue-light); box-shadow: 0 0 8px var(--skillspace-blue-glow);
+        }
+        .slide .quote {
+          background: rgba(82, 110, 255, 0.1); border-left: 3px solid var(--skillspace-blue);
+          padding: 16px 20px; border-radius: 0 var(--radius-md) var(--radius-md) 0;
+          margin: 16px 0; color: var(--skillspace-text-secondary);
+          font-size: 0.95rem; line-height: 1.6; font-style: italic;
+        }
+        .slide img {
+          border-radius: var(--radius-md); margin: 16px auto; display: block;
+          width: 100%; max-width: 600px; height: auto; max-height: 300px;
+          object-fit: contain; border: 1px solid var(--skillspace-border);
+          background: rgba(255,255,255,0.03);
+        }
+        .hero-image-wrapper { position: relative; display: flex; justify-content: center; align-items: center; margin: 0 auto 20px; max-width: 350px; }
+        .hero-image-box { height: 100%; width: 100%; max-width: 350px; aspect-ratio: 1 / 1.1; position: relative; border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.5); border: 4px solid var(--skillspace-green-light); transition: border-radius 0.6s; animation: morphShape 6s ease-in-out infinite; }
+        @keyframes morphShape { 0%, 100% { border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%; } 25% { border-radius: 58% 42% 75% 25% / 76% 46% 54% 24%; } 50% { border-radius: 50% 50% 33% 67% / 55% 27% 73% 45%; } 75% { border-radius: 33% 67% 58% 42% / 63% 68% 32% 37%; } }
+        .hero-image-box img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .title-slide-layout { display: flex; align-items: center; gap: 30px; justify-content: center; margin-bottom: 16px; }
+        .hero-caption { text-align: center; font-size: clamp(2.0rem, 3vw, 3.0rem); font-weight: 600; color: var(--skillspace-blue); line-height: 1.5;  font-family: 'Arial Black', 'Impact', 'Franklin Gothic Heavy', sans-serif; letter-spacing: 1px; }
+        @media (min-width: 769px) { .hero-caption { text-align: left; } }
+        @media (max-width: 768px) { .title-slide-layout { flex-direction: column; gap: 16px; } .hero-caption { text-align: center; } }
+
+        /* --- Стили для слайдов с боковой картинкой (О компании, Как мы работали, Моя роль) --- */
+        .side-layout {
+          display: flex;
+          gap: 30px;
+          align-items: flex-start;
+        }
+        .side-layout-image {
+          flex: 0 0 40%;
+          max-width: 40%;
+        }
+        .side-layout-image img {
+          width: 100%;
+          height: auto;
+          max-height: 350px;
+          object-fit: contain;
+          margin: 0;
+        }
+        .side-layout-text {
+          flex: 1;
+        }
+        .side-layout-text .badge-row {
+          margin-top: 0;
+        }
+        @media (max-width: 768px) {
+          .side-layout {
+            flex-direction: column;
+          }
+          .side-layout-image {
+            flex: 0 0 100%;
+            max-width: 100%;
+          }
+        }
+        /* -------------------------------------------------------------- */
+
+        .badge-row { display: flex; flex-wrap: wrap; gap: 10px; margin: 16px 0; }
+        .badge { display: inline-flex; align-items: center; gap: 6px; background: rgba(82, 110, 255, 0.15); border: 1px solid rgba(82, 110, 255, 0.3); color: var(--skillspace-blue-light); padding: 6px 14px; border-radius: 50px; font-size: 13px; font-weight: 600; transition: all 0.3s; }
+        .badge:hover { transform: scale(1.05); box-shadow: 0 0 14px var(--skillspace-blue-glow); }
+        .badge.green { background: rgba(52, 199, 89, 0.15); border-color: rgba(52, 199, 89, 0.3); color: var(--skillspace-green-light); }
+        .badge.dark { background: rgba(255, 255, 255, 0.08); border-color: rgba(255, 255, 255, 0.2); color: #fff; }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 14px; margin: 20px 0; }
+        .stat-card { background: rgba(255, 255, 255, 0.04); border: 1px solid var(--skillspace-border); border-radius: var(--radius-md); padding: 18px 14px; text-align: center; transition: all 0.3s; cursor: default; }
+        .stat-card:hover { border-color: var(--skillspace-border-hover); box-shadow: 0 8px 30px var(--skillspace-blue-glow); transform: translateY(-4px); background: rgba(82, 110, 255, 0.1); }
+        .stat-card .stat-value { font-size: 2rem; font-weight: 900; color: #fff; }
+        .stat-card .stat-label { font-size: 0.8rem; color: var(--skillspace-text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; margin-top: 4px; }
+        .task-example { background: rgba(255, 255, 255, 0.04); border-radius: var(--radius-md); padding: 20px; margin: 14px 0; border: 1px solid var(--skillspace-border); transition: all 0.3s; }
+        .task-example:hover { border-color: var(--skillspace-border-hover); box-shadow: 0 4px 20px var(--skillspace-blue-glow); transform: translateX(4px); }
+        .task-example .task-emoji { font-size: 1.8rem; margin-bottom: 8px; display: inline-block; animation: bounceEmoji 1s ease-in-out infinite; }
+        @keyframes bounceEmoji { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+        .task-example h4 { font-weight: 700; font-size: 1rem; margin-bottom: 6px; color: #fff; }
+        .task-example p { font-size: 0.9rem; color: var(--skillspace-text-secondary); }
+        .arrow-7 { margin: 40px auto 10px auto; width: 38px; height: 100px; }
+        .arrow-7 span { display: block; width: 30px; height: 30px; border-bottom: 5px solid var(--skillspace-blue); border-right: 5px solid var(--skillspace-blue); transform: rotate(45deg); margin: -16px 0; animation: arrow-7 2s infinite; }
+        .arrow-7 span:nth-child(2) { animation-delay: -0.2s; }
+        .arrow-7 span:nth-child(3) { animation-delay: -0.4s; }
+        @keyframes arrow-7 { 0% { opacity: 0; transform: translate(0,-20px) rotate(45deg); } 50% { opacity: 1; } 100% { opacity: 0; transform: translate(0,20px) rotate(45deg); } }
+
+        .arrow-6 {
+            margin:20px;
+        }
+        .arrow-6 svg {
+            width: 100px;
+            height: auto;
+            margin: 0 2rem;
+            cursor: pointer;
+            overflow: visible;
+        }
+        .arrow-6 svg polygon,
+        .arrow-6 svg path {
+            transition: all 0.5s cubic-bezier(0.2, 1, 0.3, 1);
+            fill: #526EFF;
+        }
+        .arrow-6 svg:hover polygon,
+        .arrow-6 svg:hover path {
+            transition: all 1s cubic-bezier(0.2, 1, 0.3, 1);
+            fill: #02423e;
+        }
+        .arrow-6 svg:hover .arrow-6-pl {
+            animation: arrow-6-anim 1s cubic-bezier(0.2, 1, 0.3, 1) infinite;
+        }
+        .arrow-6 svg:hover .arrow-6-pl-fixed {
+            animation: arrow-6-fixed-anim 1s cubic-bezier(0.2, 1, 0.3, 1) infinite;
+        }
+
+        @keyframes arrow-6-anim {
+            0% { opacity: 1; transform: translateX(0); }
+            5% { transform: translateX(-0.1rem); }
+            100% { transform: translateX(1rem); opacity: 0; }
+        }
+        @keyframes arrow-6-fixed-anim {
+            5% { opacity: 0; }
+            20% { opacity: 0.4; }
+            100% { opacity: 1; }
+        }
+        .shadow-6 {
+          font-size: clamp(1.1rem, 3vw, 1.3rem); font-weight: 900; text-transform: uppercase;
+          letter-spacing: 0.1em; margin-bottom: 0px;
+          background: linear-gradient(135deg, var(--skillspace-blue-light), var(--skillspace-green-light), var(--skillspace-orange));
+          background-size: 300% 300%; -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+          background-clip: text; animation: gradientShift 4s ease infinite;
+        }
+        .footer { text-align: center; padding: 40px 20px; color: var(--skillspace-text-muted); font-size: 14px; font-weight: 500; position: relative; background: var(--skillspace-surface); border-radius: var(--radius-2xl); margin-top: 28px; border: 1px solid var(--skillspace-border); }
+        .footer .thanks {font-size: 1.5rem;
+    font-weight: 700;
+    position: relative;
+    z-index: 1;
+    background: linear-gradient(135deg, #FFFFFF 0%, #526EFF 40%, #34C759 70%, #FFD60A 100%);
+    background-size: 300% 300%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: gradientShift 4s ease infinite;
+    margin-bottom: 6px; }
+    .footer p {
+    position: relative;
+    z-index: 1;
+    color: #8B8FA0;
+    font-size: 15px;
+}
+        @media (max-width: 640px) {
+          .slide { padding: 24px 18px; border-radius: var(--radius-xl); }
+          .slide h2 { font-size: 1.25rem; }
+          .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+          .stat-card .stat-value { font-size: 1.4rem; }
+          .header h1 { font-size: 1.7rem; }
+          .header .meta { gap: 8px; }
+          .header .meta span { padding: 5px 10px; font-size: 12px; }
+          .slide img { max-height: 200px; }
+          .hero-image-wrapper { max-width: 280px; }
+          .hero-caption { font-size: 0.95rem; }
+          article#slide1.slide { background-size: 50%; background-position: top center; }
+        }
+    </style>
+</head>
+<body>
+<div class="bg-logo">SkillSpace</div>
+<div class="bg-logo">🎓</div>
+<div class="bg-logo">⚡</div>
+<div class="side-stripe left"></div>
+<div class="side-stripe right"></div>
+
+<nav class="nav-dots" id="navDots" aria-label="Навигация по слайдам">
+    <button class="nav-dot active" data-slide="0" data-label="Титул"></button>
+    <button class="nav-dot" data-slide="1" data-label="Компания"></button>
+    <button class="nav-dot" data-slide="2" data-label="Процессы"></button>
+    <button class="nav-dot" data-slide="3" data-label="Роль"></button>
+    <button class="nav-dot" data-slide="4" data-label="Цифры"></button>
+    <button class="nav-dot" data-slide="5" data-label="Задачи"></button>
+    <button class="nav-dot" data-slide="6" data-label="Навыки"></button>
+    <button class="nav-dot" data-slide="7" data-label="Вклад"></button>
+    <button class="nav-dot" data-slide="8" data-label="Итоги"></button>
+</nav>
+
+<main class="app">
+    <header class="header">
+        <div class="header-badge"><span class="dot"></span> Школа 21 · Стажировка 2026</div>
+        <a href="https://raw.githubusercontent.com/olga555scherbinina-cell/tomokoom/main/images/%D0%A1%D1%82%D0%B0%D0%B6%D0%B8%D1%80%D0%BE%D0%B2%D0%BA%D0%B0-2.png" target="_blank" rel="noopener noreferrer">
+            <img style="border-radius: var(--radius-2xl);width: 100%; height: auto; max-height: 350px; object-fit: contain;" src="https://raw.githubusercontent.com/olga555scherbinina-cell/tomokoom/main/images/%D0%A1%D1%82%D0%B0%D0%B6%D0%B8%D1%80%D0%BE%D0%B2%D0%BA%D0%B0-2.png" alt="Стажировка SkillSpace" loading="lazy">
+        </a>
+        <div class="meta">
+            <span style="color: var(--skillspace-blue); ">👩‍💻 Щербинина Ольга Борисовна</span>
+            <span style="color: #849e00; ">📅 16.06.2026 – 12.09.2026</span>
+            <span style="color: var(--skillspace-blue); ">⏱️ 3 месяца · 240+ часов</span>
+        </div>
+    </header>
+
+    <div class="slides-container" id="slidesContainer">
+        <article class="slide" id="slide1">
+            <div class="slide-number">1</div>
+            <h1>
+                <img style="width: 40px; height: 40px; border-radius: 10px; margin: 0; vertical-align: middle; flex-shrink: 0;" src="https://sun1-85.userapi.com/s/v1/ig2/y1mInHRq_vWgTJahxyawSlU9gBmfD7_6WGnoVmXYP4UOCD9kAtRMfvzDNM1_dhJN_qQqRp-IbiYjWz911lUE7JKq.jpg?quality=95&crop=51,51,409,409&as=32x32,48x48,72x72,108x108,160x160,240x240,360x360&ava=1&u=TJ_EaMQoTOPFV5odaiiooESm84ILHKnLWIsT3bnt5Bc&cs=100x100" alt="Школа 21 Челябинск">
+                <span>Школа 21 · Основное обучение</span>
+            </h1>
+            <p style="color:var(--skillspace-text-secondary); margin-bottom: 16px; text-align: center;">Отчёт о прохождении стажировки</p>
+
+            <div class="title-slide-layout">
+                <div class="hero-image-wrapper">
+                    <div class="hero-image-box">
+                        <img src="https://sun9-64.userapi.com/s/v1/ig2/ewBymdvqqPZ6SBQFNbBIUSbkYdbvckyexcP9syMdR0BYX-a-wmnRtn5ajt6R56aMZa2iCyzcl0UBRUQ6gHKBW02s.jpg?quality=95&as=32x41,48x62,72x93,108x139,160x206,240x309,360x463,480x617,540x694,640x823,720x926,896x1152&from=bu&cs=896x0" alt="Фото стажёра" loading="lazy">
+                    </div>
+                </div>
+                <p class="hero-caption">Щербинина Ольга<br>
+                    <span style="color: var(--skillspace-green-light); font-size: 1.8rem;">QA-стажёр в SkillSpace</span></p>
+            </div>
+            <div class="quote">Здравствуйте, коллеги! Меня зовут Ольга. Сегодня я расскажу о своей трёхмесячной стажировке в роли QA-стажёра в компании SkillSpace. Я работала 20 часов в неделю в команде тестирования и успела не только освоить реальные процессы, но и внести свой вклад в качество продукта.</div>
+        </article>
+
+        <article class="slide" id="slide2">
+            <div class="slide-number">2</div>
+            <h2>О компании SkillSpace</h2>
+            <div class="side-layout">
+                <div class="side-layout-image">
+                    <img src="https://avatars.dzeninfra.ru/get-zen_doc/271828/pub_694cbdc8986a1e23ef915f12_694cbfeae1f99218d8349f50/scale_1200" alt="Интерфейс SkillSpace" loading="lazy">
+                </div>
+                <div class="side-layout-text">
+                    <div class="badge-row">
+                        <span class="badge">🎓 Образовательная платформа</span>
+                        <span class="badge green">🏗️ Конструктор курсов</span>
+                        <span class="badge dark">📝 Тесты и задания</span>
+                    </div>
+                    <ul>
+                        <li>Платформа для запуска онлайн-обучения: курсы, вебинары, тестирования, домашние задания</li>
+                        <li><strong>Конструктор курсов</strong> — уроки с контентом, 9 типов тестовых вопросов, практические задания с проверкой</li>
+                        <li><strong>Вебинарная платформа</strong> — встроенные трансляции, авто-запись, каталог вебинаров</li>
+                        <li><strong>Аналитика</strong> — детальная статистика по ученикам, прогрессу, результатам тестов и ДЗ</li>
+                        <li>Интеграции: Tilda (конструктор сайтов), Bitrix24 (система для управления бизнесом и CRM), Telegram, оплата через эквайринг</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="quote">Skillspace — это российская платформа для создания и управления онлайн-школами, которая позволяет запустить образовательный проект без привлечения программистов и дизайнеров. Сервис предоставляет полный набор инструментов для размещения курсов, проведения вебинаров, приёма платежей и анализа успеваемости учеников. Платформа была основана в 2018 году и за это время зарекомендовала себя как удобное решение для экспертов, коучей и образовательных компаний. Skillspace подходит как для начинающих авторов курсов, так и для крупных онлайн-школ с тысячами учеников.</div>
+        </article>
+
+        <article class="slide" id="slide3">
+            <div class="slide-number">3</div>
+            <h2>SkillSpace: культура, построенная на собственных принципах</h2>
+            <div class="side-layout">
+                <div class="side-layout-image">
+                    <img src="https://avatars.mds.yandex.net/get-direct/4628381/kSZ2Cd6i7B3CEurHRsLbMw/wx1080" alt="Культура SkillSpace" loading="lazy">
+                </div>
+                <div class="side-layout-text">
+                    <div class="badge-row">
+                        <span class="badge">💡 Открытость и гибкость</span>
+                        <span class="badge green">🤝 Поддержка новичков</span>
+                        <span class="badge dark">💬 Прозрачная коммуникация</span>
+                    </div>
+                    <ul>
+                        <li><strong>Открытость и гибкость:</strong> идеи каждого имеют вес, а процессы умеют меняться.</li>
+                        <li><strong>Поддержка новичков:</strong> онбординг — это не галочка, а путь с наставником.</li>
+                        <li><strong>Фокус на развитии:</strong>  доступ к обучению и карьерному росту через платформу.</li>
+                        <li><strong>Прозрачная коммуникация:</strong>  открытые каналы обмена информацией, регулярные обсуждения.</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="quote">SkillSpace выстраивает свою внутреннюю среду — ценности, нормы общения, традиции и подходы к адаптации новых сотрудников — с помощью собственных же инструментов. Это не просто особенность, а осознанный принцип работы компании. За время стажировки я на собственном опыте убедилась в том, насколько последовательно SkillSpace следует этому подходу. Здесь всё взаимосвязано: то, что компания создаёт для других, она в первую очередь применяет внутри себя. SkillSpace — это не только платформа для онлайн-обучения, но и живой пример современной образовательной среды. Открытая, гибкая, нацеленная на развитие и чутко поддерживающая каждого сотрудника — именно такой она предстаёт изнутри. Мне невероятно повезло пройти стажировку именно здесь: это опыт, который не только обогатил меня профессионально, но и вдохновил своим подходом к делу.</div>
+        </article>
+
+        <article class="slide" id="slide4">
+            <div class="slide-number">4</div>
+            <h2>План расширения функционала SkillSpace</h2>
+            <div class="side-layout">
+                <div class="side-layout-image">
+                    <img src="https://static.tildacdn.com/tild6433-3634-4835-b539-333163666462/_.png" alt="Обновления" loading="lazy">
+                    <div class="badge-row">
+                        <span class="badge">🧑‍🏫Новое iOS приложение</span>
+                        <span class="badge green">👨‍💻Обновление интерфейса</span>
+                        <span class="badge dark">Патч – Доработки вебинаров</span>
+                    </div>
+                </div>
+                <div class="side-layout-text">
+                    <p style="color: var(--skillspace-text-secondary); margin-bottom: 12px;">Компания активно работает над крупными обновлениями, которые требуют тщательного тестирования. Вот ключевые проекты:</p>
+                    <ul>
+                        <li><strong>Новое iOS приложение для учеников</strong> — исправление ошибок (вылеты при записи голосовых сообщений) и перевод приложения на новый аккаунт AppStore.</li>
+                        <li><strong>Обновление интерфейса №1: Каталог курсов и вебинаров</strong> — мобильная версия для администраторов, визуальные доработки.</li>
+                        <li><strong>Патч – Доработки вебинаров</strong> — финальное решение проблем с автозаписью, новый дизайн писем-напоминаний, функция удаления участников.</li>
+                        <li><strong>Обновление интерфейса №2: Раздел «Проверка заданий»</strong> — мобильная версия, новый дизайн окна проверки с улучшениями по обратной связи.</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="quote">На момент моей стажировки команда SkillSpace активно вела разработку и тестирование нескольких крупных обновлений. Мы выпустили обновлённое iOS-приложение, в котором исправили критические ошибки, включая вылеты при записи голосовых сообщений. Параллельно шла работа над улучшением раздела «Проверка заданий»: статус «Принято» теперь выбирается по умолчанию, баллы подставляются автоматически, а в боковой панели отображается последний ответ ученика — это значительно ускоряет процесс проверки. Кнопки статуса и баллов стали крупнее и ближе к кнопке отправки, появился полноэкранный режим и подсказки с названиями файлов. Также мы обновили интерфейс кабинета ученика: унифицировали компоненты, навигацию и размеры обложек. Все эти изменения требовали тщательного ручного тестирования, и я принимала в этом непосредственное участие.</div>
+        </article>
+        <article class="slide" id="slide5">
+            <div class="slide-number">5</div>
+            <h2>Моя должность: QA-стажёр</h2>
+            <div class="side-layout">
+                <div class="side-layout-image">
+                    <img src="https://sun9-84.userapi.com/s/v1/ig2/7oNf3iTuKR4Ww3nO8ZI4KCjZVQkzdBwsPjlJdVMvC6JF17is08h4PAQEUL-h5b0tJX0VAbHQnvbiEIlwak00cOaP.jpg?quality=95&as=32x18,48x27,72x40,108x61,160x90,240x135,360x202,480x270,540x304,640x360,720x405,1080x607,1280x720,1440x810,2000x1125&from=bu&u=ziJShdfBjm9tuVbZb9wuRKay6274XtSxJLjcuirsTJ8&cs=2000x0" alt="Команда SkillSpace" loading="lazy">
+                    <div class="badge-row">
+                        <span class="badge">🏢 Отдел: QA</span>
+                        <span class="badge green">👥 Команда: 2 человека + стажер</span>
+                        <span class="badge dark">🧑‍🏫 Ментор: специалист по кадрам</span>
+                    </div>
+                </div>
+                <div class="side-layout-text">
+                    <ul>
+                        <li><strong>Тестирование каталога курсов</strong> — проверка нового интерфейса и мобильной версии для администраторов.</li>
+                        <li><strong>Тестирование iOS приложения</strong> — поиск и документирование ошибок (например, вылеты при записи голосовых сообщений).</li>
+                        <li><strong>Регресс вебинаров</strong> — проверка автозаписей на разных устройствах и браузерах после исправлений.</li>
+                        <li><strong>Приёмочное тестирование раздела «Проверка заданий»</strong> — тестирование нового дизайна окна проверки перед релизом.</li>
+                        <li><strong>Ведение документации</strong> — написание тест-кейсов в TestIT, оформление баг-репортов в YouTrack.</li>
+                        <li><strong>Участие в стендапах</strong> — ежедневная синхронизация с командой тестирования и разработчиками.</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="quote">Я работала в отделе тестирования — это небольшая, но очень эффективная QA-команда из двух опытных тестировщиков и меня, стажёра. Мои обязанности были напрямую связаны с теми крупными обновлениями, которые компания активно разрабатывала в период моей стажировки: новый интерфейс каталога, мобильное iOS приложение, доработки вебинаров и редизайн раздела проверки заданий. Это позволило мне не просто учиться, а сразу вносить реальный вклад в качество продукта.</div>
+        </article>
+
+        <article class="slide" id="slide6">
+            <div class="slide-number">6</div>
+            <h2> SkillSpace: команда, методология и рабочие инструменты</h2>
+            <div class="side-layout">
+                <div class="side-layout-image">
+                    <img src="https://skillspace.ru/blog/content/images/2023/03/86827435-816A-43CA-85F6-13B90594D109.jpg" alt="Процессы" loading="lazy">
+                    <div class="badge-row">
+                        <span class="badge">🧑‍🏫 Ментор</span>
+                        <span class="badge green">👨‍💻 Dev: 3 разработчика</span>
+                        <span class="badge dark">🧪 QA: Lead + 1 QA + я</span>
+                    </div>
+                </div>
+                <div class="side-layout-text">
+                    <ul>
+                        <li><strong>YouTrack</strong> — для отслеживания багов и управления задачами (удобно смотреть статусы своих багов и связывать их с задачами разработчиков).</li>
+                        <li><strong>TestIT</strong> — для написания и хранения тест-кейсов (структурируем все проверки, чтобы ничего не забыть при регрессе).</li>
+                        <li><strong>Figma</strong> — для сверки вёрстки с макетами (особенно актуально при редизайне интерфейсов).</li>
+                        <li><strong>Chrome DevTools</strong> — для отладки фронтенда и анализа API-запросов (вкладка Network незаменима при тестировании вебинаров и обновлений интерфейса).</li>
+                        <li><strong>Confluence</strong> — для ведения базы знаний и онбординг-документации (все гайды и чек-листы хранятся там).</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="quote">Команда работала по методологии Scrum короткими двухнедельными спринтами. Процессы (тесты, баги, релизы) привязаны к этим спринтам. В начале каждого спринта мы планировали задачи, а в конце — демонстрировали готовый функционал. Такой подход позволял быстро получать обратную связь и оперативно вносить правки. Работа в Scrum и использование современных инструментов позволили мне быстро влиться в команду и эффективно тестировать даже сложные функции, такие как новые мобильные версии разделов и обновления интерфейсов.</div>
+        </article>
+
+        <article class="slide" id="slide7">
+            <div class="slide-number">7</div>
+            <h2>Описание выполненных задач и проектов, над которыми работала</h2>
+            <div class="side-layout">
+                <div class="side-layout-image">
+                    <div class="task-example">
+                        <div class="task-emoji">💚</div>
+                        <img src="https://optim.tildacdn.com/tild3666-6365-4435-a161-306232326533/-/format/webp/sta-illustration_1.png.webp" alt="Процессы" loading="lazy">
+                    </div>
+                </div>
+                <div class="side-layout-text">
+                    <div class="badge-row">
+                        <span class="badge green">🏆 Участие в крупном редизайне</span>
+                    </div>
+                    <h3>Любимая: Тестирование обновлённого каталога курсов и вебинаров</h3>
+                    <ul>
+                        <li><strong>Это была самая интересная и масштабная </strong>задача за всю стажировку.</li>
+                        <li><strong>Мы полностью обновляли интерфейс каталога:</strong> новый дизайн карточек курсов, мобильная версия для администраторов, визуальная стандартизация всех компонентов.</li>
+                        <li><strong>Мне нужно было проверить адаптивность на десктопе, планшетах и смартфонах,</strong> а также убедиться, что все фильтры и поиск работают корректно после редизайна.</li>
+                        <li><strong>Я нашла 3 бага, связанных с отображением карточек на планшетах,</strong> и все они были исправлены до релиза.</li>
+                        <li><strong>Чувствовала, что участвую в большом и важном обновлении,</strong> которое увидят все пользователи платформы.</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="arrow-7"><span></span><span></span><span></span></div>
+            <div class="side-layout">
+                <div class="side-layout-image">
+                    <div class="task-example">
+                        <div class="task-emoji">😮‍💨</div>
+                        <div class="slide7-image-wrapper">
+                            <img style="background: linear-gradient(135deg, rgba(82, 110, 255, 0.12) 0%, rgba(52, 199, 89, 0.08) 50%, rgba(42, 103, 101, 0.86) 100%);" src="https://optim.tildacdn.com/tild6237-3261-4238-a333-653032396261/-/format/webp/_.png.webp" alt="Процессы тестирования" loading="lazy">
+                        </div>
+                    </div>
+                </div>
+                <div class="side-layout-text">
+                    <div class="badge-row">
+                        <span class="badge green">📋 Системный подход</span>
+                    </div>
+                    <h3>Наименее любимая: Полный регресс раздела «Проверка заданий»</h3>
+                    <ul>
+                        <li><strong>У преподавателя </strong>— личный кабинет с фильтрами, статусами, комментариями и автопроверкой.</li>
+                        <li><strong>У ученика</strong>  — чёткий прогресс и мотивация двигаться дальше.</li>
+                        <li><strong>После масштабного редизайна окна проверки</strong> потребовалось провести полный регресс всех сценариев: загрузка файлов разных форматов, отправка комментариев, смена статусов, проверка на мобильной версии.</li>
+                        <li>Это была очень монотонная работа,<strong> но именно она научила меня структурировать процесс:</strong> я составила подробный чек-лист на 30+ пунктов и методично проходила каждый сценарий.</li>
+                        <li><strong> В итоге нашла 2 критических бага,</strong> которые могли помешать администраторам проверять работы учеников.</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="quote">Описание выполненных задач и проектов, над которыми работала. Любимой задачей стало тестирование обновлённого каталога курсов и вебинаров — это была масштабная работа с новым интерфейсом и мобильной версией, где я нашла 3 бага и увидела результат своего труда в реальном продукте. А самой нелюбимой, но очень полезной — полный регресс раздела «Проверка заданий», который научил меня системному подходу и внимательности к деталям. Теперь я точно знаю, что системный подход — лучший друг тестировщика.</div>
+        </article>
+
+        <article class="slide" id="slide8">
+            <div class="slide-number">8</div>
+            <h2>Моя работа в цифрах</h2>
+            <div class="side-layout">
+                <div class="side-layout-image">
+                    <img src="https://avatars.dzeninfra.ru/get-zen_doc/4907516/pub_634320deb829767a924b5f59_63432282191778155041754b/scale_1200" alt="Статистика" loading="lazy">
+                </div>
+                <div class="side-layout-text">
+                    <div class="stats-grid">
+                        <div class="stat-card"><div class="stat-value">27</div><div class="stat-label">Всего задач</div></div>
+                        <div class="stat-card"><div class="stat-value">25</div><div class="stat-label">Успешно</div></div>
+                        <div class="stat-card"><div class="stat-value">2</div><div class="stat-label">На доработку</div></div>
+                        <div class="stat-card"><div class="stat-value">~6,5 ч</div><div class="stat-label">Среднее время</div></div>
+                        <div class="stat-card"><div class="stat-value">31</div><div class="stat-label">Баг-репортов</div></div>
+                        <div class="stat-card"><div class="stat-value">42</div><div class="stat-label">Тест-кейсов</div></div>
+                    </div>
+                </div>
+            </div>
+            <div class="quote">За три месяца я получила 27 задач — тестирование новых фич, регресс и написание документации. 25 из них успешно закрыты, две возвращались на доработку по обратной связи ментора. Среднее время на задачу — около шести с половиной часов. Всего я оформила 31 баг-репорт и написала 42 тест-кейса. При моей 20-часовой рабочей неделе это комфортный темп, который позволял не гнаться за количеством, а вдумчиво разбираться в каждой задаче.</div>
+        </article>
+
+        <article class="slide" id="slide9">
+            <div class="slide-number">9</div>
+            <h2>Чему я научилась: навыки и примеры</h2>
+            <div class="side-layout">
+                <div class="side-layout-image">
+                    <h3>🛠️ Hard skills (технические навыки)</h3>
+                    <img style="object-fit: cover;" src="https://sun9-6.userapi.com/s/v1/ig2/TmQQi5XTSKRQo3enFCjC2XVOBg4uPQ8uk0WBAvtvCAdO9dencRkEzCxuVxV33iNRL-DTvJ-zrXdPG4MyDIkqUpX5.jpg?quality=95&as=32x35,48x53,72x80,108x120,160x177,240x266,360x399,480x532,540x599,640x710,659x731&from=bu&cs=659x0" alt="Хард‑скилы" loading="lazy">
+                </div>
+                <div class="side-layout-text">
+                    <ul>
+                        <li><strong>Написание структурированных баг-репортов.</strong> Пример: при тестировании iOS приложения я оформила баг с вылетом при записи голосовых сообщений — подробно описала шаги, окружение и ожидаемый результат, что позволило разработчикам исправить ошибку за один день.</li>
+                        <li><strong>Работа в TestIT.</strong> Пример: для раздела «Проверка заданий» я создала 20+ тест-кейсов, структурировав их по модулям (статусы, комментарии, файлы).</li>
+                        <li><strong>Использование Chrome DevTools (вкладка Network).</strong> Пример: при тестировании вебинаров я отслеживала API-запросы автозаписи и находила проблемы с таймаутами.</li>
+                        <li><strong>Понимание жизненного цикла дефекта.</strong> Пример: научилась отслеживать баг от создания до закрытия, взаимодействуя с разработчиками на каждом этапе.</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="side-layout">
+                <div class="side-layout-image">
+                    <h3>🤝 Soft skills (личные качества)</h3>
+                    <img style="object-fit: cover;" src="https://sun9-26.userapi.com/s/v1/ig2/RUBWXWZlecQQWH-o7Dp4hO88mjPAq-zJm48Tx9LlaajrRj0hwNpzjik21W1rSm7FnSXhQ7dWjUqq6j28bs0Zx8nf.jpg?quality=95&as=32x38,48x56,72x85,108x127,160x188,240x283,360x424,480x565,540x636,621x731&from=bu&u=sLhlflJvIjuzUi8emfbG4vbRHD7ngNBt61nl9AzX07I&cs=621x0" alt="Софт‑скилы" loading="lazy">
+                </div>
+                <div class="side-layout-text">
+                    <ul>
+                        <li><strong>Коммуникация с разработчиками.</strong> Пример: во время регресса вебинаров я ежедневно обсуждала с разработчиками найденные проблемы на стендапах, что ускоряло их исправление.</li>
+                        <li><strong>Работа в команде.</strong> Пример: вместе с другим тестировщиком мы делили задачи по проверке каталога курсов, чтобы покрыть все сценарии за ограниченное время.</li>
+                        <li><strong>Приоритизация задач (20 ч/нед).</strong> Пример: я составляла список задач на неделю и согласовывала с ментором, что критично для ближайшего релиза, а что можно отложить.</li>
+                        <li><strong>Критическое мышление.</strong> Пример: при тестировании нового интерфейса каталога я не просто следовала тест-кейсам, но и придумывала нестандартные сценарии (поворот экрана на планшете, быстрые нажатия), которые помогли найти скрытые баги.</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="quote">За время стажировки я прокачала и технические, и личные навыки. Из хард-скиллов: научилась писать баг-репорты так, чтобы разработчик с первого раза понимал проблему, освоила TestIT для ведения тестовой документации и стала уверенно пользоваться DevTools. Из софт-скиллов главное — коммуникация и приоритизация: когда работаешь 20 часов в неделю, а список задач длинный, нужно уметь выбирать самое важное и чётко обсуждать это с командой.</div>
+        </article>
+
+        <article class="slide" id="slide10">
+            <div class="slide-number">10</div>
+            <h2>Мой вклад в продукт</h2>
+            <div class="side-layout">
+                <div class="side-layout-image">
+                    <img src="https://skillspace.ru/blog/content/images/2023/03/C794F775-8743-4194-A1F5-34DE35C48068.jpg" alt="Вклад" loading="lazy">
+                </div>
+                <div class="side-layout-text">
+                    <ul>
+                        <li><strong>Тест-кейсы:</strong> 42 тест-кейса для модулей «Каталог курсов» и «Проверка заданий».</li>
+                        <li><strong>Баг-репорты:</strong> 31 оформленный баг, из них 4 — высокой важности (high priority).</li>
+                        <li><strong>Релизы:</strong> Участие в двух релизах — обновление интерфейса каталога и патч вебинаров с доработками автозаписей.</li>
+                        <li><strong>Документация:</strong> Чек-лист регресса раздела «Проверка заданий» и мини-гайд по типовым багам мобильной версии.</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="quote">Что я оставила после себя? Во-первых, 42 тест-кейса для двух крупных модулей — обновлённого каталога курсов и раздела «Проверка заданий». Во-вторых, 31 баг-репорт, из которых четыре — высокой важности: они реально влияли на пользовательский опыт администраторов и учеников. В-третьих, за время стажировки я участвовала в двух релизах: обновление интерфейса каталога и патч вебинаров с доработками автозаписей. Все серьёзные баги были исправлены до продакшена. И напоследок я составила чек-лист регресса для раздела «Проверка заданий» и небольшой гайд по типовым багам мобильной версии — это поможет будущим стажёрам быстрее влиться в работу.</div>
+        </article>
+
+        <article class="slide" id="slide11">
+            <div class="slide-number">11</div>
+            <h2>Итоги стажировки</h2>
+            <div style="flex-wrap: nowrap; align-items: center;" class="badge-row">
+                <img style="filter: grayscale(12%) hue-rotate(299deg) invert(11%);" src="https://habrastorage.org/getpro/habr/upload_files/28c/40a/f23/28c40af237019402d3a4166fcd56af44.png" alt="Итоги" loading="lazy">
+                <div class="arrow-6">
+                <svg width="18px" height="17px" viewBox="-1 0 18 17" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                    <g>
+                        <polygon class="arrow-6-pl" points="16.3746667 8.33860465 7.76133333 15.3067621 6.904 14.3175671 14.2906667 8.34246869 6.908 2.42790698 7.76 1.43613596"></polygon>
+                        <polygon class="arrow-6-pl-fixed" points="16.3746667 8.33860465 7.76133333 15.3067621 6.904 14.3175671 14.2906667 8.34246869 6.908 2.42790698 7.76 1.43613596"></polygon>
+                        <path d="M-4.58892184e-16,0.56157424 L-4.58892184e-16,16.1929159 L9.708,8.33860465 L-1.64313008e-15,0.56157424 L-4.58892184e-16,0.56157424 Z M1.33333333,3.30246869 L7.62533333,8.34246869 L1.33333333,13.4327013 L1.33333333,3.30246869 L1.33333333,3.30246869 Z"></path>
+                    </g>
+                </svg>
+            </div>
+                <div class="side-layout-image">
+                    <div style="display:flex;align-items:center;justify-content:center;gap:20px;flex-wrap:wrap; background: #02423e; border-radius: var(--radius-md);">
+                        <div>
+                            <img style="border-bottom-left-radius: 3px; border-bottom-right-radius: 3px;" src="https://i.pinimg.com/originals/bb/16/97/bb1697684df622986cdf5a10c49ab25e.jpg" alt="Мем" loading="lazy" >
+                            <div class="shadow-6" style="text-align:center;">БЫЛО КРУТО!!! <br>САМА НЕ ОЖИДАЛА!!!</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="arrow-7"><span></span><span></span><span></span></div>
+            <div style="align-items: center;" class="side-layout">
+                <div class="side-layout-image">
+                    <div class="shadow-6" style="text-align:center;">Благодарность команде SkillSpace <br>и ментору за поддержку. </div>
+                </div>
+                <div class="side-layout-text">
+                    <ul>
+                        <li><strong>Стажировка подтвердила</strong> мой выбор профессии QA-инженера.</li>
+                        <li><strong>Получен реальный опыт</strong> работы в профессиональной команде тестирования.</li>
+                        <li><strong>Полное понимание</strong> цикла тестирования: от требований до релиза.</li>
+                        <li><strong>Освоены инструменты:</strong> YouTrack, TestIT, Figma, Chrome DevTools, Confluence.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="quote">Подводя итог: эта стажировка подтвердила, что тестирование — это именно то, чем я хочу заниматься. Работа в команде профессиональных QA-инженеров дала мне гораздо больше, чем я могла бы получить в одиночку. Я прошла путь от первой задачи до участия в релизах и увидела реальный результат своей работы. Спасибо команде SkillSpace за поддержку!</div>
+        </article>
+    </div>
+
+    <footer class="footer">
+        <p class="thanks">Спасибо за внимание! 🙌</p>
+        <p>Щербинина Ольга · Школа 21 · Стажировка 2026 · SkillSpace</p>
+    </footer>
+</main>
+
+<script>
+    (function() {
+      const slides = document.querySelectorAll('.slide');
+      const dots = document.querySelectorAll('.nav-dot');
+      const navDots = document.getElementById('navDots');
+      function updateActiveDot(index) {
+        dots.forEach(d => d.classList.remove('active'));
+        const activeDot = document.querySelector(`.nav-dot[data-slide="${index}"]`);
+        if (activeDot) activeDot.classList.add('active');
+      }
+      function getCurrentSlideIndex() {
+        let closestIndex = 0, closestDistance = Infinity;
+        const viewportMiddle = window.innerHeight / 2;
+        slides.forEach((slide, index) => {
+          const rect = slide.getBoundingClientRect();
+          const slideMiddle = rect.top + rect.height / 2;
+          const distance = Math.abs(slideMiddle - viewportMiddle);
+          if (distance < closestDistance) { closestDistance = distance; closestIndex = index; }
+        });
+        return closestIndex;
+      }
+      function onScroll() { updateActiveDot(getCurrentSlideIndex()); }
+      navDots.addEventListener('click', (e) => {
+        const dot = e.target.closest('.nav-dot'); if (!dot) return;
+        const targetSlide = slides[parseInt(dot.getAttribute('data-slide'), 10)];
+        if (targetSlide) targetSlide.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      });
+      window.addEventListener('scroll', onScroll, { passive: true }); onScroll();
+    })();
+</script>
+</body>
+</html>
