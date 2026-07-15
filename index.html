@@ -20,13 +20,10 @@
     <script src="https://code.jquery.com/jquery-2.2.3.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.matchHeight/0.7.0/jquery.matchHeight-min.js"></script>
     <style>
-        /* ============================================================================
-        RESET & BASE
-        ============================================================================ */
         *, *::before, *::after { padding: 0; margin: 0; border: 0; box-sizing: border-box; }
         html, body {
             font-family: 'Montserrat', sans-serif;
-            background-color: #000000;
+            background-color: #000;
             color: #f0f0f0;
             scroll-behavior: smooth;
             line-height: 1.6;
@@ -63,8 +60,7 @@
         .section { padding: 5rem 0; position: relative; z-index: 2; }
         .section-title {
             font-size: clamp(2.2rem, 5vw, 3.5rem); text-align: center; margin-bottom: 3rem;
-            color: var(--primary-orange); position: relative; display: block; width: 100%;
-            letter-spacing: 1px;
+            color: var(--primary-orange); position: relative; display: block; width: 100%; letter-spacing: 1px;
         }
         .section-title::after {
             content: ''; position: absolute; bottom: -12px; left: 50%; transform: translateX(-50%);
@@ -79,15 +75,10 @@
         }
         .main-content { position: relative; z-index: 1; }
 
-        /* ============================================================================
-        HEADER
-        ============================================================================ */
+        /* HEADER */
         .header {
-            position: sticky; top: 0; z-index: 999;
-            background: #000000;
-            color: var(--off-white);
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-            border-bottom: 1px solid var(--deep-orange);
+            position: sticky; top: 0; z-index: 999; background: #000; color: var(--off-white);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3); border-bottom: 1px solid var(--deep-orange);
         }
         .header__inner {
             display: flex; justify-content: space-between; align-items: center;
@@ -100,10 +91,10 @@
             font-weight: 300; font-style: normal; text-decoration: none;
             margin: 20px 0 20px 20px; line-height: 6px;
         }
-        .logotype1 div { display: block;}
+        .logotype1 div { display: block; }
         .logotype1 b {
             font-family: 'Russo One', sans-serif; letter-spacing: 1px; font-size: 24px; color: #F28627;
-            background: #000000; -webkit-text-stroke: 1px #BF491F;
+            background: #000; -webkit-text-stroke: 1px #BF491F;
             text-shadow: 2px 4px 3px rgba(0,0,0,0.3); font-weight: bolder; background-color: #00010D;
         }
         .logotype1 span {
@@ -122,42 +113,42 @@
         .header-info { display: flex; align-items: center; gap: 25px; }
         .header-greeting { display: flex; flex-direction: column; align-items: flex-end; font-family: 'Cardo', serif; color: #e7cfc1; }
         .header-greeting .date-time { font-size: 0.9rem; opacity: 0.8; }
-        .header-greeting .greeting-text { font-size: 1.2rem; font-weight: 700; color: var(--warm-orange);}
+        .header-greeting .greeting-text { font-size: 1.2rem; font-weight: 700; color: var(--warm-orange); }
 
-        /* ============================================================================
-        HERO
-        ============================================================================ */
-        .hero {display: flex; align-items: center; min-height: 80vh;}
+        /* HERO */
+        .hero { display: flex; align-items: center; min-height: 80vh; }
         .hero__grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 4rem; align-items: center; }
         .hero__title { font-size: clamp(2.5rem, 5vw, 3.5rem); line-height: 1.2; margin-bottom: 1.5rem; color: var(--deep-orange); }
         .hero__title span { color: var(--teal); display: block; font-size: clamp(1.6rem, 3vw, 2.2rem); font-family: 'Cardo', serif; font-style: italic; margin-top: 0.5rem; }
         .hero__text { font-size: 1.1rem; margin-bottom: 2rem; color: var(--text-secondary); max-width: 550px; }
-        .hero__image-box { max-height: 90%; position: relative; border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%; overflow: hidden; box-shadow: var(--shadow-lg); border: 5px solid var(--primary-orange); transition: border-radius 0.6s; aspect-ratio: 1 / 1.2; }
+        .hero__image-box {
+            max-height: 90%; position: relative; border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%; overflow: hidden;
+            box-shadow: var(--shadow-lg); border: 5px solid var(--primary-orange); transition: border-radius 0.6s; aspect-ratio: 1 / 1.2;
+        }
         .hero__image-box:hover { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
         .hero__image { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s; }
         .hero__image-box:hover .hero__image { transform: scale(1.05); }
-        .btn { display: inline-block; padding: 0.9rem 2.2rem; border-radius: 50px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; transition: 0.3s; background: var(--primary-orange); color: var(--off-white); box-shadow: 0 8px 18px rgba(242, 134, 39, 0.3); border: 2px solid transparent; }
+        .btn {
+            display: inline-block; padding: 0.9rem 2.2rem; border-radius: 50px; font-weight: 600;
+            text-transform: uppercase; letter-spacing: 1px; transition: 0.3s; background: var(--primary-orange);
+            color: var(--off-white); box-shadow: 0 8px 18px rgba(242,134,39,0.3); border: 2px solid transparent;
+        }
         .btn-outline { background: transparent; border-color: var(--warm-orange); color: var(--warm-orange); box-shadow: none; margin-left: 1rem; }
         .btn:hover { transform: translateY(-3px); background: var(--deep-orange); }
         .btn-outline:hover { border-color: var(--warm-orange); background: var(--warm-orange); color: var(--off-white); }
 
-        /* ============================================================================
-        CARD SYSTEM
-        ============================================================================ */
+        /* CARD SYSTEM */
         .card-grid {
-            display: grid; grid-template-columns: 1fr;
-            gap: 2rem; max-width: var(--container-width); margin: 0 auto; padding: 0 2rem;
+            display: grid; grid-template-columns: 1fr; gap: 2rem;
+            max-width: var(--container-width); margin: 0 auto; padding: 0 2rem;
         }
         .card-grid.cols-4 { grid-template-columns: 1fr; }
-
         .card {
             background: var(--card-bg); border-radius: 24px; overflow: hidden;
             border: 1px solid var(--border-light); box-shadow: var(--shadow-md);
-            transition: transform 0.3s ease, box-shadow 0.3s ease; display: flex; flex-direction: column;
-            height: 100%;
+            transition: transform 0.3s ease, box-shadow 0.3s ease; display: flex; flex-direction: column; height: 100%;
         }
         .card:hover { transform: translateY(-8px); box-shadow: var(--shadow-lg); border-color: #F28627; }
-
         .card__header {
             position: relative; width: 100%; height: 180px; max-height: 180px;
             background: #0A151B; display: flex; align-items: center; justify-content: center;
@@ -184,11 +175,13 @@
             justify-content: center; font-size: 1.6rem; color: #fff; font-weight: bold; line-height: 1;
         }
         .card:hover .card__badge span { transform: scale(1) rotate(45deg); background: #F28627; }
-
         .card__body { padding: 1.5rem; flex: 1; display: flex; flex-direction: column; }
         .card__body h3 { font-size: 1.4rem; margin-bottom: 1rem; color: var(--deep-orange); text-align: center; }
         .card__body ul { flex: 1; }
-        .card__body ul li { padding: 0.5rem 0; border-bottom: 1px dashed var(--border-light); display: flex; align-items: center; gap: 10px; color: var(--text-secondary); }
+        .card__body ul li {
+            padding: 0.5rem 0; border-bottom: 1px dashed var(--border-light);
+            display: flex; align-items: center; gap: 10px; color: var(--text-secondary);
+        }
         .card__body ul li i { font-size: 0.9rem; color: var(--teal); width: 16px; text-align: center; }
         .card__icon-inline { width: 100px; height: 100px; margin: 0 auto 1.2rem; display: block; object-fit: contain; }
 
@@ -213,14 +206,26 @@
         .project-list { display: flex; flex-direction: column; gap: 8px; margin-top: 10px; }
         .project-item {
             background: rgba(255,255,255,0.08); border-radius: 12px; padding: 10px 12px;
-            border: 1px solid rgba(255,255,255,0.1); transition: 0.3s; display: block; color: inherit;
+            border: 1px solid rgba(255,255,255,0.1); transition: 0.3s; display: flex;
+            color: inherit; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;
         }
         .project-item:hover { background: rgba(242,134,39,0.2); border-color: var(--warm-orange); }
+        .project-info { flex: 1; min-width: 200px; }
         .project-name { font-weight: 700; font-size: 0.9rem; color: #fff; margin-bottom: 2px; display: flex; align-items: center; gap: 6px; }
         .project-desc { font-size: 0.72rem; color: var(--text-secondary); margin-bottom: 4px; line-height: 1.3; }
         .project-tech { display: flex; flex-wrap: wrap; gap: 4px; }
         .tech-tag { background: rgba(242,134,39,0.2); color: var(--warm-orange); padding: 2px 7px; border-radius: 50px; font-size: 0.65rem; font-weight: 500; }
         .tech-tag.highlight { background: var(--primary-orange); color: #fff; font-weight: 700; }
+        .project-links { display: flex; gap: 6px; flex-shrink: 0; }
+        .project-link {
+            display: inline-flex; align-items: center; gap: 4px; padding: 5px 10px; border-radius: 20px;
+            font-size: 0.7rem; font-weight: 600; transition: 0.3s; background: rgba(242,134,39,0.2); color: var(--warm-orange);
+        }
+        .project-link:hover { background: var(--warm-orange); color: #fff; }
+        .project-link.live { background: rgba(4,157,191,0.2); color: var(--teal); }
+        .project-link.live:hover { background: var(--teal); color: #fff; }
+        .project-link.download { background: rgba(242,116,5,0.2); color: var(--primary-orange); }
+        .project-link.download:hover { background: var(--primary-orange); color: #fff; }
 
         /* QUALITIES */
         .quality-card { background: var(--card-bg); border-radius: 20px; transition: 0.5s; box-shadow: var(--shadow-md); border: 1px solid var(--border-light); overflow: hidden; height: 100%; display: flex; flex-direction: column; }
@@ -241,9 +246,7 @@
         .quality-card__body ul li { padding: 0.4rem 0; border-bottom: 1px dashed var(--border-light); display: flex; align-items: center; gap: 10px; color: var(--text-secondary); font-size: 0.9rem; }
         .quality-card__body ul li i { color: var(--teal); font-size: 0.8rem; width: 14px; text-align: center; flex-shrink: 0; }
 
-        /* ============================================================================
-        EDUCATION
-        ============================================================================ */
+        /* EDUCATION */
         .education-wrapper {
             background: var(--card-bg); border-radius: 24px; padding: 3rem 2rem;
             border: 1px solid var(--border-light); box-shadow: var(--shadow-md);
@@ -274,9 +277,7 @@
         .photo-container-2 .photo-2 { position: absolute; top: 0; animation: rotate 10s linear infinite; }
         @keyframes rotate { 0% { opacity: 1; transform: rotate(0) scale(1); } 40% { transform: rotate(0) scale(1); opacity: 1; } 49.99999% { transform: rotate(45deg) scale(3); opacity: 0; z-index: 1; } 50% { transform: rotate(0) scale(1); opacity: 0; z-index: -1; } 100% { opacity: 1; transform: rotate(0) scale(1); z-index: -1; } }
 
-        /* ============================================================================
-        FOOTER & CONTACT
-        ============================================================================ */
+        /* FOOTER */
         .contact-section { text-align: center; }
         .social-links { display: flex; justify-content: center; gap: 1.8rem; margin: 2.5rem 0; flex-wrap: wrap; }
         .social-link {
@@ -297,9 +298,7 @@
         .upbtn:hover { background: var(--deep-orange); transform: scale(1.1) !important; }
         .upbtn i { font-size: 24px; }
 
-        /* ============================================================================
-        SIDEBAR & MENU
-        ============================================================================ */
+        /* SIDEBAR */
         .sidebar {
             position: fixed; top: 0; left: 0; width: 280px; height: 100vh; background: #000;
             z-index: 1001; display: flex; flex-direction: column; transition: transform 0.4s;
@@ -326,11 +325,7 @@
         .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 1000; backdrop-filter: blur(2px); }
         .sidebar-overlay.show { display: block; }
 
-        /* ============================================================================
-        RESPONSIVE — Mobile First (1 колонка)
-        ============================================================================ */
-        /* 0 — 779px: 1 колонка */
-        /* 780px — 991px: 2 колонки, боковая панель скрыта */
+        /* RESPONSIVE */
         @media(min-width: 780px) {
             .card-grid { grid-template-columns: repeat(2, 1fr); }
             .card-grid.cols-4 { grid-template-columns: repeat(2, 1fr); }
@@ -342,8 +337,6 @@
             .btn-outline { margin-left: 1rem; margin-top: 0; }
             .container-logotype1 { transform: scale(1); }
         }
-
-        /* 992px — 1399px: боковая панель + 2 колонки */
         @media(min-width: 992px) {
             .sidebar { transform: translateX(0); }
             .main-with-sidebar { margin-left: 280px; }
@@ -354,16 +347,10 @@
             .card-grid.cols-4 { grid-template-columns: repeat(2, 1fr); }
             .header-greeting { display: flex; }
         }
-
-        /* 1400px+: 3 колонки для компетенций и проектов, 4 для качеств */
         @media(min-width: 1400px) {
             .card-grid { grid-template-columns: repeat(3, 1fr); }
             .card-grid.cols-4 { grid-template-columns: repeat(4, 1fr); }
         }
-
-        /* ============================================================================
-        Мелкие правки для мобильных
-        ============================================================================ */
         @media(max-width: 992px) {
             .sidebar { transform: translateX(-100%); }
             .sidebar.open { transform: translateX(0); }
@@ -416,6 +403,8 @@
             .btn { padding: 0.7rem 1.5rem; font-size: 0.85rem; }
             .social-link { width: 45px; height: 45px; font-size: 1.2rem; }
             .social-links { gap: 0.8rem; }
+            .project-item { flex-direction: column; align-items: flex-start; }
+            .project-links { width: 100%; justify-content: flex-start; }
         }
     </style>
 </head>
@@ -426,10 +415,10 @@
 <aside class="sidebar" id="sidebar">
     <div class="sidebar-header">
         <div class="container-logotype1">
-            <a href="https://sites.google.com/view/frontend-olga-kashina/%D1%80%D0%B5%D0%B7%D1%8E%D0%BC%D0%B5" class="logotype1">
+            <a href="#" class="logotype1">
                 <div><b>Junior</b>FrontEnd</div>
                 <span>ашина Ольга </span>
-                <span><b style="font-size: 30px; margin-left: 50px; padding-right: 0; stroke-width: 4px; color:#F28627; transition: all 0.3s ease; box-sizing: content-box;">K </b></span>
+                <span><b style="font-size:30px;margin-left:50px;color:#F28627;">K </b></span>
             </a>
         </div>
     </div>
@@ -437,14 +426,12 @@
         <a href="#skills" onclick="closeSidebar()"><i class="fas fa-code"></i> Мои компетенции</a>
         <a href="#qualities" onclick="closeSidebar()"><i class="fas fa-star"></i> Личные качества</a>
         <a href="#education" onclick="closeSidebar()"><i class="fas fa-graduation-cap"></i> Образование</a>
-        <a href="#projects" onclick="closeSidebar()" class="active"><i class="fas fa-folder-open"></i> PET Проекты</a>
+        <a href="#projects" onclick="closeSidebar()"><i class="fas fa-folder-open"></i> PET Проекты</a>
         <a href="#contact" onclick="closeSidebar()"><i class="fas fa-envelope"></i> Контакты</a>
         <span class="nav-section">Прямые ссылки</span>
         <a href="https://drive.google.com/file/d/100H6l3nqZmm5T8zP-GkuKAJ18gcF36Lg/view?usp=drive_link" target="_blank"><i class="fas fa-file-pdf"></i> Скачать резюме (PDF)</a>
     </nav>
-    <div class="sidebar-footer">
-        <p class="copyright">© 2023–2026<br>Ольга Кашина (Щербинина)</p>
-    </div>
+    <div class="sidebar-footer">© 2023–2026<br>Ольга Кашина (Щербинина)</div>
 </aside>
 
 <button class="menu-toggle" id="menuToggle" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
@@ -455,10 +442,10 @@
         <section class="header">
             <div class="header__inner">
                 <div class="container-logotype1">
-                    <a href="https://sites.google.com/view/frontend-olga-kashina/%D1%80%D0%B5%D0%B7%D1%8E%D0%BC%D0%B5" class="logotype1">
+                    <a href="#" class="logotype1">
                         <div><b>Junior</b>FrontEnd</div>
                         <span>ашина Ольга </span>
-                        <span><b style="font-size: 30px; margin-left: 50px; padding-right: 0; stroke-width: 4px; color:#F28627; transition: all 0.3s ease; box-sizing: content-box;">K </b></span>
+                        <span><b style="font-size:30px;margin-left:50px;color:#F28627;">K </b></span>
                     </a>
                 </div>
                 <div class="header-info">
@@ -478,8 +465,8 @@
                     <h1 class="hero__title">Ольга Кашина <span>Frontend-разработчик & AQA-инженер</span></h1>
                     <p class="hero__text">Создаю адаптивные, интерактивные и стильные веб-сайты. Тестирую и довожу продукт до совершенства. <br><br>🏆 Победитель премии «Прорыв года» в «Школе 21» (образовательный проект Сбера для ИТ-специалистов). Первая в Челябинском кампусе выполнила все обязательные проекты по направлению «Тестирование».</p>
                     <div class="hero__buttons">
-                        <a href="mailto:olga.555.scherbinina@gmail.com" class="btn">Связаться</a>
-                        <a href="https://sites.google.com/view/frontend-olga-kashina/%D0%BF%D1%80%D0%BE%D0%B5%D0%BA%D1%82%D1%8B" class="btn btn-outline">Мои работы</a>
+                        <a href="#contact" class="btn">Связаться</a>
+                        <a href="#projects" class="btn btn-outline">Мои работы</a>
                     </div>
                 </div>
                 <div class="hero__image-box">
@@ -491,9 +478,9 @@
         <section class="section" id="skills">
             <div class="container"><h2 class="section-title">Мои компетенции</h2></div>
             <div class="card-grid">
-                <div class="card"><div class="card__header"><span class="gradient-label">Frontend</span><span class="card__badge"><span></span></span></div><div class="card__body"><img src="https://raw.githubusercontent.com/olga555scherbinina-cell/tomokoom/main/images/html-3d-icon.png" alt="" class="card__icon-inline" loading="lazy"><ul><li><i class="fas fa-check"></i> HTML5, CSS3, JavaScript</li><li><i class="fas fa-check"></i> Адаптивная верстка</li><li><i class="fas fa-check"></i> jQuery, GSAP</li><li><i class="fas fa-check"></i> Figma, Photoshop</li></ul></div></div>
-                <div class="card"><div class="card__header"><span class="gradient-label aqa">AQA & Backend</span><span class="card__badge"><span></span></span></div><div class="card__body"><img src="https://raw.githubusercontent.com/olga555scherbinina-cell/tomokoom/main/images/hacker-3d-icon.png" alt="" class="card__icon-inline" loading="lazy"><ul><li><i class="fas fa-check"></i> JUnit, TestNG, Selenide</li><li><i class="fas fa-check"></i> REST Assured, Postman</li><li><i class="fas fa-check"></i> Cucumber, Allure</li><li><i class="fas fa-check"></i> Java, Spring, PostgreSQL</li></ul></div></div>
-                <div class="card"><div class="card__header"><span class="gradient-label tools">Инструменты</span><span class="card__badge"><span></span></span></div><div class="card__body"><img src="https://raw.githubusercontent.com/olga555scherbinina-cell/tomokoom/main/images/application-setting-3d.png" alt="" class="card__icon-inline" loading="lazy"><ul><li><i class="fas fa-check"></i> VS Code, IntelliJ IDEA</li><li><i class="fas fa-check"></i> Git, Gradle</li><li><i class="fas fa-check"></i> Linux, Bash</li><li><i class="fas fa-check"></i> Android Studio, Espresso</li><li><i class="fas fa-check"></i> Работа с нейросетями (Prompt Engineering)</li></ul></div></div>
+                <div class="card"><div class="card__header"><span class="gradient-label">Frontend</span><span class="card__badge"><span></span></span></div><div class="card__body"><img src="https://raw.githubusercontent.com/olga555scherbinina-cell/tomokoom/main/images/html-3d-icon.png" alt="" class="card__icon-inline" loading="lazy"><h3>Frontend</h3><ul><li><i class="fas fa-check"></i> HTML5, CSS3, JavaScript</li><li><i class="fas fa-check"></i> Адаптивная верстка</li><li><i class="fas fa-check"></i> jQuery, GSAP</li><li><i class="fas fa-check"></i> Figma, Photoshop</li></ul></div></div>
+                <div class="card"><div class="card__header"><span class="gradient-label aqa">AQA & Backend</span><span class="card__badge"><span></span></span></div><div class="card__body"><img src="https://raw.githubusercontent.com/olga555scherbinina-cell/tomokoom/main/images/hacker-3d-icon.png" alt="" class="card__icon-inline" loading="lazy"><h3>AQA & Backend</h3><ul><li><i class="fas fa-check"></i> JUnit, TestNG, Selenide</li><li><i class="fas fa-check"></i> REST Assured, Postman</li><li><i class="fas fa-check"></i> Cucumber, Allure</li><li><i class="fas fa-check"></i> Java, Spring, PostgreSQL</li></ul></div></div>
+                <div class="card"><div class="card__header"><span class="gradient-label tools">Инструменты</span><span class="card__badge"><span></span></span></div><div class="card__body"><img src="https://raw.githubusercontent.com/olga555scherbinina-cell/tomokoom/main/images/application-setting-3d.png" alt="" class="card__icon-inline" loading="lazy"><h3>Инструменты</h3><ul><li><i class="fas fa-check"></i> VS Code, IntelliJ IDEA</li><li><i class="fas fa-check"></i> Git, Gradle</li><li><i class="fas fa-check"></i> Linux, Bash</li><li><i class="fas fa-check"></i> Android Studio, Espresso</li><li><i class="fas fa-check"></i> Работа с нейросетями (Prompt Engineering)</li></ul></div></div>
             </div>
         </section>
 
@@ -515,7 +502,13 @@
                         <div class="photo-container-2"><div class="photo-1"><img src="https://sun9-67.userapi.com/s/v1/ig2/SqWn9aZHVRd59WypAAR5-oGvSK-I7PBTQht8k_rYIo8vuEPxBaZcUnkA3ihpwOML5VYJgpkZHEe1FhqWfngAd7Ln.jpg?quality=95&as=32x47,48x70,72x105,108x157,160x233,240x350,360x524,480x699,540x786,596x868&from=bu&cs=596x0" alt="" /></div><div class="photo-2"><img src="https://sun9-41.userapi.com/s/v1/ig2/td7rT72w5lVj77PcFAxjGepDoz2Yyl-VnvBi41BL6yDx5qF9Q6N1kSTwKDiEt1kpqc2yW1FCAWBdKd8EXdTvEFYL.jpg?quality=95&as=32x45,48x68,72x102,108x153,160x227,240x341,360x511,480x682,540x767,595x845&from=bu&cs=595x0" alt="" /></div></div>
                         <div class="photo-container-1"><div class="photo-0"><img src="https://sun9-74.userapi.com/s/v1/ig2/LWWndfqZR2Bjv8rWCam6O-HW5yEguhMeKCKFpU6erkZppKmncYznEp9hXS-Fkg906Gcqo8r3w19cZlRiUYGBamCW.jpg?quality=95&as=32x35,48x53,72x79,108x118,160x175,240x263,360x394,480x526,540x592,640x701,720x789,1080x1183,1280x1402,1440x1577,2337x2560&from=bu&cs=2337x0" alt="" /></div><div class="photo-1"><img src="https://sun9-74.userapi.com/s/v1/ig2/LWWndfqZR2Bjv8rWCam6O-HW5yEguhMeKCKFpU6erkZppKmncYznEp9hXS-Fkg906Gcqo8r3w19cZlRiUYGBamCW.jpg?quality=95&as=32x35,48x53,72x79,108x118,160x175,240x263,360x394,480x526,540x592,640x701,720x789,1080x1183,1280x1402,1440x1577,2337x2560&from=bu&cs=2337x0" alt="" /></div><div class="photo-2"><img src="https://sun9-39.userapi.com/impg/WPX3_fEKCdo2b1naDBBKG89XQsrJl8SZGZc6LQ/Uyu4GBdZwLk.jpg?size=1713x1275&quality=95&sign=9eb103c9a577135b0f3a0b55ef90e053&type=album" alt="" /></div></div>
                     </div>
-                    <div class="education-timeline"><div class="timeline"><div class="timeline-item"><div class="timeline-year">2025 — н.в.</div><div class="timeline-title">Школа 21 (Сбер)</div><div class="timeline-text">Инженер по тестированию (AQA/QA).</div></div><div class="timeline-item"><div class="timeline-year">2026</div><div class="timeline-title">Подтверждение ИТ-компетенций</div><div class="timeline-text">Функциональное тестирование — продвинутый.<br>Регрессионное — базовый.</div></div><div class="timeline-item"><div class="timeline-year">2025</div><div class="timeline-title">Экзамен SQL (Школа 21)</div><div class="timeline-text">SQL_Ex_test.</div></div><div class="timeline-item"><div class="timeline-year">2023</div><div class="timeline-title">ЮУрГУ, повышение квалификации</div><div class="timeline-text">«Дизайн и верстка веб-сайтов».</div></div></div></div>
+                    <div class="education-timeline"><div class="timeline"><div class="timeline-item"><div class="timeline-year">2025 — н.в.</div><div class="timeline-title">Школа 21 (Сбер)</div><div class="timeline-text">Инженер по тестированию (AQA/QA).</div></div>
+                        <div class="timeline-item">
+                            <div class="timeline-year">2026</div>
+                            <div class="timeline-title">Экзамен Java (Школа 21)</div>
+                            <div class="timeline-text">Java_Ex_test.</div>
+                        </div>
+                        <div class="timeline-item"><div class="timeline-year">2026</div><div class="timeline-title">Подтверждение ИТ-компетенций</div><div class="timeline-text">Функциональное тестирование — продвинутый.<br>Регрессионное — базовый.</div></div><div class="timeline-item"><div class="timeline-year">2025</div><div class="timeline-title">Экзамен SQL (Школа 21)</div><div class="timeline-text">SQL_Ex_test.</div></div><div class="timeline-item"><div class="timeline-year">2023</div><div class="timeline-title">ЮУрГУ, повышение квалификации</div><div class="timeline-text">«Дизайн и верстка веб-сайтов».</div></div></div></div>
                 </div>
             </div>
         </section>
@@ -524,31 +517,65 @@
             <div class="container"><h2 class="section-title">PET Проекты и опыт</h2></div>
             <div class="card-grid">
                 <div class="card"><div class="card__header"><span class="gradient-label aqa-vs">AQA VS QA</span><span class="card__badge"><span></span></span></div><div class="card__body"><img src="https://raw.githubusercontent.com/olga555scherbinina-cell/tomokoom/main/images/bug-fixing-3d-icon.png" alt="" class="card__icon-inline" loading="lazy"><h3>Тестирование</h3><div class="project-list">
-                    <a class="project-item" href="https://sites.google.com/view/frontend-olga-kashina/aqa1-basics" target="_blank"><div class="project-name">🧪 AQA1: Unit-тесты</div><div class="project-desc">JUnit, TestNG. Параметризованные тесты на Java.</div><div class="project-tech"><span class="tech-tag">Java</span><span class="tech-tag">JUnit 5</span><span class="tech-tag">TestNG</span></div></a>
-                    <a class="project-item" href="https://sites.google.com/view/frontend-olga-kashina/aqa2-api-testing" target="_blank"><div class="project-name">🔌 AQA2: API тестирование</div><div class="project-desc">OkHttp, REST Assured, Retrofit. JSON, REST API.</div><div class="project-tech"><span class="tech-tag">REST Assured</span><span class="tech-tag">Retrofit</span></div></a>
-                    <a class="project-item" href="https://sites.google.com/view/frontend-olga-kashina/aqa3-ui-web-testing" target="_blank"><div class="project-name">🖥️ AQA3: UI Web тестирование</div><div class="project-desc">Selenide, Page Object, Cucumber, Allure.</div><div class="project-tech"><span class="tech-tag">Selenide</span><span class="tech-tag">Cucumber</span><span class="tech-tag">Allure</span></div></a>
-                    <a class="project-item" href="https://sites.google.com/view/frontend-olga-kashina/aqa4-mobile-testing" target="_blank"><div class="project-name">📱 AQA4: Мобильное тестирование</div><div class="project-desc">Espresso, Android Studio. Android-приложения.</div><div class="project-tech"><span class="tech-tag">Espresso</span><span class="tech-tag">Android</span></div></a>
-                    <a class="project-item" href="https://sites.google.com/view/frontend-olga-kashina/qa6-web-testing" target="_blank"><div class="project-name">🌍 QA6: Web testing</div><div class="project-desc">Кроссбраузерное тестирование, Cookies, UI-багрепорты.</div><div class="project-tech"><span class="tech-tag">Postman</span><span class="tech-tag">DevTools</span></div></a>
-                    <a class="project-item" href="https://sites.google.com/view/frontend-olga-kashina/find-and-go" target="_blank"><div class="project-name">📍 «Найди и иди»</div><div class="project-desc">Тест-дизайн, чек-листы, тест-кейсы.</div><div class="project-tech"><span class="tech-tag">Тест-дизайн</span><span class="tech-tag">Документация</span></div></a>
+                    <div class="project-item">
+                        <div class="project-info"><div class="project-name">🧪 AQA1: Unit-тесты</div><div class="project-desc">JUnit, TestNG. Параметризованные тесты на Java.</div><div class="project-tech"><span class="tech-tag">Java</span><span class="tech-tag">JUnit 5</span><span class="tech-tag">TestNG</span></div></div>
+                        <div class="project-links"><a href="https://drive.google.com/file/d/1QMsP-vZPTKXDrvKdaLUAnsbci5DIljCo/view?usp=drive_link" class="project-link download" target="_blank"><i class="fas fa-download"></i> Скачать</a></div>
+                    </div>
+                    <div class="project-item">
+                        <div class="project-info"><div class="project-name">🔌 AQA2: API тестирование</div><div class="project-desc">OkHttp, REST Assured, Retrofit. JSON, REST API.</div><div class="project-tech"><span class="tech-tag">REST Assured</span><span class="tech-tag">Retrofit</span></div></div>
+                        <div class="project-links"><a href="https://drive.google.com/file/d/1ykqYy4pbz2TNINienon42VXg8iyh0E7j/view?usp=drive_link" class="project-link download" target="_blank"><i class="fas fa-download"></i> Скачать</a></div>
+                    </div>
+                    <div class="project-item">
+                        <div class="project-info"><div class="project-name">🖥️ AQA3: UI Web тестирование</div><div class="project-desc">Selenide, Page Object, Cucumber, Allure.</div><div class="project-tech"><span class="tech-tag">Selenide</span><span class="tech-tag">Cucumber</span><span class="tech-tag">Allure</span></div></div>
+                        <div class="project-links"><a href="https://drive.google.com/file/d/1SGcWqXc4qwaJYz8J3Dfmz1c8-dyPDqAS/view?usp=drive_link" class="project-link download" target="_blank"><i class="fas fa-download"></i> Скачать</a></div>
+                    </div>
+                    <div class="project-item">
+                        <div class="project-info"><div class="project-name">📱 AQA4: Мобильное тестирование</div><div class="project-desc">Espresso, Android Studio. Android-приложения.</div><div class="project-tech"><span class="tech-tag">Espresso</span><span class="tech-tag">Android</span></div></div>
+                        <div class="project-links"><a href="https://drive.google.com/file/d/10KjMU2qHeKCG1kDSZDLW9Sld3X6bpM2u/view?usp=drive_link" class="project-link download" target="_blank"><i class="fas fa-download"></i> Скачать</a></div>
+                    </div>
+                    <div class="project-item">
+                        <div class="project-info"><div class="project-name">🌍 QA6: Web testing</div><div class="project-desc">Кроссбраузерное тестирование, Cookies, UI-багрепорты.</div><div class="project-tech"><span class="tech-tag">Postman</span><span class="tech-tag">DevTools</span></div></div>
+                        <div class="project-links"><a href="https://olga555scherbinina-cell.github.io/tomokoom/qa6_web_testing/" class="project-link live" target="_blank"><i class="fas fa-external-link-alt"></i> Live</a><a href="https://drive.google.com/file/d/1bi7ew3zT7OkCg-EfSt2pQ5VWNvfVRbID/view?usp=drive_link" class="project-link download" target="_blank"><i class="fas fa-download"></i> Скачать</a></div>
+                    </div>
+                    <div class="project-item">
+                        <div class="project-info"><div class="project-name">📍 QA4: Виды и уровни тестирования</div><div class="project-desc">Тестовая документация (Black-box, Grey-box). Тест-дизайн, чек-листы, тест-кейсы.</div><div class="project-tech"><span class="tech-tag">Тест-дизайн</span><span class="tech-tag">Документация</span></div></div>
+                        <div class="project-links"><a href="https://drive.google.com/file/d/1RffaaUx1DEnp2yBZGpMg02azzLQIgnpA/view?usp=drive_link" class="project-link download" target="_blank"><i class="fas fa-download"></i> Скачать</a></div>
+                    </div>
                 </div></div></div>
                 <div class="card"><div class="card__header"><span class="gradient-label frontend-vs">Frontend VS Backend</span><span class="card__badge"><span></span></span></div><div class="card__body"><img src="https://cdn3d.iconscout.com/3d/premium/thumb/api-setting-3d-icon-png-download-7757226.png" alt="" class="card__icon-inline" loading="lazy"><h3>Разработка</h3><div class="project-list">
-                    <a class="project-item" href="https://olga555scherbinina-cell.github.io/tomokoom/pool/" target="_blank"><div class="project-name">💧 Бассейн Школы 21</div><div class="project-desc">Дневник прохождения бассейна. Челябинск, 2025.</div><div class="project-tech"><span class="tech-tag highlight">🌐 Live</span></div></a>
-                    <a class="project-item" href="https://olga555scherbinina-cell.github.io/tomokoom/graph_builder/" target="_blank"><div class="project-name">📈 Graph Builder</div><div class="project-desc">Польская нотация. Алгоритм Дейкстры.</div><div class="project-tech"><span class="tech-tag highlight">🌐 Live</span></div></a>
-                    <a class="project-item" href="https://sites.google.com/view/ashmarin-creativ/" target="_blank"><div class="project-name">📸 Сайт фотографа</div><div class="project-desc">Адаптивная верстка, Figma.</div><div class="project-tech"><span class="tech-tag">HTML5</span><span class="tech-tag">Figma</span></div></a>
-                    <a class="project-item" href="https://sites.google.com/view/tmcontinent/" target="_blank"><div class="project-name">🚛 ТМ Континент</div><div class="project-desc">Корпоративный сайт, UI/UX.</div><div class="project-tech"><span class="tech-tag">JavaScript</span></div></a>
-                    <a class="project-item" href="https://sites.google.com/view/frontend-olga-kashina/tictactoe" target="_blank"><div class="project-name">🎮 Крестики-Нолики</div><div class="project-desc">Spring Boot, JWT, PostgreSQL.</div><div class="project-tech"><span class="tech-tag">Spring Boot</span><span class="tech-tag">JWT</span></div></a>
-                    <a class="project-item" href="https://sites.google.com/view/frontend-olga-kashina/rogue1980" target="_blank"><div class="project-name">🐉 Rogue 1980</div><div class="project-desc">Java, ООП. Roguelike-игра в терминале.</div><div class="project-tech"><span class="tech-tag">Java</span><span class="tech-tag">ООП</span></div></a>
-                    <a class="project-item" href="https://sites.google.com/view/frontend-olga-kashina/console-programs" target="_blank"><div class="project-name">💻 Консольные программы</div><div class="project-desc">Фибоначчи, калькулятор. Алгоритмы на Java.</div><div class="project-tech"><span class="tech-tag">Java</span><span class="tech-tag">Алгоритмы</span></div></a>
+                    <div class="project-item">
+                        <div class="project-info"><div class="project-name">💧 Бассейн Школы 21</div><div class="project-desc">Дневник прохождения бассейна. Челябинск, 2025.</div><div class="project-tech"><span class="tech-tag highlight">🌐 Live</span></div></div>
+                        <div class="project-links"><a href="https://olga555scherbinina-cell.github.io/tomokoom/pool/" class="project-link live" target="_blank"><i class="fas fa-external-link-alt"></i> Live</a></div>
+                    </div>
+                    <div class="project-item">
+                        <div class="project-info"><div class="project-name">📈 Graph Builder</div><div class="project-desc">Польская нотация. Алгоритм Дейкстры.</div><div class="project-tech"><span class="tech-tag highlight">🌐 Live</span></div></div>
+                        <div class="project-links"><a href="https://olga555scherbinina-cell.github.io/tomokoom/graph_builder/" class="project-link live" target="_blank"><i class="fas fa-external-link-alt"></i> Live</a></div>
+                    </div>
+                    <div class="project-item">
+                        <div class="project-info"><div class="project-name">🚛 ТМ Континент</div><div class="project-desc">Корпоративный сайт, UI/UX.</div><div class="project-tech"><span class="tech-tag">JavaScript</span></div></div>
+                        <div class="project-links"><a href="https://sites.google.com/view/tmcontinent/" class="project-link live" target="_blank"><i class="fas fa-external-link-alt"></i> Live</a></div>
+                    </div>
+                    <div class="project-item">
+                        <div class="project-info"><div class="project-name">🎮 Крестики-Нолики</div><div class="project-desc">Spring Boot, JWT, PostgreSQL.</div><div class="project-tech"><span class="tech-tag">Spring Boot</span><span class="tech-tag">JWT</span></div></div>
+                        <div class="project-links"><a href="https://olga555scherbinina-cell.github.io/tomokoom/tic_tac_toe/" class="project-link live" target="_blank"><i class="fas fa-external-link-alt"></i> Live</a><a href="https://drive.google.com/file/d/167XvXn6hRqrNChDrydfWMn_ytt0WiMzC/view?usp=drive_link" class="project-link download" target="_blank"><i class="fas fa-download"></i> Скачать</a></div>
+                    </div>
+                    <div class="project-item">
+                        <div class="project-info"><div class="project-name">🐉 Rogue 1980</div><div class="project-desc">Java, ООП. Roguelike-игра в терминале.</div><div class="project-tech"><span class="tech-tag">Java</span><span class="tech-tag">ООП</span></div></div>
+                        <div class="project-links"><a href="https://olga555scherbinina-cell.github.io/tomokoom/rogue_1980/" class="project-link live" target="_blank"><i class="fas fa-external-link-alt"></i> Live</a><a href="https://drive.google.com/file/d/1L_JQLj0iPidpqQ-s1zEeP2twWa5Ij8-E/view?usp=drive_link" class="project-link download" target="_blank"><i class="fas fa-download"></i> Скачать</a></div>
+                    </div>
                 </div></div></div>
                 <div class="card"><div class="card__header"><span class="gradient-label sql">SQL</span><span class="card__badge"><span></span></span></div><div class="card__body"><img src="https://cdn3d.iconscout.com/3d/premium/thumb/sql-3d-icon-png-download-7757239.png" alt="" class="card__icon-inline" loading="lazy"><h3>Базы данных</h3><div class="project-list">
-                    <a class="project-item" href="https://sites.google.com/view/frontend-olga-kashina/sql-queries" target="_blank"><div class="project-name">🗃️ SQL-запросы</div><div class="project-desc">JOIN, фильтры, модель БД пиццерии. PostgreSQL.</div><div class="project-tech"><span class="tech-tag">PostgreSQL</span><span class="tech-tag">SQL</span></div></a>
+                    <div class="project-item">
+                        <div class="project-info"><div class="project-name">🗃️ SQL-запросы</div><div class="project-desc">JOIN, фильтры, модель БД пиццерии. PostgreSQL.</div><div class="project-tech"><span class="tech-tag">PostgreSQL</span><span class="tech-tag">SQL</span></div></div>
+                        <div class="project-links"><a href="https://drive.google.com/drive/folders/1W3OATFcEZbTWRNaj1JEY9HJLUA7Z9FT7?usp=drive_link" class="project-link download" target="_blank"><i class="fas fa-download"></i> Скачать</a></div>
+                    </div>
                 </div></div></div>
             </div>
         </section>
 
         <section class="section contact-section" id="contact">
             <div class="container"><h2 class="section-title">Свяжитесь со мной</h2>
-                <p style="margin-bottom: 2rem; font-size: 1.2rem; color: var(--text-secondary);">Открыта для предложений о сотрудничестве</p>
+                <p style="margin-bottom:2rem;font-size:1.2rem;color:var(--text-secondary);">Открыта для предложений о сотрудничестве</p>
                 <div class="social-links">
                     <a href="https://t.me/olga_liza13" class="social-link" target="_blank"><i class="fab fa-telegram-plane"></i></a>
                     <a href="https://wa.me/79128920956" class="social-link" target="_blank"><i class="fab fa-whatsapp"></i></a>
@@ -556,13 +583,12 @@
                     <a href="mailto:olga.555.scherbinina@gmail.com" class="social-link"><i class="fas fa-envelope"></i></a>
                     <a href="tel:+79080740974" class="social-link"><i class="fas fa-phone-alt"></i></a>
                 </div>
-                <a href="https://drive.google.com/file/d/1NiZfvKVbW9F_1eYbqKEcbRTRFGfaIlJj/view?usp=drive_link" class="btn" style="margin-top: 1rem;">Скачать резюме (PDF)</a>
+                <a href="https://olga555scherbinina-cell.github.io/tomokoom/Резюме%20Ольга%20Щербинина.pdf" download class="btn" style="margin-top:1rem;">Скачать резюме (PDF)</a>
             </div>
         </section>
 
         <div class="section-divider"></div>
     </main>
-
     <footer class="footer"><div class="container"><p>© 2023-2026 Ольга Кашина (Щербинина). Все права защищены.</p></div></footer>
 </div>
 
@@ -571,8 +597,8 @@
 <script>
     function updateDateTime() {
         const d = new Date();
-        const months = ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'];
-        const week = ['Воскресенье', 'Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота'];
+        const months = ['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];
+        const week = ['Воскресенье','Понедельник','Вторник','Среда','Четверг','Пятница','Суббота'];
         document.getElementById('liveDateTime').textContent = `${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}, ${week[d.getDay()]} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
     }
     updateDateTime(); setInterval(updateDateTime, 1000);
