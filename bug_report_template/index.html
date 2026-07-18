@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Шаблон баг-репорта | Сохранение в PDF и DOC</title>
+    <style>
+        :root {
+            --bg: #141822;
+            --surface: #1E2330;
+            --border: #2a2f40;
+            --text: #e8e8f0;
+            --text-secondary: #b0b5c0;
+            --text-muted: #7a7e8c;
+            --blue: #526EFF;
+            --blue-light: rgba(82, 110, 255, 0.12);
+            --red: #ff4d6a;
+            --radius-lg: 16px;
+            --radius-md: 10px;
+            --radius-sm: 6px;
+            --font: 'Inter', system-ui, -apple-system, sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font);
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            padding: 16px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .header-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        h1 {
+            font-size: clamp(1.4rem, 4vw, 1.8rem);
+            font-weight: 700;
+            color: var(--blue);
+        }
+        .subtitle {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+        }
+
+        .bug-report-block {
+            background: var(--surface);
+            border: 2px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 18px 20px;
+            margin-bottom: 28px;
+            position: relative;
+        }
+        .bug-report-block .block-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 14px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border);
+        }
+        .bug-report-block .block-header h3 {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--blue);
+        }
+        .bug-report-block .block-header .block-actions {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .section {
+            background: transparent;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 14px 16px;
+            margin-bottom: 12px;
+        }
+        .section h2 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+            padding-bottom: 6px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 12px;
+        }
+        .field {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            min-width: 0;
+        }
+        .field label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            color: var(--text-muted);
+        }
+
+        input,
+        textarea,
+        select {
+            font-family: var(--font);
+            font-size: 0.9rem;
+            padding: 10px 12px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            background: var(--bg);
+            color: var(--text);
+            width: 100%;
+            transition: border-color 0.2s;
+            min-width: 0;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 60px;
+            max-height: 300px;
+            overflow-y: auto;
+            line-height: 1.5;
+        }
+
+        input:focus,
+        textarea:focus,
+        select:focus {
+            outline: none;
+            border-color: var(--blue);
+            box-shadow: 0 0 0 3px rgba(82, 110, 255, 0.1);
+        }
+
+        .step-row {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 6px;
+            align-items: flex-start;
+        }
+        .step-num {
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            background: var(--blue-light);
+            color: var(--blue);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.8rem;
+            flex-shrink: 0;
+            margin-top: 7px;
+        }
+        .step-row textarea {
+            min-height: 44px;
+            flex: 1;
+            min-width: 0;
+        }
+        .btn-remove-step {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            padding: 4px 8px;
+            border-radius: var(--radius-sm);
+            font-size: 0.7rem;
+            cursor: pointer;
+            margin-top: 7px;
+            flex-shrink: 0;
+        }
+        .btn-remove-step:hover {
+            border-color: var(--red);
+            color: var(--red);
+        }
+
+        button {
+            font-family: var(--font);
+            font-weight: 600;
+            font-size: 0.85rem;
+            padding: 9px 18px;
+            border-radius: 50px;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+        .btn-primary {
+            background: var(--blue);
+            color: #fff;
+        }
+        .btn-primary:hover {
+            opacity: 0.85;
+        }
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text);
+        }
+        .btn-outline:hover {
+            border-color: var(--blue);
+            color: var(--blue);
+        }
+        .btn-success {
+            background: #25b99a;
+            color: #fff;
+        }
+        .btn-success:hover {
+            opacity: 0.85;
+        }
+        .btn-danger {
+            background: transparent;
+            border: 1px solid var(--red);
+            color: var(--red);
+        }
+        .btn-danger:hover {
+            background: var(--red);
+            color: #fff;
+        }
+
+        .tag-row {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+        .tag {
+            padding: 5px 12px;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            border: 1px solid var(--border);
+            cursor: pointer;
+            transition: all 0.2s;
+            background: transparent;
+            color: var(--text-secondary);
+        }
+        .tag.active,
+        .tag:hover {
+            border-color: var(--blue);
+            background: var(--blue-light);
+            color: var(--blue);
+        }
+
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-overlay.active {
+            display: flex;
+        }
+        .modal {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            max-width: 420px;
+            width: 90%;
+            text-align: center;
+        }
+        .modal h3 {
+            margin-bottom: 8px;
+            font-size: 1.1rem;
+        }
+        .modal p {
+            color: var(--text-secondary);
+            margin-bottom: 18px;
+            font-size: 0.9rem;
+        }
+        .modal .btn-row {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        @media print {
+            body {
+                background: #fff !important;
+                color: #000 !important;
+                padding: 0 !important;
+            }
+            .bug-report-block {
+                background: #fff !important;
+                border: 1px solid #ccc !important;
+                page-break-inside: avoid;
+                margin-bottom: 16px !important;
+                padding: 12px !important;
+            }
+            .section {
+                background: #fff !important;
+                border: 1px solid #ddd !important;
+                page-break-inside: avoid;
+                margin-bottom: 8px !important;
+                padding: 10px !important;
+            }
+            input,
+            textarea,
+            select {
+                background: #fff !important;
+                color: #000 !important;
+                border: 1px solid #ccc !important;
+            }
+            .section h2,
+            .block-header h3 {
+                color: #000 !important;
+            }
+            .field label {
+                color: #555 !important;
+            }
+            .step-num {
+                background: #e0e0e0 !important;
+                color: #000 !important;
+            }
+            button,
+            .btn-add-step,
+            .btn-remove-step,
+            .block-actions,
+            .header-row button,
+            .subtitle,
+            .modal-overlay {
+                display: none !important;
+            }
+            textarea {
+                resize: none !important;
+                overflow: visible !important;
+                max-height: none !important;
+                height: auto !important;
+            }
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 10px;
+            }
+            .bug-report-block {
+                padding: 14px;
+            }
+            .section {
+                padding: 12px;
+            }
+            .grid {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+            button {
+                padding: 8px 14px;
+                font-size: 0.8rem;
+            }
+            .step-row {
+                gap: 4px;
+            }
+            .step-num {
+                width: 22px;
+                height: 22px;
+                font-size: 0.7rem;
+                margin-top: 6px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="header-row">
+    <h1>🪲 Баг-репорты</h1>
+    <button id="btn-add-new-block" class="btn-success">➕ Добавить новый</button>
+</div>
+<p class="subtitle">Все текстовые поля автоматически расширяются. Можно создать несколько баг-репортов. Для сохранения в PDF нажмите «📄 PDF» — откроется окно печати, выберите «Сохранить как PDF».</p>
+
+<div id="all-reports"></div>
+
+<div id="modal-clear" class="modal-overlay">
+    <div class="modal">
+        <h3>Очистить этот баг-репорт?</h3>
+        <p>Все данные этого отчёта будут удалены.</p>
+        <div class="btn-row">
+            <button id="modal-clear-yes" class="btn-danger">Да, очистить</button>
+            <button class="modal-close btn-outline">Отмена</button>
+        </div>
+    </div>
+</div>
+
+<div id="modal-delete" class="modal-overlay">
+    <div class="modal">
+        <h3>Удалить этот баг-репорт?</h3>
+        <p>Весь блок будет удалён безвозвратно.</p>
+        <div class="btn-row">
+            <button id="modal-delete-yes" class="btn-danger">Да, удалить</button>
+            <button class="modal-close btn-outline">Отмена</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    let reportCounter = 0;
+    let pendingAction = null;
+    let pendingBlock = null;
+
+    // Автоматическое расширение всех textarea
+    function autoResize(textarea) {
+        textarea.style.height = 'auto';
+        textarea.style.height = Math.min(textarea.scrollHeight, 300) + 'px';
+    }
+    function initTextareas(container) {
+        container.querySelectorAll('textarea').forEach(textarea => {
+            textarea.addEventListener('input', () => autoResize(textarea));
+            autoResize(textarea);
+        });
+    }
+
+    // Инициализация тегов
+    function initTags(container) {
+        container.querySelectorAll('.tag-item').forEach(tag => {
+            tag.addEventListener('click', () => tag.classList.toggle('active'));
+        });
+    }
+
+    // Инициализация шагов
+    function initSteps(container) {
+        const addBtn = container.querySelector('.btn-add-step');
+        if (addBtn) {
+            addBtn.addEventListener('click', function () {
+                const stepsContainer = container.querySelector('.steps-container');
+                const stepCount = stepsContainer.querySelectorAll('.step-row').length + 1;
+                const row = document.createElement('div');
+                row.className = 'step-row';
+                row.innerHTML = `
+                    <div class="step-num">${stepCount}</div>
+                    <textarea class="field-step" placeholder="Опишите шаг..."></textarea>
+                    <button class="btn-remove-step">✕</button>
+                `;
+                const textarea = row.querySelector('textarea');
+                textarea.addEventListener('input', () => autoResize(textarea));
+                row.querySelector('.btn-remove-step').addEventListener('click', function () {
+                    row.remove();
+                    updateStepNumbers(stepsContainer);
+                });
+                stepsContainer.appendChild(row);
+                autoResize(textarea);
+            });
+        }
+        container.querySelectorAll('.btn-remove-step').forEach(btn => {
+            btn.addEventListener('click', function () {
+                const stepsContainer = container.closest('.bug-report-block').querySelector('.steps-container');
+                this.closest('.step-row').remove();
+                updateStepNumbers(stepsContainer);
+            });
+        });
+    }
+
+    function updateStepNumbers(container) {
+        container.querySelectorAll('.step-row').forEach((row, i) => {
+            row.querySelector('.step-num').textContent = i + 1;
+        });
+    }
+
+    // Сбор текста отчёта
+    function getReportText(block) {
+        const lines = [];
+        block.querySelectorAll('.section').forEach(section => {
+            const title = section.querySelector('h2')?.textContent || '';
+            lines.push(`\n=== ${title} ===\n`);
+            section.querySelectorAll('.field, .step-row').forEach(field => {
+                const label = field.querySelector('label')?.textContent || '';
+                const input = field.querySelector('input, textarea, select');
+                const value = input?.tagName === 'SELECT' ? input.options[input.selectedIndex]?.text : (input?.value || '');
+                if (label && value) lines.push(`${label} ${value}`);
+            });
+        });
+        return lines.join('\n');
+    }
+
+    // Сохранение в PDF через window.print()
+    function saveAsPDF(block) {
+        // Добавляем класс для печати только этому блоку
+        document.querySelectorAll('.bug-report-block').forEach(b => b.classList.remove('print-only'));
+        block.classList.add('print-only');
+
+        // Скрываем все остальные блоки при печати
+        const style = document.createElement('style');
+        style.id = 'print-style';
+        style.textContent = `
+            @media print {
+                .bug-report-block:not(.print-only) { display: none !important; }
+                .header-row, .subtitle { display: none !important; }
+            }
+        `;
+        document.head.appendChild(style);
+
+        window.print();
+
+        // Убираем после печати
+        setTimeout(() => {
+            block.classList.remove('print-only');
+            const s = document.getElementById('print-style');
+            if (s) s.remove();
+        }, 500);
+    }
+
+    // Создание нового баг-репорта
+    function createBugReport() {
+        reportCounter++;
+        const block = document.createElement('div');
+        block.className = 'bug-report-block';
+        block.dataset.reportId = reportCounter;
+        block.innerHTML = `
+            <div class="block-header">
+                <h3>Баг-репорт №${reportCounter}</h3>
+                <div class="block-actions">
+                    <button class="btn-save-pdf btn-primary">📄 PDF</button>
+                    <button class="btn-save-doc btn-outline">📝 DOC</button>
+                    <button class="btn-copy-text btn-outline">📋 Копия</button>
+                    <button class="btn-clear-block btn-outline">🗑️ Очистить</button>
+                    <button class="btn-delete-block btn-danger">✕ Удалить</button>
+                </div>
+            </div>
+            <div class="section">
+                <h2>Основная информация</h2>
+                <div class="grid">
+                    <div class="field"><label>ID ошибки</label><input type="text" class="field-bug-id" placeholder="BUG-YYYY-MMDD-NNN"></div>
+                    <div class="field" style="grid-column: span 2;"><label>Заголовок</label><textarea class="field-title" rows="1" placeholder="Краткое описание проблемы"></textarea></div>
+                    <div class="field"><label>Тяжесть</label><select class="field-severity"><option>Критический</option><option selected>Высокий</option><option>Средний</option><option>Низкий</option></select></div>
+                    <div class="field"><label>Приоритет</label><select class="field-priority"><option selected>Высокий</option><option>Средний</option><option>Низкий</option></select></div>
+                    <div class="field"><label>Источник</label><select class="field-origin"><option selected>Ручное тестирование</option><option>Сообщение клиента</option><option>Автотесты</option></select></div>
+                    <div class="field"><label>Тип ошибки</label><select class="field-type"><option>UI</option><option selected>Бэкенд</option><option>Производительность</option><option>Безопасность</option></select></div>
+                    <div class="field"><label>Воспроизводимость</label><select class="field-repro"><option>Всегда</option><option selected>Периодически</option><option>Редко</option></select></div>
+                </div>
+            </div>
+            <div class="section">
+                <h2>Описание и шаги</h2>
+                <div class="field" style="margin-bottom: 14px;"><label>Описание</label><textarea class="field-desc" placeholder="Подробное описание проблемы..."></textarea></div>
+                <label style="font-size:0.75rem;font-weight:600;text-transform:uppercase;letter-spacing:0.04em;color:var(--text-muted);margin-bottom:6px;display:block;">Шаги воспроизведения</label>
+                <div class="steps-container">
+                    <div class="step-row"><div class="step-num">1</div><textarea class="field-step" placeholder="Опишите шаг..."></textarea><button class="btn-remove-step">✕</button></div>
+                </div>
+                <button class="btn-add-step btn-outline" style="margin-top: 6px;">➕ Добавить шаг</button>
+                <div class="grid" style="margin-top: 14px;">
+                    <div class="field"><label>Фактический результат</label><textarea class="field-actual" placeholder="Что происходит на самом деле"></textarea></div>
+                    <div class="field"><label>Ожидаемый результат</label><textarea class="field-expected" placeholder="Что должно происходить"></textarea></div>
+                </div>
+            </div>
+            <div class="section">
+                <h2>Дополнительная информация</h2>
+                <div class="grid">
+                    <div class="field"><label>Тестовая среда</label><textarea class="field-env" rows="1" placeholder="ОС, браузер, устройство..."></textarea></div>
+                    <div class="field"><label>Область</label><textarea class="field-area" rows="1" placeholder="Модуль или раздел"></textarea></div>
+                    <div class="field" style="grid-column: span 2;"><label>Рекомендации</label><textarea class="field-recommend" rows="1" placeholder="Предложения по исправлению"></textarea></div>
+                </div>
+            </div>
+            <div class="section">
+                <h2>Административная информация</h2>
+                <div class="grid">
+                    <div class="field"><label>Создано</label><textarea class="field-author" rows="1" placeholder="Ваше имя"></textarea></div>
+                    <div class="field"><label>Дата создания</label><input type="text" class="field-date" placeholder="YYYY-MM-DD"></div>
+                    <div class="field"><label>Статус</label><select class="field-status"><option selected>Открыт</option><option>В работе</option><option>Исправлен</option><option>Закрыт</option></select></div>
+                    <div class="field"><label>Теги</label><div class="tag-row" style="margin-top: 4px;"><span class="tag tag-item" data-tag="Бэкенд">Бэкенд</span><span class="tag tag-item" data-tag="UI">UI</span><span class="tag tag-item" data-tag="Производительность">Производительность</span><span class="tag tag-item" data-tag="Безопасность">Безопасность</span></div></div>
+                </div>
+            </div>
+        `;
+        document.getElementById('all-reports').appendChild(block);
+        initTextareas(block);
+        initTags(block);
+        initSteps(block);
+        initBlockActions(block);
+        block.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // Инициализация кнопок блока
+    function initBlockActions(block) {
+        block.querySelector('.btn-save-pdf').addEventListener('click', () => saveAsPDF(block));
+        block.querySelector('.btn-save-doc').addEventListener('click', () => {
+            const text = getReportText(block);
+            const blob = new Blob([text], { type: 'application/msword' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = `bug-report-${block.dataset.reportId}.doc`;
+            a.click();
+            URL.revokeObjectURL(a.href);
+        });
+        block.querySelector('.btn-copy-text').addEventListener('click', () => {
+            navigator.clipboard.writeText(getReportText(block)).then(() => alert('Текст скопирован!'));
+        });
+        block.querySelector('.btn-clear-block').addEventListener('click', () => {
+            pendingAction = 'clear';
+            pendingBlock = block;
+            document.getElementById('modal-clear').classList.add('active');
+        });
+        block.querySelector('.btn-delete-block').addEventListener('click', () => {
+            pendingAction = 'delete';
+            pendingBlock = block;
+            document.getElementById('modal-delete').classList.add('active');
+        });
+    }
+
+    // Модальные окна
+    document.querySelectorAll('.modal-close').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.modal-overlay').forEach(m => m.classList.remove('active'));
+        });
+    });
+    document.querySelectorAll('.modal-overlay').forEach(overlay => {
+        overlay.addEventListener('click', function (e) {
+            if (e.target === this) this.classList.remove('active');
+        });
+    });
+
+    document.getElementById('modal-clear-yes').addEventListener('click', () => {
+        if (pendingBlock) {
+            pendingBlock.querySelectorAll('input[type="text"], textarea').forEach(el => el.value = '');
+            pendingBlock.querySelectorAll('select').forEach(el => el.selectedIndex = 0);
+            pendingBlock.querySelectorAll('.tag-item').forEach(t => t.classList.remove('active'));
+            pendingBlock.querySelectorAll('textarea').forEach(autoResize);
+        }
+        document.getElementById('modal-clear').classList.remove('active');
+    });
+
+    document.getElementById('modal-delete-yes').addEventListener('click', () => {
+        if (pendingBlock) pendingBlock.remove();
+        document.getElementById('modal-delete').classList.remove('active');
+    });
+
+    // Кнопка добавления нового
+    document.getElementById('btn-add-new-block').addEventListener('click', () => createBugReport());
+
+    // Создать первый блок при загрузке
+    createBugReport();
+</script>
+</body>
+</html>
