@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test IT Mini | Тест-кейсы, Тест-планы, Баг-репорты</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Russo+One&family=Inter:opsz,wght@14..32,400..700&family=Cardo:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <style>
+        :root {
+            --bg: #141822; --surface: #1E2330; --border: #2a2f40; --text: #e8e8f0;
+            --text-secondary: #b0b5c0; --text-muted: #7a7e8c; --blue: #526EFF;
+            --blue-light: rgba(82,110,255,0.12); --green: #25b99a; --red: #ff4d6a;
+            --orange: #f59e0b; --gray: #6b7280; --radius-lg: 16px; --radius-md: 10px;
+            --radius-sm: 6px; --font: 'Inter', system-ui, -apple-system, sans-serif;
+            --sidebar-width: 280px; --deep-orange: #BF491F; --warm-orange: #F28627;
+            --teal: #049DBF; --light-teal: #2C6C73; --light-beige: #D9B29C; --grayish-blue: #A68A7B;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: var(--font); background: var(--bg); color: var(--text); line-height: 1.6; display: flex; min-height: 100vh; overflow-x: hidden; }
+        .sidebar { position: fixed; top: 0; left: 0; width: var(--sidebar-width); height: 100vh; background: #000; z-index: 1001; display: flex; flex-direction: column; transition: transform 0.4s; overflow-y: auto; box-shadow: 4px 0 30px rgba(0,0,0,0.4); border-right: 3px solid; border-image: linear-gradient(to bottom, #049DBF, #035E73, #F28627) 1; flex-shrink: 0; }
+        .sidebar-header { padding: 24px 20px; border-bottom: 1px solid rgba(255,255,255,0.1); text-align: center; }
+        .sidebar-nav { flex: 1; padding: 16px 0; }
+        .sidebar-nav a { display: flex; align-items: center; gap: 12px; padding: 13px 24px; color: var(--light-beige); font-size: 0.9rem; font-weight: 500; transition: 0.3s; position: relative; text-decoration: none; }
+        .sidebar-nav a::before { content: ''; position: absolute; left: 0; top: 15%; bottom: 15%; width: 4px; background: var(--warm-orange); transform: scaleY(0); transition: 0.3s; border-radius: 0 4px 4px 0; }
+        .sidebar-nav a:hover, .sidebar-nav a.active { color: #fff; background: rgba(242,116,5,0.08); }
+        .sidebar-nav a:hover::before, .sidebar-nav a.active::before { transform: scaleY(1); }
+        .sidebar-nav a i { width: 22px; text-align: center; font-size: 1rem; color: var(--warm-orange); }
+        .sidebar-nav .nav-section { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 3px; color: var(--grayish-blue); padding: 24px 24px 10px; font-weight: 700; }
+        .sidebar-footer { padding: 20px; border-top: 1px solid rgba(255,255,255,0.1); text-align: center; color: var(--grayish-blue); font-size: 0.7rem; line-height: 1.8; }
+        .main-content-wrapper { margin-left: var(--sidebar-width); flex: 1; display: flex; flex-direction: column; min-height: 100vh; transition: margin-left 0.4s; }
+        .app-container { max-width: 1100px; width: 100%; margin: 0 auto; padding: 16px; flex: 1; }
+        .menu-toggle { display: none; position: fixed; top: 16px; left: 16px; z-index: 2000; background: #000; border: 2px solid var(--warm-orange); color: var(--warm-orange); width: 48px; height: 48px; border-radius: 14px; cursor: pointer; font-size: 1.5rem; box-shadow: 0 4px 15px rgba(0,0,0,0.4); transition: 0.3s; align-items: center; justify-content: center; }
+        .menu-toggle:hover { background: var(--warm-orange); color: #fff; }
+        .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 1000; backdrop-filter: blur(2px); }
+        .sidebar-overlay.show { display: block; }
+        .container-logotype1 { padding: 0; margin: 0; display: inline-block; }
+        .logotype1, .logotype1:hover, .logotype1 div { position: relative; display: inline-block; font-size: 20px; color: var(--light-teal); text-shadow: 2px 4px 3px rgba(0,0,0,0.3); font-family: 'Russo One', sans-serif; font-weight: 300; font-style: normal; text-decoration: none; margin: 20px 0 20px 20px; line-height: 6px; }
+        .logotype1 div { display: block; }
+        .logotype1 b { font-family: 'Russo One', sans-serif; letter-spacing: 1px; font-size: 24px; color: #F28627; background: #000; -webkit-text-stroke: 1px #BF491F; text-shadow: 2px 4px 3px rgba(0,0,0,0.3); font-weight: bolder; background-color: #00010D; }
+        .logotype1 span { text-shadow: 1px 2px 1px rgba(0,0,0,0.2); display: block; float: right; font-size: 18px; color: #A68A7B; line-height: 6px; margin-top: 1px; }
+        .logotype1 span b { font-size: 30px; margin-left: 10px; padding-right: 5px; stroke-width: 4px; color: #F28627; transition: all 0.3s ease; box-sizing: content-box; vertical-align: middle; }
+        .logotype1:before { position: absolute; top: -9px; left: 0; content: ""; border: 6px solid #F28627; width: 46px; height: 46px; border-radius: 100%; transition: all 0.3s ease; box-sizing: content-box; }
+        .logotype1:hover:before { transform: scale(1.1); border: 8px solid #F27F3D; }
+        .footer { padding: 1.2rem 0; text-align: center; border-top: 1px solid var(--border); color: var(--text-muted); font-size: 0.8rem; background: #000; width: 100%; margin-top: auto; }
+        .header-row { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; margin-bottom: 10px; }
+        .header-buttons { display: flex; gap: 8px; flex-wrap: wrap; }
+        h1 { font-size: clamp(1.3rem, 4vw, 1.6rem); font-weight: 700; color: var(--blue); }
+        .subtitle { color: var(--text-muted); font-size: 0.85rem; margin-bottom: 16px; }
+        .tabs { display: flex; gap: 4px; margin-bottom: 20px; flex-wrap: wrap; border-bottom: 2px solid var(--border); padding-bottom: 0; }
+        .tab-btn { padding: 10px 22px; border: none; background: transparent; color: var(--text-muted); font-weight: 600; font-size: 0.9rem; cursor: pointer; border-radius: var(--radius-sm) var(--radius-sm) 0 0; transition: all 0.2s; position: relative; bottom: -2px; border: 2px solid transparent; }
+        .tab-btn.active { color: var(--blue); background: var(--blue-light); border-bottom: 2px solid var(--blue); }
+        .tab-btn:hover { color: var(--text); }
+        .tab-panel { display: none; }
+        .tab-panel.active { display: block; }
+        .card { background: var(--surface); border: 2px solid var(--border); border-radius: var(--radius-lg); padding: 16px 18px; margin-bottom: 20px; position: relative; }
+        .card .card-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
+        .card .card-header h3 { font-size: 0.95rem; font-weight: 700; color: var(--blue); }
+        .card .card-header .card-actions { display: flex; gap: 5px; flex-wrap: wrap; }
+        .section { border: 1px solid var(--border); border-radius: var(--radius-md); padding: 12px 14px; margin-bottom: 10px; }
+        .section h2 { font-size: 0.9rem; font-weight: 600; margin-bottom: 10px; padding-bottom: 4px; border-bottom: 1px solid var(--border); color: var(--green); }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px; }
+        .grid-equal { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px; align-items: stretch; }
+        .grid-equal > .field { height: 100%; }
+        .field { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+        .field label { font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-muted); }
+        input, textarea, select { font-family: var(--font); font-size: 0.85rem; padding: 8px 10px; border: 1px solid var(--border); border-radius: var(--radius-sm); background: var(--bg); color: var(--text); width: 100%; transition: border-color 0.2s; min-width: 0; }
+        textarea { resize: vertical; min-height: 100px; overflow-y: auto; line-height: 1.5; }
+        textarea.step-expected {min-height: 150px !important;}
+        textarea.step-action {min-height: 150px !important;}
+        textarea.step-actual {min-height: 200px !important;}
+        input.step-comment {min-height: 150px !important;}
+#testplans-container textarea.step-actual {min-height: 650px !important;}
+#testplans-container textarea.step-comment {min-height: 350px !important;}
+textarea.field-desc {min-height: 350px !important;}
+textarea.field-recommend {min-height: 350px !important;}
+textarea.bug-step-action {min-height: 250px !important;}
+textarea.bug-step-actual {min-height: 250px !important;}
+textarea.bug-step-expected {min-height: 250px !important;}
+        input:focus, textarea:focus, select:focus { outline: none; border-color: var(--blue); box-shadow: 0 0 0 3px rgba(82,110,255,0.1); }
+        .step-row { display: flex; gap: 4px; margin-bottom: 4px; align-items: flex-start; flex-wrap: wrap; }
+        .step-num { width: 24px; height: 24px; border-radius: 50%; background: var(--blue-light); color: var(--blue); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.75rem; flex-shrink: 0; margin-top: 6px; }
+        .step-row textarea { min-height: 150px; flex: 1; min-width: 150px; }
+        .step-row .step-result { width: 110px; flex-shrink: 0; font-size: 0.75rem; }
+        .step-row .step-comment { width: 120px; flex-shrink: 0; font-size: 0.75rem; }
+        .btn-remove-step { background: transparent; border: 1px solid var(--border); color: var(--text-muted); padding: 3px 7px; border-radius: var(--radius-sm); font-size: 0.65rem; cursor: pointer; margin-top: 6px; flex-shrink: 0; }
+        .btn-remove-step:hover { border-color: var(--red); color: var(--red); }
+        button { font-family: var(--font); font-weight: 600; font-size: 0.8rem; padding: 7px 15px; border-radius: 50px; cursor: pointer; border: none; transition: all 0.2s; white-space: nowrap; }
+        .btn-primary { background: var(--blue); color: #fff; }
+        .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text); }
+        .btn-success { background: var(--green); color: #fff; }
+        .btn-danger { background: transparent; border: 1px solid var(--red); color: var(--red); }
+        .btn-danger:hover { background: var(--red); color: #fff; }
+        .btn-teal { background: var(--teal); color: #fff; }
+        .btn-teal:hover { background: #035E73; }
+        .tag-row { display: flex; gap: 5px; flex-wrap: wrap; align-items: center; }
+        .tag { padding: 4px 10px; border-radius: 50px; font-size: 0.7rem; font-weight: 600; border: 1px solid var(--border); cursor: pointer; transition: all 0.2s; background: transparent; color: var(--text-secondary); }
+        .tag.active, .tag:hover { border-color: var(--blue); background: var(--blue-light); color: var(--blue); }
+        .status-badge { display: inline-flex; align-items: center; gap: 4px; padding: 3px 10px; border-radius: 50px; font-size: 0.7rem; font-weight: 700; }
+        .status-passed { background: rgba(37,185,154,0.15); color: var(--green); }
+        .status-failed { background: rgba(255,77,106,0.15); color: var(--red); }
+        .status-inprogress { background: rgba(245,158,11,0.15); color: var(--orange); }
+        .status-blocked { background: rgba(107,114,128,0.15); color: var(--gray); }
+        .status-skipped { background: rgba(107,114,128,0.1); color: var(--gray); }
+        .status-ready { background: rgba(82,110,255,0.12); color: var(--blue); }
+        .linked-info { background: rgba(82,110,255,0.06); border: 1px dashed var(--border); border-radius: var(--radius-sm); padding: 6px 10px; margin: 6px 0; font-size: 0.75rem; color: var(--text-muted); }
+        .attachment-item { background: var(--blue-light); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 4px 8px; font-size: 0.7rem; display: inline-flex; align-items: center; gap: 4px; margin: 2px; }
+        .attachment-item a { color: var(--blue); text-decoration: none; }
+        .attachment-item .remove-attach { cursor: pointer; color: var(--text-muted); margin-left: 4px; }
+        .attachment-item .remove-attach:hover { color: var(--red); }
+        .link-item { display: flex; align-items: center; gap: 6px; margin-bottom: 4px; flex-wrap: wrap; }
+        .link-item input, .link-item select { width: auto; min-width: 250px; font-size: 0.75rem; }
+        .link-item .btn-remove-step { margin-top: 0; }
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 1000; justify-content: center; align-items: center; }
+        .modal-overlay.active { display: flex; }
+        .modal { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 20px; max-width: 500px; width: 90%; text-align: center; }
+        .custom-tag-input { width: 80px; font-size: 0.7rem; padding: 4px 8px; margin-left: 4px; }
+        @media print { @page { margin: 15mm; } body { background: #fff !important; color: #000 !important; padding: 0 !important; } .sidebar, .menu-toggle, .sidebar-overlay, .footer, button, .tabs, .modal-overlay, .btn-add-step, .btn-add-link, .btn-remove-step, .btn-add-bug-step, .btn-add-custom-tag, .custom-tag-input, .btn-remove-from-plan, .btn-run-plan, .btn-add-tc-to-plan-item, .btn-new-tc-from-plan, .btn-save-pdf-plan, .btn-delete-plan, .btn-save-pdf, .btn-save-doc, .btn-delete-card, .btn-download-zip, .card-actions select, .card-actions button { display: none !important; } .main-content-wrapper { margin-left: 0 !important; } .card { background: #fff !important; border: 2px solid #333 !important; page-break-inside: avoid; box-shadow: none !important; } textarea { overflow: visible !important; max-height: none !important; height: auto !important; border: 1px solid #ccc !important; background: #fff !important; color: #000 !important; } input, select { border: 1px solid #ccc !important; background: #fff !important; color: #000 !important; } .section { border: 1px solid #ddd !important; } a { color: #0000EE !important; text-decoration: underline !important; } .status-badge { border: 1px solid #333; color: #000 !important; background: #eee !important; } .card-header h3 { color: #000 !important; } .section h2 { color: #000 !important; border-bottom-color: #333 !important; } .app-container { padding: 0 !important; } }
+        @media (max-width: 992px) { .sidebar { transform: translateX(-100%); } .sidebar.open { transform: translateX(0); } .main-content-wrapper { margin-left: 0; } .menu-toggle { display: flex; } .app-container { padding-top: 60px; } .header-row { margin-top: 10px; } }
+        @media (max-width: 768px) { .app-container { padding: 8px; padding-top: 60px; } .grid, .grid-equal { grid-template-columns: 1fr; } .step-row { flex-direction: column; } .step-row .step-result, .step-row .step-comment { width: 100%; } .card-header { flex-direction: column; align-items: flex-start; } .card-actions { width: 100%; justify-content: flex-start; } .tabs { gap: 2px; } .tab-btn { padding: 8px 14px; font-size: 0.8rem; } .link-item { flex-direction: column; } .link-item input, .link-item select { width: 100%; } .header-buttons { width: 100%; justify-content: flex-start; } }
+    </style>
+</head>
+<body>
+
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+
+<aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+        <div class="container-logotype1">
+            <a href="#" class="logotype1">
+                <div><b>Junior</b>FrontEnd</div>
+                <span>ашина Ольга </span>
+                <span><b style="font-size:30px;margin-left:50px;color:#F28627;">K </b></span>
+            </a>
+        </div>
+    </div>
+    <nav class="sidebar-nav">
+        <span class="nav-section">Test IT Mini</span>
+        <a href="#" onclick="switchTab('tab-testcases'); closeSidebar();" class="active"><i class="fas fa-list-check"></i> Тест-кейсы</a>
+        <a href="#" onclick="switchTab('tab-testplan'); closeSidebar();"><i class="fas fa-file-alt"></i> Тест-план</a>
+        <a href="#" onclick="switchTab('tab-bugs'); closeSidebar();"><i class="fas fa-bug"></i> Баг-репорты</a>
+        <span class="nav-section">Инструменты</span>
+        <a href="#" onclick="downloadAllData(); closeSidebar();"><i class="fas fa-download"></i> Скачать всё (ZIP)</a>
+        <a href="https://github.com/olga555scherbinina-cell/tomokoom/tree/main/bug_report_template/attachments" target="_blank"><i class="fab fa-github"></i> Папка с вложениями</a>
+    </nav>
+    <div class="sidebar-footer">© 2023–2026<br>Ольга Кашина (Щербинина)</div>
+</aside>
+
+<button class="menu-toggle" id="menuToggle" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
+
+<div class="main-content-wrapper">
+    <div class="app-container">
+        <div class="header-row">
+            <h1>🧪 Test IT Mini</h1>
+            <div class="header-buttons">
+                <button id="btn-add-testcase" class="btn-success">➕ Новый тест-кейс</button>
+                <button id="btn-add-testplan" class="btn-teal">📑 Новый тест-план</button>
+                <button id="btn-add-bug" class="btn-primary">🪲 Новый баг-репорт</button>
+            </div>
+        </div>
+        <p class="subtitle">Тест-кейсы → Тест-план → Прогон → Баг-репорт. Для сохранения используйте кнопки PDF или ZIP.</p>
+        <div class="tabs">
+            <button class="tab-btn active" data-tab="tab-testcases">📋 Тест-кейсы</button>
+            <button class="tab-btn" data-tab="tab-testplan">📑 Тест-план</button>
+            <button class="tab-btn" data-tab="tab-bugs">🪲 Баг-репорты</button>
+        </div>
+
+        <div id="tab-testcases" class="tab-panel active"><div id="testcases-container"></div></div>
+        <div id="tab-testplan" class="tab-panel"><div id="testplans-container"></div></div>
+        <div id="tab-bugs" class="tab-panel"><div id="bugs-container"></div></div>
+
+        <div id="modal-delete" class="modal-overlay"><div class="modal"><h3>Удалить?</h3><p>Элемент будет удалён.</p><button id="modal-delete-yes" class="btn-danger">Да</button><button class="modal-close btn-outline">Отмена</button></div></div>
+        <div id="modal-select-tc" class="modal-overlay"><div class="modal"><h3>Выберите тест-кейс</h3><div id="modal-tc-list" style="text-align:left;max-height:250px;overflow-y:auto;"></div><button class="modal-close btn-outline" style="margin-top:10px;">Отмена</button></div></div>
+    </div>
+    <footer class="footer"><p>© 2023-2026 Ольга Кашина (Щербинина). Все права защищены.</p></footer>
+</div>
+
+<script>
+    let tcCounter = 0, bugCounter = 0, planCounter = 0;
+    const testCases = {}, bugs = {}, linksStore = {};
+    let pendingTarget = null, pendingBugBlock = null;
+
+    function autoResize(textarea) { textarea.style.height = 'auto'; textarea.style.height = textarea.scrollHeight + 'px'; }
+    function initTextareas(container) { container.querySelectorAll('textarea').forEach(textarea => { textarea.addEventListener('input', () => autoResize(textarea)); autoResize(textarea); }); }
+    function initTags(container) { container.querySelectorAll('.tag-item').forEach(tag => { tag.addEventListener('click', () => tag.classList.toggle('active')); }); }
+    function updateStepNumbers(container) { container.querySelectorAll('.step-row').forEach((row, index) => { row.querySelector('.step-num').textContent = index + 1; }); }
+    function getStatusLabel(status) { const labels = { ready: 'Готов / Ready', inprogress: 'Не готов / In Progress', passed: 'Пройден / Passed', failed: 'Провален / Failed', blocked: 'Заблокирован / Blocked', skipped: 'Пропущен / Skipped' }; return labels[status] || status; }
+    function getStatusIcon(status) { const icons = { passed: '✅', failed: '❌', inprogress: '🔄', blocked: '🔒', skipped: '⏭️', ready: '📋' }; return icons[status] || ''; }
+
+    function initLinks(card, cardId) {
+        const container = card.querySelector('.links-container');
+        if (!linksStore[cardId]) linksStore[cardId] = [];
+        renderLinks(container, cardId);
+        card.querySelector('.btn-add-link').addEventListener('click', () => { linksStore[cardId].push({ url: '', type: 'Связанный / Related', description: '' }); renderLinks(container, cardId); });
+    }
+
+    function renderLinks(container, cardId) {
+        container.innerHTML = '';
+        (linksStore[cardId] || []).forEach((link, index) => {
+            const row = document.createElement('div');
+            row.className = 'link-item';
+            row.innerHTML = `<input type="text" value="${link.url}" placeholder="URL" style="flex:1;" data-link-idx="${index}" data-field="url"><select data-link-idx="${index}" data-field="type"><option ${link.type==='Связанный / Related'?'selected':''}>Связанный / Related</option><option ${link.type==='Заблокирован / Blocked'?'selected':''}>Заблокирован / Blocked</option><option ${link.type==='Дефект / Defect'?'selected':''}>Дефект / Defect</option><option ${link.type==='Задача / Task'?'selected':''}>Задача / Task</option><option ${link.type==='Требование / Requirement'?'selected':''}>Требование / Requirement</option><option ${link.type==='Репозиторий / Repository'?'selected':''}>Репозиторий / Repository</option></select><input type="text" value="${link.description}" placeholder="Описание / Description" style="flex:1;" data-link-idx="${index}" data-field="description"><button class="btn-remove-step" data-link-idx="${index}">✕</button>`;
+            row.querySelectorAll('input, select').forEach(el => { el.addEventListener('change', function() { linksStore[cardId][index][this.dataset.field] = this.value; }); });
+            row.querySelector('.btn-remove-step').addEventListener('click', () => { linksStore[cardId].splice(index, 1); renderLinks(container, cardId); });
+            container.appendChild(row);
+        });
+    }
+
+    function addStepRow(container, num, action, expected) {
+        const row = document.createElement('div');
+        row.className = 'step-row';
+        row.innerHTML = `<div class="step-num">${num}</div><textarea class="step-action" placeholder="Действие / Action">${action}</textarea><textarea class="step-expected" placeholder="Ожидаемый результат / Expected Result">${expected}</textarea><button class="btn-remove-step">✕</button>`;
+        row.querySelector('.btn-remove-step').addEventListener('click', () => { row.remove(); updateStepNumbers(container); });
+        container.appendChild(row);
+        initTextareas(row);
+    }
+
+    function addBugStepRow(container, num, action, actual, expected) {
+        const row = document.createElement('div');
+        row.className = 'step-row';
+        row.innerHTML = `<div class="step-num">${num}</div><textarea class="bug-step-action" placeholder="Действие / Action">${action}</textarea><textarea class="bug-step-actual" placeholder="Фактический / Actual">${actual}</textarea><textarea class="bug-step-expected" placeholder="Ожидаемый / Expected">${expected}</textarea><button class="btn-remove-step">✕</button>`;
+        row.querySelector('.btn-remove-step').addEventListener('click', () => { row.remove(); updateStepNumbers(container); });
+        container.appendChild(row);
+        initTextareas(row);
+    }
+
+    function createTestCase(data = null, switchToTab = null) {
+        tcCounter++;
+        const id = data?.id || tcCounter;
+        if (!linksStore[id]) linksStore[id] = data?.links || [];
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.dataset.tcId = id;
+        const currentStatus = data?.status || 'passed';
+        card.innerHTML = `<div class="card-header"><h3>📋 Тест-кейс №${id} / Test Case №${id}</h3><div class="card-actions"><span class="status-badge status-${currentStatus}">${getStatusIcon(currentStatus)} ${getStatusLabel(currentStatus)}</span><select class="tc-status-select" style="width:auto;font-size:0.75rem;padding:4px 8px;"><option value="ready" ${currentStatus==='ready'?'selected':''}>Готов / Ready</option><option value="inprogress" ${currentStatus==='inprogress'?'selected':''}>Не готов / In Progress</option><option value="passed" ${currentStatus==='passed'?'selected':''}>Пройден / Passed</option><option value="failed" ${currentStatus==='failed'?'selected':''}>Провален / Failed</option></select><button class="btn-save-pdf btn-outline">📄 PDF</button><button class="btn-download-zip btn-outline">📦 ZIP</button><button class="btn-delete-card btn-outline">✕</button></div></div><div class="section"><div class="field"><label>Title / Название</label><textarea class="tc-title" rows="1">${data?.title||''}</textarea></div></div><div class="section"><h2>Precondition / Предусловие</h2><div class="grid"><div class="field"><label>Action / Действие</label><textarea class="tc-pre-action" rows="1">${data?.preAction||''}</textarea></div><div class="field"><label>Expected Result / Ожидаемый результат</label><textarea class="tc-pre-expected" rows="1">${data?.preExpected||''}</textarea></div></div></div><div class="section"><h2>Steps / Шаги</h2><div class="steps-container"></div><button class="btn-add-step btn-outline" style="margin-top:6px;">➕ Step / Добавить шаг</button></div><div class="section"><h2>Postcondition / Постусловия</h2><div class="grid"><div class="field"><label>Action / Действие</label><textarea class="tc-post-action" rows="1">${data?.postAction||''}</textarea></div><div class="field"><label>Expected Result / Ожидаемый результат</label><textarea class="tc-post-expected" rows="1">${data?.postExpected||''}</textarea></div></div></div><div class="section"><div class="grid"><div class="field"><label>Priority / Приоритет</label><select class="tc-priority"><option>Высокий / High</option><option selected>Средний / Medium</option><option>Низкий / Low</option></select></div><div class="field"><label>Section / Секция</label><select class="tc-section"><option>Intern</option></select></div><div class="field"><label>Severity / Тяжесть</label><select class="tc-severity"><option>Критический / Critical</option><option selected>Высокий / High</option><option>Средний / Medium</option><option>Низкий / Low</option></select></div></div></div><div class="section"><div class="field"><label>Description / Описание</label><textarea class="tc-desc" rows="2">${data?.description||''}</textarea></div></div><div class="section"><div class="field"><label>Test Environment / Тестовая среда</label><textarea class="tc-env" rows="1">${data?.env||''}</textarea></div></div><div class="section"><h2>Links / Ссылки</h2><div class="links-container"></div><button class="btn-add-link btn-outline" style="margin-top:4px;">🔗 Add Link / Добавить ссылку</button></div><div class="section"><h2>Notes / Примечания</h2><div class="field"><label>Notes & Comments / Примечания и комментарии</label><textarea class="tc-notes" rows="3" placeholder="Дополнительные заметки, комментарии, наблюдения...">${data?.notes||''}</textarea></div></div>`;
+        const stepsContainer = card.querySelector('.steps-container');
+        (data?.steps || [{ action: '', expected: '' }]).forEach((s, i) => addStepRow(stepsContainer, i + 1, s.action || '', s.expected || ''));
+        document.getElementById('testcases-container').appendChild(card);
+        initTextareas(card); initTags(card); initLinks(card, id); initTCCardActions(card, id);
+        card.querySelector('.btn-add-step').addEventListener('click', () => addStepRow(stepsContainer, stepsContainer.querySelectorAll('.step-row').length + 1, '', ''));
+        card.scrollIntoView({ behavior: 'smooth' });
+        if (switchToTab) switchTab(switchToTab);
+        testCases[id] = getTCData(card);
+        return id;
+    }
+
+    function initTCCardActions(card, id) {
+        card.querySelector('.btn-delete-card').addEventListener('click', () => { pendingTarget = card; document.getElementById('modal-delete').classList.add('active'); });
+        card.querySelector('.btn-save-pdf').addEventListener('click', () => prepareForPrint(card));
+        card.querySelector('.btn-download-zip').addEventListener('click', () => downloadSingleAsZip(card, `test-case-${id}`));
+        card.querySelector('.tc-status-select').addEventListener('change', function() { const b = card.querySelector('.status-badge'); b.innerHTML = `${getStatusIcon(this.value)} ${getStatusLabel(this.value)}`; b.className = `status-badge status-${this.value}`; testCases[id] = getTCData(card); });
+        card.querySelectorAll('textarea, select, input').forEach(el => { el.addEventListener('change', () => { testCases[id] = getTCData(card); }); });
+    }
+
+    function getTCData(card) {
+        const steps = [];
+        card.querySelectorAll('.step-row').forEach(row => steps.push({ action: row.querySelector('.step-action')?.value || '', expected: row.querySelector('.step-expected')?.value || '' }));
+        return { id: parseInt(card.dataset.tcId), title: card.querySelector('.tc-title')?.value || '', steps, notes: card.querySelector('.tc-notes')?.value || '', severity: card.querySelector('.tc-severity')?.value || 'Высокий / High', description: card.querySelector('.tc-desc')?.value || '', env: card.querySelector('.tc-env')?.value || '', status: card.querySelector('.tc-status-select')?.value || 'ready' };
+    }
+
+    function prepareForPrint(card) {
+        card.querySelectorAll('textarea').forEach(t => { t.style.overflow = 'visible'; t.style.height = 'auto'; t.style.height = t.scrollHeight + 'px'; t.style.maxHeight = 'none'; });
+        document.querySelectorAll('.card').forEach(c => c.classList.remove('print-only'));
+        card.classList.add('print-only');
+        setTimeout(() => { window.print(); setTimeout(() => { card.classList.remove('print-only'); card.querySelectorAll('textarea').forEach(t => { t.style.overflow = ''; t.style.maxHeight = ''; autoResize(t); }); }, 300); }, 300);
+    }
+
+    async function downloadSingleAsZip(card, filename) {
+        card.querySelectorAll('textarea').forEach(t => { t.style.overflow = 'visible'; t.style.height = 'auto'; t.style.height = t.scrollHeight + 'px'; t.style.maxHeight = 'none'; });
+        const clone = card.cloneNode(true);
+        clone.querySelectorAll('button, .btn-add-step, .btn-add-link, .btn-remove-step').forEach(el => el.remove());
+        clone.querySelectorAll('.card-actions').forEach(el => el.remove());
+        const htmlContent = `<!DOCTYPE html><html><head><meta charset="UTF-8"><style>body{font-family:Arial,sans-serif;max-width:800px;margin:0 auto;padding:20px;color:#000}.card{border:2px solid #333;padding:15px;margin-bottom:20px}.section{border:1px solid #ddd;padding:10px;margin-bottom:10px}textarea,input,select{width:100%;border:1px solid #ccc;padding:5px;font-family:inherit;color:#000}a{color:#0000EE;text-decoration:underline}.status-badge{padding:3px 10px;border-radius:12px;border:1px solid #333}.card-header h3{color:#000}.section h2{color:#000;border-bottom:1px solid #333}</style></head><body>${clone.outerHTML}</body></html>`;
+        const zip = new JSZip();
+        zip.file(`${filename}.html`, htmlContent);
+        zip.file("README.txt", "Архив тестовой документации Test IT Mini\n\nСсылки кликабельны.\nПапка с вложениями:\nhttps://github.com/olga555scherbinina-cell/tomokoom/tree/main/bug_report_template/attachments");
+        const blob = await zip.generateAsync({type:'blob'});
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a'); a.href = url; a.download = `${filename}.zip`; document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
+        card.querySelectorAll('textarea').forEach(t => { t.style.overflow = ''; t.style.maxHeight = ''; autoResize(t); });
+    }
+
+    function createBugReport(data = null) {
+        bugCounter++;
+        const id = bugCounter;
+        const bugCardId = 'bug-' + id;
+        if (!linksStore[bugCardId]) linksStore[bugCardId] = data?.links || [];
+        const block = document.createElement('div');
+        block.className = 'card';
+        block.dataset.bugId = id;
+        const linkedTcTitle = data?.title || '';
+        const tcLink = data?.tcId ? `<div class="linked-info">🔗 Связан с тест-кейсом №${data.tcId} / Linked to Test Case №${data.tcId}: <span class="bug-tc-title">${linkedTcTitle}</span> (<span class="bug-tc-steps-count">${data.stepsList ? data.stepsList.length : 0}</span> шагов / steps)</div>` : '';
+        block.innerHTML = `<div class="card-header"><h3>🪲 Баг-репорт №${id} / Bug Report №${id}</h3><div class="card-actions"><button class="btn-save-pdf btn-primary">📄 PDF</button><button class="btn-save-doc btn-outline">📝 DOC</button><button class="btn-download-zip btn-outline">📦 ZIP</button><button class="btn-delete-card btn-danger">✕</button></div></div>${tcLink}<div class="section"><h2>Basic Information / Основная информация</h2><div class="grid" style="grid-template-columns:1fr 2fr;gap:10px;"><div class="field"><label>Bug ID / ID ошибки</label><input type="text" class="bug-id" value="BUG-2026-0726-${String(id).padStart(3,'0')}"></div><div class="field"><label>Title / Заголовок</label><textarea class="bug-title" rows="2">${data?.title||''}</textarea></div></div><div class="grid-equal" style="grid-template-columns:repeat(3,1fr);margin-top:10px;"><div class="field"><label>Severity / Тяжесть</label><select class="bug-severity"><option>Критический / Critical</option><option selected>${data?.severity||'Высокий / High'}</option><option>Средний / Medium</option><option>Низкий / Low</option></select></div><div class="field"><label>Priority / Приоритет</label><select class="bug-priority"><option selected>Высокий / High</option><option>Средний / Medium</option><option>Низкий / Low</option></select></div><div class="field"><label>Origin / Источник</label><select class="field-origin"><option selected="">Ручное / Manual</option><option>Клиент / Customer</option><option>Автотесты / Autotests</option><option>Другое / Other</option></select></div><div class="field"><label>Type / Тип</label><select class="field-type"><option>UI</option><option selected="">Бэкенд / Backend</option><option>Производительность / Performance</option><option>Безопасность / Security</option><option>Другой / Other</option></select></div><div class="field"><label>Reproducibility / Воспроизводимость</label><select class="bug-repro"><option>Всегда / Always</option><option selected>Периодически / Sometimes</option><option>Редко / Rarely</option></select></div></div></div><div class="section"><h2>Description & Steps / Описание и шаги</h2><div class="field" style="margin-bottom:14px;"><label>Description / Описание</label><textarea class="field-desc" rows="4" placeholder="Подробное описание проблемы...">${data?.description||''}</textarea></div><label style="font-size:0.75rem;font-weight:600;text-transform:uppercase;letter-spacing:0.04em;color:var(--text-muted);margin-bottom:6px;display:block;">Steps to Reproduce / Шаги воспроизведения</label><div class="bug-steps-container"></div><button class="btn-add-bug-step btn-outline" style="margin-top:6px;">➕ Step / Добавить шаг</button><div class="grid" style="margin-top:14px;"><div class="field"><label>Actual Result / Фактический результат</label><textarea class="bug-actual" rows="3">${data?.actual||''}</textarea></div><div class="field"><label>Expected Result / Ожидаемый результат</label><textarea class="bug-expected" rows="3">${data?.expected||''}</textarea></div></div></div><div class="section"><h2>Additional Information / Дополнительная информация</h2><div class="grid" style="grid-template-columns:1fr 1fr;gap:10px;"><div class="field"><label>Test Environment / Тестовая среда</label><textarea class="bug-env" rows="1">${data?.env||''}</textarea></div><div class="field"><label>Area / Область</label><input type="text" class="bug-area" value="${data?.area||'Стартовая страница / Homepage'}" placeholder="Модуль / Module"></div></div><div class="field" style="margin-top:10px;"><label>Recommendations / Рекомендации</label><textarea class="field-recommend" rows="3">${data?.recommend||''}</textarea></div></div><div class="section"><h2>Administrative Information / Административная информация</h2><div class="grid-equal" style="grid-template-columns:1fr 1fr 1fr 2fr;gap:10px;"><div class="field"><label>Created By / Создано</label><input type="text" class="bug-author" value="Щербинина Ольга"></div><div class="field"><label>Creation Date / Дата</label><input type="text" class="bug-date" value="${new Date().toISOString().split('T')[0]}"></div><div class="field"><label>Status / Статус</label><select class="bug-status"><option selected>Открыт / Open</option><option>В работе / In Progress</option><option>Исправлен / Fixed</option><option>Закрыт / Closed</option></select></div><div class="field"><label>Tags / Теги</label><div class="tag-row" style="margin-top:4px;"><span class="tag tag-item" data-tag="HTML">HTML</span><span class="tag tag-item" data-tag="CSS">CSS</span><span class="tag tag-item" data-tag="Валидация">Валидация</span><span class="tag tag-item" data-tag="Синтаксис">Синтаксис</span><input type="text" class="custom-tag-input" placeholder="Новый тег"><button class="btn-add-custom-tag btn-outline" style="font-size:0.65rem;padding:2px 6px;">+</button></div></div></div></div><div class="section"><h2>Links / Ссылки</h2><div class="links-container"></div><button class="btn-add-link btn-outline" style="margin-top:4px;">🔗 Add Link / Добавить ссылку</button></div>`;
+        const bugStepsContainer = block.querySelector('.bug-steps-container');
+        if (data?.stepsList) { data.stepsList.forEach((s, i) => addBugStepRow(bugStepsContainer, i + 1, s.action || '', s.actual || s.action || '', s.expected || '')); } else { addBugStepRow(bugStepsContainer, 1, '', '', ''); }
+        document.getElementById('bugs-container').appendChild(block);
+        initTextareas(block); initTags(block); initLinks(block, bugCardId); initBugActions(block, id);
+        block.querySelector('.btn-add-bug-step').addEventListener('click', () => addBugStepRow(bugStepsContainer, bugStepsContainer.querySelectorAll('.step-row').length + 1, '', '', ''));
+        block.querySelector('.bug-title').addEventListener('input', function() { const t = block.querySelector('.bug-tc-title'); if (t) t.textContent = this.value; });
+        block.querySelector('.btn-add-custom-tag').addEventListener('click', () => { const inp = block.querySelector('.custom-tag-input'); const tr = block.querySelector('.tag-row'); if (inp.value.trim()) { const nt = document.createElement('span'); nt.className = 'tag tag-item active'; nt.dataset.tag = inp.value.trim(); nt.textContent = inp.value.trim(); nt.addEventListener('click', () => nt.classList.toggle('active')); tr.insertBefore(nt, inp); inp.value = ''; } });
+        block.scrollIntoView({ behavior: 'smooth' });
+        if (data) bugs[id] = { ...data, id };
+        return id;
+    }
+
+    function initBugActions(block, id) {
+        block.querySelector('.btn-delete-card').addEventListener('click', () => { pendingBugBlock = block; document.getElementById('modal-delete').classList.add('active'); });
+        block.querySelector('.btn-save-pdf').addEventListener('click', () => prepareForPrint(block));
+        block.querySelector('.btn-download-zip').addEventListener('click', () => downloadSingleAsZip(block, `bug-report-${id}`));
+        block.querySelector('.btn-save-doc').addEventListener('click', () => { const t = []; block.querySelectorAll('.section').forEach(s => { t.push(`\n=== ${s.querySelector('h2')?.textContent||''} ===\n`); s.querySelectorAll('.field').forEach(f => { const l = f.querySelector('label')?.textContent || '', i = f.querySelector('input,textarea,select'), v = i?.tagName === 'SELECT' ? i.options[i.selectedIndex]?.text : (i?.value || ''); if (l && v) t.push(`${l} ${v}`); }); }); const b = new Blob([t.join('\n')], { type: 'application/msword' }); const a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = `bug-report-${id}.doc`; a.click(); URL.revokeObjectURL(a.href); });
+    }
+
+    function createTestPlan(data = null) {
+        planCounter++;
+        const planId = data?.id || planCounter;
+        const planCard = document.createElement('div');
+        planCard.className = 'card';
+        planCard.dataset.planId = planId;
+        planCard.innerHTML = `<div class="card-header"><h3>📑 Тест-план №${planId} / Test Plan №${planId}: <span class="plan-title-text">${data?.title || 'Новый тест-план / New Test Plan'}</span></h3><div class="card-actions"><button class="btn-add-tc-to-plan-item btn-success">➕ Добавить тест-кейс</button><button class="btn-new-tc-from-plan btn-outline">🆕 Новый тест-кейс</button><button class="btn-save-pdf-plan btn-outline">📄 PDF</button><button class="btn-download-zip btn-outline">📦 ZIP</button><button class="btn-delete-plan btn-outline">✕</button></div></div><div class="section"><div class="grid"><div class="field"><label>Product / Продукт</label><input type="text" class="plan-product" value="${data?.product || 'SkillSpace'}"></div><div class="field"><label>Version / Версия</label><input type="text" value="${data?.version || '1.0'}"></div><div class="field"><label>Execution / Прохождение</label><select><option>Ручное / Manual</option></select></div></div></div><div class="section"><h2>Test Cases in Plan / Тест-кейсы в плане</h2><div class="plan-items-container"></div></div>`;
+        document.getElementById('testplans-container').appendChild(planCard);
+        const pic = planCard.querySelector('.plan-items-container');
+        planCard.querySelector('.plan-product').addEventListener('input', function() { planCard.querySelector('.plan-title-text').textContent = this.value || 'Новый тест-план'; });
+        planCard.querySelector('.btn-add-tc-to-plan-item').addEventListener('click', () => { const tcCards = document.querySelectorAll('#testcases-container .card'); if (!tcCards.length) { alert('Сначала создайте тест-кейсы!'); return; } const ml = document.getElementById('modal-tc-list'); ml.innerHTML = ''; tcCards.forEach(card => { const tid = card.dataset.tcId, ttl = card.querySelector('.tc-title')?.value || `Тест-кейс №${tid}`, st = card.querySelector('.tc-status-select')?.value || 'ready'; const div = document.createElement('div'); div.style.cssText = 'padding:6px;cursor:pointer;border-bottom:1px solid var(--border);'; div.innerHTML = `<strong>№${tid}</strong> ${ttl} <span class="status-badge status-${st}">${getStatusLabel(st)}</span>`; div.addEventListener('click', () => { addTCToPlan(card, tid, ttl, st, pic); document.getElementById('modal-select-tc').classList.remove('active'); }); ml.appendChild(div); }); document.getElementById('modal-select-tc').classList.add('active'); });
+        planCard.querySelector('.btn-new-tc-from-plan').addEventListener('click', () => { const nid = createTestCase(null, 'tab-testcases'); testCases[nid] = getTCData(document.querySelector(`[data-tc-id="${nid}"]`)); });
+        planCard.querySelector('.btn-save-pdf-plan').addEventListener('click', () => prepareForPrint(planCard));
+        planCard.querySelector('.btn-download-zip').addEventListener('click', () => downloadSingleAsZip(planCard, `test-plan-${planId}`));
+        planCard.querySelector('.btn-delete-plan').addEventListener('click', () => { pendingTarget = planCard; document.getElementById('modal-delete').classList.add('active'); });
+        planCard.scrollIntoView({ behavior: 'smooth' });
+        return { card: planCard, id: planId };
+    }
+
+    function addTCToPlan(card, id, title, status, container, stepsData) {
+        const item = document.createElement('div'); item.className = 'card'; item.style.cssText = 'padding:10px;margin-bottom:8px;';
+        item.innerHTML = `<div class="card-header"><h3>📋 ${title}</h3><span class="status-badge status-${status}">${getStatusIcon(status)} ${getStatusLabel(status)}</span><button class="btn-remove-from-plan btn-outline" style="font-size:0.7rem;">✕</button></div><div class="steps-container"></div><div style="margin-top:8px;"><button class="btn-run-plan btn-primary" style="font-size:0.75rem;">▶ Run / Запустить</button></div>`;
+        const sc = item.querySelector('.steps-container');
+        card.querySelectorAll('.step-row').forEach((row, i) => {
+            const a = row.querySelector('.step-action')?.value || '';
+            const e = row.querySelector('.step-expected')?.value || '';
+            const stepBlock = document.createElement('div');
+            stepBlock.style.cssText = 'margin-bottom:12px;padding:10px;border:1px solid var(--border);border-radius:var(--radius-sm);';
+            const row1 = document.createElement('div');
+            row1.style.cssText = 'display:flex;gap:4px;margin-bottom:6px;align-items:flex-start;';
+            row1.innerHTML = `<div class="step-num">${i+1}</div><textarea class="step-action" style="flex:1;min-height:60px;" placeholder="Действие / Action">${a}</textarea><textarea class="step-expected" style="flex:1;min-height:60px;" placeholder="Ожидаемый результат / Expected Result">${e}</textarea>`;
+            const row2 = document.createElement('div');
+            row2.style.cssText = 'margin-bottom:6px;';
+            row2.innerHTML = `<textarea class="step-actual" style="width:100%;min-height:50px;" placeholder="Фактический результат / Actual Result">${(stepsData&&stepsData[i]&&stepsData[i].actual)||''}</textarea>`;
+            const row3 = document.createElement('div');
+            row3.style.cssText = 'display:flex;gap:8px;align-items:center;';
+            row3.innerHTML = `<select class="step-result" style="width:130px;flex-shrink:0;"><option value="">-- Статус --</option><option value="inprogress">🔄 In Progress</option><option value="passed" ${(stepsData&&stepsData[i]&&stepsData[i].status==='passed')?'selected':''}>✅ Passed</option><option value="failed" ${(stepsData&&stepsData[i]&&stepsData[i].status==='failed')?'selected':''}>❌ Failed</option><option value="skipped">⏭️ Skipped</option><option value="blocked">🔒 Blocked</option></select><textarea class="step-comment" placeholder="Комментарий / Comment" style="flex:1;min-height:160px;">${(stepsData&&stepsData[i]&&stepsData[i].comment)||''}</textarea>`;
+            stepBlock.appendChild(row1);
+            stepBlock.appendChild(row2);
+            stepBlock.appendChild(row3);
+            sc.appendChild(stepBlock);
+        });
+        initTextareas(item);
+        item.querySelector('.btn-remove-from-plan').addEventListener('click', () => item.remove());
+        item.querySelector('.btn-run-plan').addEventListener('click', function() {
+            let ap = true;
+            item.querySelectorAll('.step-block').forEach(block => {
+                const r = block.querySelector('.step-result')?.value;
+                if (r === 'failed') ap = false;
+                if (!r) ap = false;
+            });
+            if (!ap && confirm('Есть проваленные шаги. Создать баг-репорт?')) {
+                const sl = []; const at = [];
+                item.querySelectorAll('.step-block').forEach((block, i) => {
+                    const a = block.querySelector('.step-action')?.value || '';
+                    const r = block.querySelector('.step-result')?.value || '';
+                    const c = block.querySelector('.step-comment')?.value || '';
+                    sl.push({ action: a, actual: r === 'failed' ? a : '', expected: '' });
+                    at.push(`Шаг ${i+1}: ${a} → ${r==='failed'?'❌ FAILED':r}${c?' ('+c+')':''}`);
+                });
+                createBugReport({ tcId: id, title, stepsList: sl, steps: at.join('\n'), actual: '', expected: '', severity: 'Высокий / High', env: card.querySelector('.tc-env')?.value || '' });
+                switchTab('tab-bugs');
+            } else if (ap) alert('✅ Все шаги пройдены успешно!');
+        });
+        container.appendChild(item);
+        return item;
+    }
+
+    document.getElementById('btn-add-testcase').addEventListener('click', () => { const id = createTestCase(null, 'tab-testcases'); testCases[id] = getTCData(document.querySelector(`[data-tc-id="${id}"]`)); });
+    document.getElementById('btn-add-testplan').addEventListener('click', () => { createTestPlan(); switchTab('tab-testplan'); });
+    document.getElementById('btn-add-bug').addEventListener('click', () => { createBugReport(); switchTab('tab-bugs'); });
+    document.querySelectorAll('.modal-close').forEach(b => { b.addEventListener('click', () => document.querySelectorAll('.modal-overlay').forEach(m => m.classList.remove('active'))); });
+    document.querySelectorAll('.modal-overlay').forEach(o => { o.addEventListener('click', function(e) { if (e.target === this) this.classList.remove('active'); }); });
+    document.getElementById('modal-delete-yes').addEventListener('click', () => { if (pendingTarget) pendingTarget.remove(); if (pendingBugBlock) pendingBugBlock.remove(); document.getElementById('modal-delete').classList.remove('active'); pendingTarget = null; pendingBugBlock = null; });
+    function switchTab(tid) { document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active')); document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active')); const at = document.querySelector(`[data-tab="${tid}"]`); if (at) at.classList.add('active'); const ap = document.getElementById(tid); if (ap) ap.classList.add('active'); }
+    document.querySelectorAll('.tab-btn').forEach(b => b.addEventListener('click', () => switchTab(b.dataset.tab)));
+    function toggleSidebar() { document.getElementById('sidebar').classList.toggle('open'); document.getElementById('sidebarOverlay').classList.toggle('show'); }
+    function closeSidebar() { document.getElementById('sidebar').classList.remove('open'); document.getElementById('sidebarOverlay').classList.remove('show'); }
+    async function downloadAllData() { const zip = new JSZip(); const allCards = document.querySelectorAll('.card'); allCards.forEach((card, index) => { card.querySelectorAll('textarea').forEach(t => { t.style.overflow = 'visible'; t.style.height = 'auto'; t.style.height = t.scrollHeight + 'px'; t.style.maxHeight = 'none'; }); const clone = card.cloneNode(true); clone.querySelectorAll('button, .btn-add-step, .btn-add-link, .btn-remove-step').forEach(el => el.remove()); clone.querySelectorAll('.card-actions').forEach(el => el.remove()); const hc = `<!DOCTYPE html><html><head><meta charset="UTF-8"><style>body{font-family:Arial,sans-serif;max-width:800px;margin:0 auto;padding:20px;color:#000}.card{border:2px solid #333;padding:15px;margin-bottom:20px}.section{border:1px solid #ddd;padding:10px;margin-bottom:10px}textarea,input,select{width:100%;border:1px solid #ccc;padding:5px;font-family:inherit;color:#000}a{color:#0000EE;text-decoration:underline}.status-badge{padding:3px 10px;border-radius:12px;border:1px solid #333}.card-header h3{color:#000}.section h2{color:#000;border-bottom:1px solid #333}</style></head><body>${clone.outerHTML}</body></html>`; const ct = card.querySelector('.card-header h3')?.textContent || `document-${index}`; const cn = ct.replace(/[^a-zа-я0-9]/gi, '-').toLowerCase(); zip.file(`${cn}.html`, hc); }); zip.file("README.txt", "Архив тестовой документации Test IT Mini\n\nДата: " + new Date().toLocaleString() + "\n\nПапка с вложениями:\nhttps://github.com/olga555scherbinina-cell/tomokoom/tree/main/bug_report_template/attachments"); const blob = await zip.generateAsync({type:'blob'}); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = `test-it-mini-all-${new Date().toISOString().split('T')[0]}.zip`; document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url); allCards.forEach(card => { card.querySelectorAll('textarea').forEach(t => { t.style.overflow = ''; t.style.maxHeight = ''; autoResize(t); }); }); alert('✅ Все документы сохранены в ZIP-архив!\n\nСсылки в HTML-файлах кликабельны.'); }
+
+    // ========== ЗАГРУЗКА ТЕСТОВЫХ ДАННЫХ ==========
+
+    // Тест-кейс 1
+    createTestCase({id:1,title:'Проверка валидности HTML-кода стартовой страницы SkillSpace',preAction:'Пользователь не авторизован. Открыть браузер (Chrome 150)',preExpected:'Браузер запущен, доступ к сайту https://skillspace.ru/ открыт',steps:[{action:'Открыть валидатор W3C: https://validator.w3.org/, ввести URL страницы https://skillspace.ru/, запустить проверку (вкладка "Validate by URI").',expected:'Страница проходит проверку без критических ошибок. Валидатор выдаёт статус «Document checking completed. No errors or warnings to show.»'},{action:'Открыть DevTools (F12) → Вкладка «Console» на странице https://skillspace.ru/.',expected:'В консоли отсутствуют критические ошибки (красные строки). Допускаются незначительные предупреждения, не нарушающих работу интерфейса.'}],postAction:'Закрыть браузер',postExpected:'Браузер закрыт, сессия завершена',severity:'Критический / Critical',description:'Проверка валидности HTML-кода стартовой страницы SkillSpace с помощью W3C Validator.',env:'Chrome 150, Windows 10',status:'failed',notes:'Тест провален. Валидатор обнаружил 897 ошибок и предупреждений. Дополнительно в консоли DevTools обнаружены сетевые ошибки.',links:[{url:'https://skillspace.ru/',type:'Связанный / Related',description:'Тестируемая страница'},{url:'https://validator.w3.org/',type:'Связанный / Related',description:'Валидатор W3C'},{url:'https://raw.githubusercontent.com/olga555scherbinina-cell/tomokoom/main/bug_report_template/attachments/Showing%20results%20for%20https!skillspace.ru!%20(checked%20with%20vnu%2026.7.22)%20-%20Nu%20Html%20Checker.pdf',type:'Дефект / Defect',description:'Результаты валидации (PDF)'}]});
+
+    // Тест-кейс 2
+    createTestCase({id:2,title:'Проверка валидности HTML-кода страницы блога SkillSpace',preAction:'Пользователь не авторизован. Открыть браузер (Chrome 150)',preExpected:'Браузер запущен, доступ к сайту https://skillspace.ru/blog/ открыт',steps:[{action:'Открыть валидатор W3C: https://validator.w3.org/, ввести URL страницы https://skillspace.ru/blog/, запустить проверку.',expected:'Страница проходит проверку без критических ошибок. Валидатор выдаёт статус успешной проверки.'}],postAction:'Закрыть браузер',postExpected:'Браузер закрыт, сессия завершена',severity:'Высокий / High',description:'Проверка валидности HTML-кода страницы блога SkillSpace.',env:'Chrome 150, Windows 10',status:'failed',notes:'Тест не пройден: обнаружено 12 ошибок, включая Fatal Error из-за тегов в комментариях.',links:[{url:'https://skillspace.ru/blog/',type:'Связанный / Related',description:'Тестируемая страница блога'},{url:'https://validator.w3.org/',type:'Связанный / Related',description:'Валидатор W3C'},{url:'https://raw.githubusercontent.com/olga555scherbinina-cell/tomokoom/main/bug_report_template/attachments/%D0%9F%D1%80%D0%BE%D0%B2%D0%B5%D1%80%D0%BA%D0%B0%20%D0%B2%D0%B0%D0%BB%D0%B8%D0%B4%D0%BD%D0%BE%D1%81%D1%82%D0%B8%20HTML-%D0%BA%D0%BE%D0%B4%D0%B0%20%D1%81%D1%82%D1%80%D0%B0%D0%BD%D0%B8%D1%86%D1%8B%20%D0%B1%D0%BB%D0%BE%D0%B3%D0%B0%20SkillSpace%20_%D0%A1%D0%BD%D0%B8%D0%BC%D0%BE%D0%BA%20%D1%8D%D0%BA%D1%80%D0%B0%D0%BD%D0%B0_20-7-2026_151735_validator.w3.org.jpeg',type:'Дефект / Defect',description:'Скриншот результатов валидации блога'}]});
+
+    // Тест-кейс 3
+    createTestCase({id:3,title:'Проверка целостности ссылок стартовой страницы SkillSpace',preAction:'Пользователь не авторизован. Открыть браузер (Chrome 150)',preExpected:'Браузер запущен, доступ к сайту https://skillspace.ru/ открыт',steps:[{action:'Открыть валидатор W3C CheckLink: https://validator.w3.org/checklink, ввести URL https://skillspace.ru/, запустить проверку.',expected:'В результатах отсутствуют ошибки (Error). Все ссылки возвращают код 200 (OK).'}],postAction:'Закрыть браузер',postExpected:'Браузер закрыт, сессия завершена',severity:'Высокий / High',description:'Проверка ссылок и якорных ссылок стартовой страницы SkillSpace с помощью W3C Link Checker.',env:'Chrome 150, Windows 10',status:'failed',notes:'Просканировано 1299 ссылок, обнаружена 121 ошибка (404, 500, 301, 410, 418).',links:[{url:'https://skillspace.ru/',type:'Связанный / Related',description:'Тестируемая страница'},{url:'https://validator.w3.org/checklink',type:'Связанный / Related',description:'Валидатор W3C CheckLink'},{url:'https://validator.w3.org/checklink?uri=https%3A%2F%2Fskillspace.ru%2F&hide_type=all',type:'Дефект / Defect',description:'Прямая ссылка на проверку'},{url:'https://raw.githubusercontent.com/olga555scherbinina-cell/tomokoom/main/bug_report_template/attachments/%D0%9F%D1%80%D0%BE%D0%B2%D0%B5%D1%80%D0%BA%D0%B0_%D0%A1%D1%82%D0%B0%D1%80%D1%82%D0%BE%D0%B2%D0%BE%D0%B9_%D0%A1%D1%82%D1%80%D0%B0%D0%BD%D0%B8%D1%86%D1%8B_%D0%A1%D0%BD%D0%B8%D0%BC%D0%BE%D0%BA%20%D1%8D%D0%BA%D1%80%D0%B0%D0%BD%D0%B0_22-7-2026_144811_skillspace.ru_validator.w3.org.checklink.jpeg',type:'Дефект / Defect',description:'Скриншот результатов проверки ссылок'}]});
+
+    // Тест-кейс 4 (с 6 шагами)
+    createTestCase({id:4,title:'Проверка стабильности загрузки страниц блога SkillSpace',preAction:'Пользователь не авторизован. Открыть браузер (Chrome 150)',preExpected:'Браузер запущен, доступ к сайту https://skillspace.ru/blog/ открыт',steps:[{action:'Обновить страницу (F5) 5-7 раз с интервалом 2-3 секунды.',expected:'При каждом обновлении страница загружается корректно, без ошибок.'},{action:'Перейти на любую статью блога (кликнуть по заголовку).',expected:'Страница статьи загружается полностью, отображается текст.'},{action:'Обновить страницу статьи (F5) 5-7 раз с интервалом 2-3 секунды.',expected:'При каждом обновлении страница статьи загружается корректно.'},{action:'Повторить шаги 1-4 в другом браузере (Firefox).',expected:'Результаты совпадают — страницы загружаются стабильно, без ошибок.'},{action:'Прокрутить страницу вниз до блока пагинации и выполнить переходы на разные страницы блога (страница 2, страница 3 и т.д.).',expected:'Все страницы пагинации загружаются корректно, без ошибок.'},{action:'Открыть W3C CheckLink: https://validator.w3.org/checklink, ввести URL https://skillspace.ru/blog/, запустить проверку.',expected:'В результатах отсутствуют ошибки. Все ссылки возвращают код 200 (OK).'}],postAction:'Закрыть браузер',postExpected:'Браузер закрыт, сессия завершена',severity:'Высокий / High',description:'Тест проверяет стабильность загрузки страниц блога SkillSpace при многократном обновлении и навигации.',env:'Chrome 150, Firefox, Windows 10',status:'failed',notes:'Обнаружена периодическая ошибка 500 Internal Server Error (20-30% запросов). В логах сервера: ER_ACCESS_DENIED_ERROR. W3C CheckLink подтверждает 5 ошибок 500.',links:[{url:'https://skillspace.ru/blog/',type:'Связанный / Related',description:'Тестируемая страница блога'},{url:'https://validator.w3.org/checklink',type:'Связанный / Related',description:'Валидатор W3C CheckLink'},{url:'https://validator.w3.org/checklink?uri=https%3A%2F%2Fskillspace.ru%2Fblog%2F',type:'Дефект / Defect',description:'Прямая ссылка на проверку блога'},{url:'https://raw.githubusercontent.com/olga555scherbinina-cell/tomokoom/main/bug_report_template/attachments/%D0%9F%D1%80%D0%BE%D0%B2%D0%B5%D1%80%D0%BA%D0%B0_%D1%81%D1%81%D1%8B%D0%BB%D0%BE%D0%BA_%D0%B1%D0%BB%D0%BE%D0%B3%D0%B0_2026-07-19_19-25-55.png',type:'Дефект / Defect',description:'Скриншот проверки ссылок блога (1)'},{url:'https://raw.githubusercontent.com/olga555scherbinina-cell/tomokoom/main/bug_report_template/attachments/%D0%9F%D1%80%D0%BE%D0%B2%D0%B5%D1%80%D0%BA%D0%B0_%D1%81%D1%81%D1%8B%D0%BB%D0%BE%D0%BA_%D0%B1%D0%BB%D0%BE%D0%B3%D0%B0_2026-07-22_10-18-27.png',type:'Дефект / Defect',description:'Скриншот проверки ссылок блога (2)'},{url:'https://raw.githubusercontent.com/olga555scherbinina-cell/tomokoom/main/bug_report_template/attachments/%D0%9F%D1%80%D0%BE%D0%B2%D0%B5%D1%80%D0%BA%D0%B0_%D1%81%D1%81%D1%8B%D0%BB%D0%BE%D0%BA_%D0%B1%D0%BB%D0%BE%D0%B3%D0%B0_%D0%A1%D0%BD%D0%B8%D0%BC%D0%BE%D0%BA%20%D1%8D%D0%BA%D1%80%D0%B0%D0%BD%D0%B0_22-7-2026_112831_validator.w3.org.jpeg',type:'Дефект / Defect',description:'Скриншот проверки ссылок блога (3)'},{url:'https://raw.githubusercontent.com/olga555scherbinina-cell/tomokoom/main/bug_report_template/attachments/W3C%20Link%20Checker_%20https___skillspace.ru_blog_.html',type:'Дефект / Defect',description:'HTML-отчёт проверки ссылок блога'}]});
+
+    // Тест-план 1 с заполненными данными
+    const plan1Data = createTestPlan({id:1,title:'Валидация HTML-разметки skillspace.ru',product:'SkillSpace',version:'1.0'});
+    const tc1Card = document.querySelector('[data-tc-id="1"]');
+    const tc2Card = document.querySelector('[data-tc-id="2"]');
+    if(tc1Card) addTCToPlan(tc1Card,1,'Проверка валидности HTML-кода стартовой страницы SkillSpace','failed',plan1Data.card.querySelector('.plan-items-container'),[
+        {actual:'Тест провален. Валидатор обнаружил 897 ошибок и предупреждений. Основные проблемы:\n\n1. Критическая ошибка синтаксиса: массовое отсутствие пробелов между атрибутами HTML-тегов (например, id="adv"class="banner"). Это делает код нечитаемым для парсера.\n2. Многочисленные дублирующиеся ID (id="header", id="about-section", id="services"), что строго запрещено спецификацией HTML.\n3. Устаревшие атрибуты в таблицах (cellpadding, cellspacing, border вместо CSS-стилей).\n4. Ошибки вложенности (например, <a> внутри другого <a>).',comment:'Требуется: Полный рефакторинг HTML-кода: расставить пробелы между атрибутами, заменить повторяющиеся ID на уникальные классы, вынести устаревшие атрибуты в CSS, переписать вложенность блоков. После исправлений запустить проверку повторно до полного исчезновения красных строк (Errors).',status:'failed'},
+        {actual:'В консоли браузера обнаружены ошибки загрузки внешних ресурсов:\n\n1. ERR_CONNECTION_RESET при попытке загрузки скриптов Google Analytics (stats.g.doubleclick.net) и Google Ads (googleads.g.doubleclick.net).\n2. Это означает, что соединение было принудительно разорвано сервером или сетевым оборудованием.\n3. Сами скрипты не являются частью кода сайта, но их сбои могут замедлять загрузку страницы и влиять на сбор аналитики.\n\nПримечание: это не ошибки кода сайта, а проблемы с доступом к внешним сервисам Google.',comment:'Проверить настройки брандмауэра и сетевые ограничения хостинга. Убедиться, что порты для исходящих соединений к внешним API Google не заблокированы.',status:'failed'}
+    ]);
+    if(tc2Card) addTCToPlan(tc2Card,2,'Проверка валидности HTML-кода страницы блога SkillSpace','failed',plan1Data.card.querySelector('.plan-items-container'),[
+        {actual:'Тест не пройден. Валидатор W3C обнаружил 12 ошибок, включая критическую Fatal Error. Причина: в коде внутри <body> присутствуют теги <style> и блочные элементы (<div>, <ul>) в HTML-комментарии. Парсер не игнорирует их полностью, из-за чего ломается структура документа: он ошибочно интерпретирует контент как второй открытый тег <body> (Ошибка №11). После накопления ошибок парсер останавливает проверку (Ошибка №12: Cannot recover after last error). Физически второго <body> в коде нет — это ошибка парсинга комментариев. Последствия: риск некорректной работы CSS/JS и проблемы с индексацией страницы.',comment:'Требуется: очистить закомментированный блок от HTML-тегов, либо вынести их за пределы комментария. После исправления необходимо повторно запустить валидацию для подтверждения исправления структуры.',status:'failed'}
+    ]);
+
+    // Тест-план 2 с заполненными данными
+    const plan2Data = createTestPlan({id:2,title:'Проверка целостности ссылок skillspace.ru',product:'SkillSpace',version:'1.0'});
+    const tc3Card = document.querySelector('[data-tc-id="3"]');
+    const tc4Card = document.querySelector('[data-tc-id="4"]');
+    if(tc3Card) addTCToPlan(tc3Card,3,'Проверка целостности ссылок стартовой страницы SkillSpace','failed',plan2Data.card.querySelector('.plan-items-container'),[
+        {actual:'Тест провален (Status: Done, но с огромным списком ошибок). Просканировано 1299 ссылок, обнаружена 121 ошибка.\n\nКритичные ошибки для исправления:\n\n1. Ошибки 404 Not Found (Ресурс не найден):\n- Масса битых ссылок на картинки в путях /images/.../, /uploads/.../, /files/.../\n- Действие: Проверить, существуют ли эти файлы на сервере. Если нет — удалить ссылки из кода, либо загрузить файлы.\n\n2. Ошибки 410 Gone (Ресурс удалён):\n- Пример: https://skillspace.ru/hse/\n- Действие: Удалить эту ссылку с главной страницы.\n\n3. Ошибки 301 Moved Permanently (Редиректы):\n- Например, https://skillspace.ru -> https://www.skillspace.ru\n- Действие: Заменить старые ссылки на новые, чтобы избежать лишних редиректов.\n\n4. Ошибки 500 Internal Server Error:\n- Пример: https://skillspace.ru/olympiads/\n- Действие: Связаться с техподдержкой хостинга для исправления ошибки сервера.\n\nВажно: Большинство ошибок повторяются — одна битая картинка может быть на 5 разных блоках страницы. Исправив исходный путь один раз, вы уберёте все 5 ошибок.',comment:'ИТОГОВЫЙ АЛГОРИТМ ДЕЙСТВИЙ:\n\n1. Найти в HTML-коде страницы все пути, заканчивающиеся на /images/..., /uploads/... или /files/..., помеченные как 404.\n2. Удалить эти ссылки из кода, либо загрузить недостающие файлы на сервер. (Это уберет 90% всех ошибок).\n3. Заменить старые ссылки (301) на новые URL-адреса, указанные валидатором.\n\nНеобязательные проверки (можно проигнорировать):\n- Секция List of redirects (информация, не ошибки).\n- Секция Anchor (предупреждения о якорях, это нормально).',status:'failed'}
+    ]);
+    if(tc4Card) addTCToPlan(tc4Card,4,'Проверка стабильности загрузки страниц блога SkillSpace','failed',plan2Data.card.querySelector('.plan-items-container'),[
+        {actual:'При каждом обновлении страница загружается корректно, без ошибок.',comment:'Базовые запросы проходят успешно.',status:'passed'},
+        {actual:'Страница статьи загружается полностью, отображается текст.',comment:'Переход на статью работает стабильно.',status:'passed'},
+        {actual:'При каждом обновлении страница статьи загружается корректно.',comment:'Многократное обновление статей без ошибок.',status:'passed'},
+        {actual:'Результаты совпадают — страницы загружаются стабильно, без ошибок.',comment:'Кроссбраузерность подтверждена (Chrome + Firefox).',status:'passed'},
+        {actual:'При переходе по страницам пагинации (страница 2, 3 и далее) периодически возникает ошибка 500 Internal Server Error (20-30% запросов). В логах сервера: ER_ACCESS_DENIED_ERROR — доступ запрещен для пользователя \'skillspace_blog\'@\'localhost\'.',comment:'Ошибка связана с настройками доступа к базе данных. Пользователь skillspace_blog не имеет прав на выполнение запросов к БД при пагинации.',status:'failed'},
+        {actual:'W3C CheckLink подтверждает наличие ошибок 500 на страницах блога:\n\n- 5 ошибок 500 Internal Server Error на разных URL статей (/blog/intierviu-s-iuristom..., /blog/kak-zapisat-viebinar..., /blog/top-7-oshibok-zapuska-viebinara...).\n- Ошибка 500 для /blog/rss/.\n- Ошибка SSL: reestr.digital.gov.ru:443 (certificate verify failed).\n- Код 418 для vk.com/skillspace (доступ запрещён).\n- Предупреждения для mailto: и tel: ссылок (не критично).\n- Предупреждения для robots.txt (Facebook, Яндекс.Метрика) — не ошибки.',comment:'Необходимо:\n1. Проверить права доступа пользователя skillspace_blog к базе данных.\n2. Проверить SSL-сертификат для внешних подключений к reestr.digital.gov.ru.\n3. Проверить доступность vk.com/skillspace.',status:'failed'}
+    ]);
+
+    // Баг-репорты (6 штук)
+    createBugReport({tcId:1,title:'Массовые ошибки валидации HTML на стартовой странице (897 ошибок)',stepsList:[{action:'Открыть https://validator.w3.org/',actual:'Валидатор открыт',expected:'Валидатор открыт'},{action:'Ввести URL https://skillspace.ru/ и запустить проверку',actual:'Обнаружено 897 ошибок и предупреждений',expected:'0 ошибок, статус «Document checking completed. No errors or warnings to show.»'}],description:'Валидатор W3C обнаружил 897 ошибок и предупреждений на стартовой странице.\n\nОсновные проблемы:\n1. Критическая ошибка синтаксиса: массовое отсутствие пробелов между атрибутами HTML-тегов (например, id="adv"class="banner").\n2. Многочисленные дублирующиеся ID (id="header", id="about-section", id="services").\n3. Устаревшие атрибуты в таблицах (cellpadding, cellspacing, border).\n4. Ошибки вложенности (например, <a> внутри другого <a>).',actual:'897 ошибок валидации HTML',expected:'0 ошибок, чистый валидный HTML-код',severity:'Критический / Critical',env:'Chrome 150, Windows 10, W3C Validator',area:'Стартовая страница / Homepage',recommend:'Полный рефакторинг HTML-кода: расставить пробелы между атрибутами, заменить повторяющиеся ID на уникальные классы, вынести устаревшие атрибуты в CSS, переписать вложенность блоков. После исправлений запустить проверку повторно.',links:[{url:'https://raw.githubusercontent.com/olga555scherbinina-cell/tomokoom/main/bug_report_template/attachments/Showing%20results%20for%20https!skillspace.ru!%20(checked%20with%20vnu%2026.7.22)%20-%20Nu%20Html%20Checker.pdf',type:'Дефект / Defect',description:'Результаты валидации (PDF)'}]});
+    createBugReport({tcId:2,title:'Fatal Error при валидации страницы блога из-за тегов в комментариях',stepsList:[{action:'Открыть https://validator.w3.org/',actual:'Валидатор открыт',expected:'Валидатор открыт'},{action:'Ввести URL https://skillspace.ru/blog/ и запустить проверку',actual:'Fatal Error: Cannot recover after last error. 12 ошибок.',expected:'0 ошибок, успешная валидация'}],description:'Валидатор W3C обнаружил 12 ошибок, включая критическую Fatal Error. Причина: в коде внутри <body> присутствуют теги <style> и блочные элементы (<div>, <ul>) в HTML-комментарии. Парсер не игнорирует их полностью, из-за чего ломается структура документа. Физически второго <body> в коде нет — это ошибка парсинга комментариев. Последствия: риск некорректной работы CSS/JS и проблемы с индексацией страницы.',actual:'Fatal Error, 12 ошибок валидации',expected:'0 ошибок, чистый валидный HTML-код',severity:'Высокий / High',env:'Chrome 150, Windows 10, W3C Validator',area:'Блог / Blog',recommend:'Очистить закомментированный блок от HTML-тегов, либо вынести их за пределы комментария. После исправления необходимо повторно запустить валидацию для подтверждения исправления структуры.',links:[{url:'https://raw.githubusercontent.com/olga555scherbinina-cell/tomokoom/main/bug_report_template/attachments/%D0%9F%D1%80%D0%BE%D0%B2%D0%B5%D1%80%D0%BA%D0%B0%20%D0%B2%D0%B0%D0%BB%D0%B8%D0%B4%D0%BD%D0%BE%D1%81%D1%82%D0%B8%20HTML-%D0%BA%D0%BE%D0%B4%D0%B0%20%D1%81%D1%82%D1%80%D0%B0%D0%BD%D0%B8%D1%86%D1%8B%20%D0%B1%D0%BB%D0%BE%D0%B3%D0%B0%20SkillSpace%20_%D0%A1%D0%BD%D0%B8%D0%BC%D0%BE%D0%BA%20%D1%8D%D0%BA%D1%80%D0%B0%D0%BD%D0%B0_20-7-2026_151735_validator.w3.org.jpeg',type:'Дефект / Defect',description:'Скриншот результатов валидации блога'}]});
+    createBugReport({tcId:1,title:'Сетевые ошибки ERR_CONNECTION_RESET в консоли DevTools',stepsList:[{action:'Открыть https://skillspace.ru/',actual:'Страница загружена',expected:'Страница загружена'},{action:'Открыть DevTools (F12) → Вкладка «Console»',actual:'Обнаружены ошибки Failed to load resource: net::ERR_CONNECTION_RESET при попытке загрузки скриптов Google (stats.g.doubleclick.net, googleads.g.doubleclick.net)',expected:'Консоль чистая, критические ошибки отсутствуют'}],description:'При проверке консоли DevTools обнаружены сетевые ошибки ERR_CONNECTION_RESET при попытке загрузки внешних скриптов Google Analytics и Google Ads. Это означает, что соединение было принудительно разорвано сервером или сетевым оборудованием. Сами скрипты не являются частью кода сайта, но их сбои могут замедлять загрузку страницы и влиять на сбор аналитики.',actual:'Ошибки ERR_CONNECTION_RESET для доменов *.doubleclick.net',expected:'Отсутствие сетевых ошибок при загрузке внешних ресурсов',severity:'Средний / Medium',env:'Chrome 150, Windows 10',area:'Стартовая страница / Homepage',recommend:'Проверить настройки брандмауэра и сетевые ограничения хостинга. Убедиться, что порты для исходящих соединений к внешним API Google не заблокированы.',links:[{url:'https://raw.githubusercontent.com/olga555scherbinina-cell/tomokoom/main/bug_report_template/attachments/%D0%A1%D0%BD%D0%B8%D0%BC%D0%BE%D0%BA%20%D1%8D%D0%BA%D1%80%D0%B0%D0%BD%D0%B0_DevTools_%D0%A1%D1%82%D0%B0%D1%80%D1%82%D0%BE%D0%B2%D0%B0%D1%8F_%D1%81%D1%82%D1%80%D0%B0%D0%BD%D0%B8%D1%86%D0%B0_%D0%A1%D0%BA%D0%B8%D0%BB%D0%BB%D1%81%D0%BF%D0%B5%D0%B9%D1%81_2026-07-27_14-54-22.png',type:'Дефект / Defect',description:'Скриншот ошибок в консоли DevTools'}]});
+    createBugReport({tcId:3,title:'121 ошибка в ссылках на стартовой странице (404, 500, 301, 410, 418)',stepsList:[{action:'Открыть https://validator.w3.org/checklink',actual:'Валидатор открыт',expected:'Валидатор открыт'},{action:'Ввести URL https://skillspace.ru/ и запустить проверку',actual:'Просканировано 1299 ссылок, обнаружена 121 ошибка: 404 (битые картинки), 500 (ошибка сервера), 301 (редиректы), 410 (удалённые страницы), 418 (доступ запрещён)',expected:'Все ссылки возвращают код 200 (OK)'}],description:'W3C Link Checker обнаружил множественные проблемы со ссылками на стартовой странице.\n\nОсновные типы ошибок:\n1. 404 Not Found — битые ссылки на картинки в /images/.../, /uploads/.../, /files/.../ (большинство ошибок).\n2. 410 Gone — страница /hse/ удалена.\n3. 301 Moved Permanently — старые URL требуют замены на новые.\n4. 500 Internal Server Error — ошибка на странице /olympiads/.\n5. 418 — доступ к vk.com/skillspace запрещён.\n\nВажно: Большинство ошибок повторяются — одна битая картинка может быть на нескольких блоках страницы. Исправив исходный путь один раз, уберутся все дубли.',actual:'121 ошибка в 1299 ссылках',expected:'0 ошибок, все ссылки возвращают 200 OK',severity:'Высокий / High',env:'Chrome 150, Windows 10, W3C CheckLink',area:'Стартовая страница / Homepage',recommend:'1. Найти в HTML-коде все пути /images/..., /uploads/..., /files/..., помеченные как 404. Удалить несуществующие ссылки или загрузить файлы на сервер.\n2. Удалить ссылку на /hse/ (410).\n3. Заменить старые URL (301) на новые, указанные валидатором.\n4. Проверить страницу /olympiads/ на работоспособность.\n5. Проверить доступность vk.com/skillspace.',links:[{url:'https://raw.githubusercontent.com/olga555scherbinina-cell/tomokoom/main/bug_report_template/attachments/%D0%9F%D1%80%D0%BE%D0%B2%D0%B5%D1%80%D0%BA%D0%B0_%D0%A1%D1%82%D0%B0%D1%80%D1%82%D0%BE%D0%B2%D0%BE%D0%B9_%D0%A1%D1%82%D1%80%D0%B0%D0%BD%D0%B8%D1%86%D1%8B_%D0%A1%D0%BD%D0%B8%D0%BC%D0%BE%D0%BA%20%D1%8D%D0%BA%D1%80%D0%B0%D0%BD%D0%B0_22-7-2026_144811_skillspace.ru_validator.w3.org.checklink.jpeg',type:'Дефект / Defect',description:'Скриншот проверки ссылок'}]});
+    createBugReport({tcId:4,title:'Ошибка 500 Internal Server Error при загрузке страниц блога (проблема с БД)',stepsList:[{action:'Обновить страницу блога 5-7 раз',actual:'В 20-30% случаев возникает ошибка 500 Internal Server Error',expected:'Все запросы успешны (200 OK)'},{action:'Проверить логи сервера',actual:'ER_ACCESS_DENIED_ERROR: Доступ запрещен для пользователя \'skillspace_blog\'@\'localhost\'',expected:'Доступ к БД предоставлен'}],description:'При многократном обновлении страниц блога периодически возникает ошибка 500 Internal Server Error (20-30% запросов). Анализ логов показал проблему с доступом к базе данных: пользователь skillspace_blog не имеет прав для выполнения запросов. W3C CheckLink подтверждает наличие 5 ошибок 500 на разных URL статей блога.',actual:'Ошибка 500 в 20-30% случаев. Лог: ER_ACCESS_DENIED_ERROR для skillspace_blog@localhost',expected:'Стабильная работа без ошибок 500',severity:'Критический / Critical',env:'Chrome 150, Firefox, Windows 10',area:'Блог / Blog',recommend:'Предоставить пользователю skillspace_blog необходимые права доступа к базе данных на сервере. Убедиться, что у пользователя есть все привилегии для выполнения запросов к БД блога. После исправления перезапустить проверку W3C CheckLink.',links:[{url:'https://raw.githubusercontent.com/olga555scherbinina-cell/tomokoom/main/bug_report_template/attachments/W3C%20Link%20Checker_%20https___skillspace.ru_blog_.html',type:'Дефект / Defect',description:'HTML-отчёт проверки ссылок блога'}]});
+    createBugReport({tcId:4,title:'Ошибка 500 при использовании пагинации в блоге',stepsList:[{action:'Прокрутить страницу блога вниз до блока пагинации',actual:'Блок пагинации отображается',expected:'Блок пагинации отображается'},{action:'Перейти на страницу 2, 3 и далее',actual:'Периодически возникает ошибка 500 Internal Server Error (20-30% запросов)',expected:'Все страницы загружаются без ошибок'}],description:'При переходе по страницам пагинации в блоге возникает ошибка 500. Это связано с проблемой доступа к базе данных (ER_ACCESS_DENIED_ERROR для пользователя skillspace_blog@localhost). Проблема проявляется при выполнении SQL-запросов для загрузки статей на страницах пагинации.',actual:'Ошибка 500 при переходе на страницы 2, 3...',expected:'Все страницы пагинации загружаются без ошибок',severity:'Высокий / High',env:'Chrome 150, Windows 10',area:'Блог / Blog (пагинация)',recommend:'1. Проверить права доступа пользователя skillspace_blog к базе данных.\n2. Проверить SQL-запросы пагинации на предмет оптимизации.\n3. После исправления прав доступа протестировать переходы по всем страницам пагинации.',links:[{url:'https://raw.githubusercontent.com/olga555scherbinina-cell/tomokoom/main/bug_report_template/attachments/W3C%20Link%20Checker_%20https___skillspace.ru_blog_.html',type:'Дефект / Defect',description:'HTML-отчёт проверки ссылок блога'}]});
+
+    console.log('✅ Test IT Mini инициализирован. 4 тест-кейса, 2 тест-плана (заполнены), 6 баг-репортов.');
+</script>
+</body>
+</html>
