@@ -1,0 +1,1134 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QA экзамен — полный тренажёр</title>
+    <style>
+        :root{
+          --bg:#f4f5f7; --card:#ffffff; --text:#1f2430; --muted:#6b7280;
+          --accent:#4f46e5; --good:#16a34a; --bad:#dc2626; --border:#e5e7eb;
+        }
+        *{box-sizing:border-box;}
+        body{
+          margin:0; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+          background:var(--bg); color:var(--text); line-height:1.5;
+        }
+        .wrap{max-width:820px; margin:0 auto; padding:24px 16px 80px;}
+        header{ text-align:center; margin-bottom:24px; }
+        header h1{ font-size:1.6rem; margin:0 0 6px; }
+        header p{ color:var(--muted); margin:0; font-size:0.95rem; }
+        #score-bar{
+          position:sticky; top:0; z-index:10; background:var(--bg); padding:10px 0;
+          display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;
+          border-bottom:1px solid var(--border);
+        }
+        #score-bar .count{ color:var(--muted); font-size:0.9rem; }
+        .card{
+          background:var(--card); border:1px solid var(--border); border-radius:12px;
+          padding:18px 20px; margin-bottom:16px; transition:border-color .2s;
+        }
+        .card.correct{ border-color:var(--good); box-shadow:0 0 0 1px var(--good) inset; }
+        .card.incorrect{ border-color:var(--bad); box-shadow:0 0 0 1px var(--bad) inset; }
+        .qnum{ font-size:0.78rem; color:var(--accent); font-weight:600; letter-spacing:.03em; margin-bottom:4px; }
+        .qtext{ font-weight:600; margin-bottom:12px; }
+        .hint{ font-size:0.82rem; color:var(--muted); margin:-8px 0 10px; }
+        label.opt{
+          display:flex; align-items:flex-start; gap:8px; padding:8px 10px; border-radius:8px;
+          cursor:pointer; margin-bottom:4px; border:1px solid transparent;
+        }
+        label.opt:hover{ background:#f1f2f6; }
+        label.opt input{ margin-top:3px; }
+        .opt-mark{ margin-left:auto; padding-left:10px; font-weight:700; }
+        code{
+          background:#eef0f5; padding:1px 5px; border-radius:5px; font-size:0.88em;
+        }
+        .match-row{ display:flex; align-items:center; gap:10px; margin-bottom:8px; flex-wrap:wrap; }
+        .match-row .left{ flex:0 0 260px; font-size:0.92rem; }
+        .match-row select{ flex:1; min-width:200px; padding:6px 8px; border-radius:6px; border:1px solid var(--border); }
+        .order-row{ display:flex; align-items:center; gap:10px; margin-bottom:8px; }
+        .order-row .pos{ width:22px; font-weight:600; color:var(--muted); }
+        .order-row select{ flex:1; padding:6px 8px; border-radius:6px; border:1px solid var(--border); }
+        input[type=text]{
+          width:100%; padding:8px 10px; border-radius:6px; border:1px solid var(--border); font-family:monospace;
+        }
+        .answer{
+          display:none; margin-top:10px; padding:10px 12px; background:#f0fdf4; border:1px dashed var(--good);
+          border-radius:8px; font-size:0.88rem; color:#14532d;
+        }
+        .card.show-answer .answer{ display:block; }
+        .result-icon{ float:right; font-weight:700; }
+        .card.correct .result-icon{ color:var(--good); }
+        .card.incorrect .result-icon{ color:var(--bad); }
+        .controls{
+          position:fixed; bottom:0; left:0; right:0; background:var(--card); border-top:1px solid var(--border);
+          padding:12px 16px; display:flex; gap:10px; justify-content:center; flex-wrap:wrap;
+        }
+        button{
+          background:var(--accent); color:#fff; border:none; padding:10px 20px; border-radius:8px;
+          font-size:0.95rem; cursor:pointer; font-weight:600;
+        }
+        button.secondary{ background:#e5e7eb; color:var(--text); }
+        button:hover{ opacity:.9; }
+        #final{
+          text-align:center; font-size:1.2rem; font-weight:700; margin:16px 0; padding:20px; border-radius:12px; display:none;
+        }
+        #final.passed { background: #dcfce7; color: #166534; border: 2px solid #22c55e; }
+        #final.failed { background: #fee2e2; color: #991b1b; border: 2px solid #ef4444; }
+    </style>
+</head>
+<body>
+<div class="wrap">
+    <header>
+        <h1>QA экзамен — тренажёр</h1>
+        <p>56 вопросов. Ответь на все и нажми «Проверить». Порог прохождения: 80%.</p>
+    </header>
+
+    <div id="score-bar">
+        <span class="count" id="progress">Отвечено: 0 / 56</span>
+        <span class="count" id="final-inline"></span>
+    </div>
+
+    <div id="final"></div>
+
+    <div id="quiz"></div>
+</div>
+
+<div class="controls">
+    <button id="checkBtn">Проверить ответы</button>
+    <button id="answersBtn" class="secondary">Показать правильные ответы</button>
+    <button id="resetBtn" class="secondary">Сбросить</button>
+</div>
+
+<script>
+    const questions = [
+    // --- Блок 1: Базовые концепции и процессы (вопросы 1-7) ---
+    {
+      type:'single', text:'1. Выбери тестовые модели, которые наиболее точно соответствуют уровням пирамиды тестирования.',
+      options:['МТ 140, ИТ 120, СТ 80','МТ 92, ИТ 16, СТ 9','МТ 50, ИТ 78, СТ 35','МТ 100, ИТ 120, СТ 30','МТ 50, ИТ 78, СТ 81'],
+      correct:[1], explain:'МТ 92, ИТ 16, СТ 9 — резкое сужение к вершине, классическая форма пирамиды.'
+    },
+    {
+      type:'multi', text:'2. Основные типы артефактов тестирования (тестовой документации). Выбери все верные.',
+      options:['Задача-Дефект (баг)','Чек-лист','Тест-план','Use case','Тест-кейс','Отчёт о тестировании','Swagger UI'],
+      correct:[0,1,2,4,5], explain:'Use case — артефакт требований, Swagger UI — инструмент документации API, не тестовые артефакты.'
+    },
+    {
+      type:'multi', text:'3. Наиболее распространённые техники тест-дизайна. Выбери все верные.',
+      options:['Диаграмма состояний','Попарное тестирование','Таблица принятия решений','Исследовательское тестирование','Матрица трассировки','Граничные значения','Классы эквивалентности'],
+      correct:[0,1,2,5,6], explain:'Исследовательское тестирование — вид/подход тестирования, матрица трассировки — артефакт, а не техника дизайна.'
+    },
+    {
+      type:'order', text:'4. Распредели в порядке очередности этапы жизненного цикла ПО.',
+      items:['Дизайн','Тестирование','Анализ','Разработка','Планирование','Поддержка'],
+      correctOrder:['Планирование','Анализ','Дизайн','Разработка','Тестирование','Поддержка'],
+      explain:'Планирование → Анализ → Дизайн → Разработка → Тестирование → Поддержка.'
+    },
+    {
+      type:'multi', text:'5. Выбери ключевые ценности, которые занимают приоритетное место в Agile Manifesto.',
+      options:['Процессы и инструменты','Сотрудничество с заказчиком','Люди и взаимодействие','Готовность к изменениям','Следовать первоначальному плану','Исчерпывающая документация','Работающий продукт'],
+      correct:[1,2,3,6], explain:'Левая часть манифеста ценится выше правой: люди > процессы, продукт > документация, сотрудничество > контракт, изменения > план.'
+    },
+    {
+      type:'match', text:'6. Сопоставь стадию жизненного цикла ПО с задачами QA-инженера.',
+      left:['Анализ','Дизайн','Разработка','Тестирование','Установка','Поддержка'],
+      rightOptions:[
+        'Тестирование требований, планирование тестирования',
+        'Тест-дизайн, настройка тестовых сред',
+        'Разработка тест-кейсов, подготовка тестовых данных',
+        'Интеграционное, системное, регрессионное тестирование',
+        'Приёмочное тестирование',
+        'Регрессионное тестирование'
+      ],
+      correct:[0,1,2,3,4,5], explain:'Анализ — требования/план; Дизайн — тест-дизайн, среды; Разработка — тест-кейсы, данные; Тестирование — интеграционное/системное/регрессионное; Установка — приёмочное; Поддержка — регрессионное.'
+    },
+    {
+      type:'classify', text:'7. Определи, какие характеристики относятся к HTTP, а какие к HTTPS.',
+      items:[
+        'Использует шифрование для защиты данных',
+        'Защищает данные от перехвата и подмены',
+        'Требует наличия SSL/TLS-сертификата',
+        'Быстрее, потому что не требует установления защищённого соединения'
+      ],
+      labels:['HTTP','HTTPS'], correct:['HTTPS','HTTPS','HTTPS','HTTP'],
+      explain:'Первые три пункта — про HTTPS (шифрование, защита, сертификат). Последний — про HTTP (быстрее, но без защиты).'
+    },
+    // --- Блок 2: Технические основы (вопросы 8-19) ---
+    {
+      type:'single', text:'8. Какое утверждение соответствует принципам REST?',
+      options:['REST требует установки постоянного соединения','REST использует только POST-запросы','REST не использует HTTP','Каждый запрос должен содержать всю необходимую информацию для его обработки'],
+      correct:[3], explain:'Это принцип statelessness (безсостояние) REST.'
+    },
+    {
+      type:'single', text:'9. Что из перечисленного верно характеризует реляционные базы данных?',
+      options:['Хранит данные в виде документов','Использует фиксированную схему','Хорошо масштабируются по горизонтали','Не поддерживают транзакции'],
+      correct:[1], explain:'Реляционные БД используют фиксированную схему. Документы — это NoSQL, транзакции реляционные БД как раз поддерживают.'
+    },
+    {
+      type:'text', text:'10. Какую команду использовать, чтобы собрать отчёт в Allure Reports? (allure ____)',
+      answerContains:'serve', placeholder:'allure ____',
+      explain:'allure serve <папка-с-результатами> — генерирует и открывает отчёт.'
+    },
+    {
+      type:'match', text:'11. Сопоставь блоки классификации тестирования с типами тестирования, входящими в эти классификации.',
+      left:['По методам тестирования','По стадии проведения процесса тестирования','По уровням тестирования (пирамида)','По целям и задачам','По уровню доступа к системе','По приоритету выполнения'],
+      rightOptions:[
+        'Ручное / Автоматизированное',
+        'Smoke / Тестирование критического пути / Регрессионное',
+        'Unit / Интеграционное / End-to-End (приёмочное)',
+        'Функциональное / Нефункциональное',
+        'Чёрный / Белый / Серый ящик',
+        'Alfa / Beta / Beta+'
+      ],
+      correct:[0,1,2,3,4,5], explain:'Методы → ручное/авто; Стадия процесса → smoke/крит.путь/регресс; Уровни (пирамида) → unit/интеграционное/e2e; Цели → функц./нефункц.; Доступ к системе → чёрный/белый/серый ящик; Приоритет → Alfa/Beta/Beta+.'
+    },
+    {
+      type:'single', text:'12. Как называется свойство метода, при котором повторный вызов метода не изменяет состояние ресурса?',
+      options:['Безопасность','Обратимость','Асинхронность','Идемпотентность','Кешируемость'],
+      correct:[3], explain:'Идемпотентность.'
+    },
+    {
+      type:'multi', text:'13. В чём разница между первичным и внешним ключами в реляционных базах данных? Выбери все верные.',
+      options:[
+        'Внешний ключ используется для установления связей между таблицами',
+        'Внешний ключ может ссылаться на первичный ключ другой таблицы',
+        'В таблице может быть несколько первичных ключей',
+        'Первичный ключ может состоять из нескольких столбцов',
+        'Первичный ключ может содержать повторяющиеся значения',
+        'Внешний ключ должен ссылаться только на таблицу из той же БД',
+        'Первичный ключ однозначно идентифицирует каждую строку в таблице'
+      ],
+      correct:[0,1,3,6], explain:'Первичный ключ один в таблице (но может быть составным) и обязан быть уникальным — остальные два пункта про это неверны.'
+    },
+    {
+      type:'multi', text:'14. Выбери правильные варианты инициализации списка (Java).',
+      options:[
+        'ArrayList&lt;int&gt; arrayList = Stream.of(1,2,3)',
+        'ArrayList&lt;Boolean&gt; arrayList = new List&lt;Boolean&gt;()',
+        'ArrayList&lt;Integer&gt; arrayList = new ArrayList&lt;&gt;(2)',
+        'List&lt;String&gt; arrayList = new ArrayList&lt;&gt;()'
+      ],
+      correct:[2,3], explain:'Дженерики не работают с примитивами (нужен Integer, не int), а List — интерфейс и его нельзя инстанцировать напрямую (new List<>()).'
+    },
+    {
+      type:'match', text:'15. Соотнеси функции с соответствующим инструментом.',
+      left:[
+        'Набор инструментов для проектирования, документирования, тестирования и развёртывания REST API на основе спецификации OpenAPI',
+        'Инструмент для мониторинга HTTP и HTTPS-трафика, который выступает в роли прокси-сервера между приложением и сервером',
+        'Используется для тестирования API. Позволяет создавать и отправлять разные типы запросов (gRPC, HTTP, GraphQL, WebSocket)',
+        'Позволяет создавать тесты для проверки ответов от сервера'
+      ],
+      rightOptions:['Postman','Charles','Swagger'], correct:[2,1,0,0], uniqueMatch:false,
+      explain:'Swagger — проектирование/документация REST API по OpenAPI; Charles — прокси для мониторинга HTTP/HTTPS-трафика; Postman — отправка запросов и написание тестов.'
+    },
+    {
+      type:'single', text:'16. На какой вкладке DevTools можно отследить отправляемые HTTP-запросы?',
+      options:['Elements','Console','Network','Sources','Application'], correct:[2],
+      explain:'Вкладка Network показывает все сетевые запросы: заголовки, тело запроса и ответ сервера.'
+    },
+    {
+      type:'match', text:'17. Сопоставь флаг cookie с его описанием.',
+      left:['HttpOnly','Path','Expires','SamePath','Secure','Domain'],
+      rightOptions:[
+        'Используется для определения срока действия cookie.',
+        'Содержит домен или поддомен, на который может быть отправлен файл cookie.',
+        'Используется для определения условий, когда cookie могут быть отправлены при межсайтовых запросах.',
+        'Если установлено значение true, JavaScript на стороне клиента не сможет получить доступ к файлу cookie.',
+        'Если разработчик хочет установить разные cookie для каждого пути, он может использовать этот атрибут для достижения этой цели.',
+        'Может быть установлен либо в true, либо в false. Если установлено значение true, cookie будет отправляться только при соединении HTTPS.'
+      ],
+      correct:[3,4,0,2,5,1], explain:'HttpOnly — блокирует доступ из JS; Path — cookie для конкретного пути; Expires — срок действия; SamePath (SameSite) — условия при межсайтовых запросах; Secure — только через HTTPS; Domain — домен/поддомен получателя.'
+    },
+    {
+      type:'text', text:'18. Ты тестируешь форму логина. После нажатия «Войти» сайт перезагружается, поля пустые. Открываю DevTools, вкладка ____.',
+      answerContains:['network','сеть'], placeholder:'название вкладки...',
+      explain:'Нужна вкладка Network — там видно сам запрос логина и ответ сервера. Console показывает только JS-ошибки.'
+    },
+    {
+      type:'single', text:'19. Задача: выбрать SQL-запрос, который вернёт все записи из таблицы employees, где зарплата (salary) больше 50 000.',
+      options:[
+        'SELECT * FROM employees WHERE salary > 50000',
+        'SELECT ALL FROM employees WHERE salary > 50000',
+        'SELECT * FROM employees WHERE salary >= 50000',
+        'SELECT * FROM employees WHERE salary = 50000'
+      ],
+      correct:[0],
+      explain:'Синтаксис SQL для выборки всех колонок (*), удовлетворяющих условию строго больше (>).'
+    },
+    // --- Блок 3: Модели, методологии, архитектура (вопросы 20-29) ---
+    {
+      type:'classify', text:'20. Распредели утверждения по методологиям Scrum и Kanban.',
+      items:[
+        'Работа делится на спринты с фиксированной длительностью',
+        'Задачи проходят через этапы SDLC без обязательного планирования спринта',
+        'Задачи обязательно оцениваются до начала спринта',
+        'Задачи берутся по мере готовности без жёсткой итерационной структуры'
+      ],
+      labels:['Scrum','Kanban'],
+      correct:['Scrum','Kanban','Scrum','Kanban'],
+      explain:'Scrum — фиксированные спринты и оценка задач до их начала. Kanban — непрерывный поток задач, работа по мере возможности.'
+    },
+    {
+      type:'multi', text:'21. Выберите все верные утверждения, описывающие Cookie.',
+      options:[
+        'Cookie автоматически отправляются при каждом запросе к серверу',
+        'Cookie могут содержать идентификаторы сессии',
+        'Cookie могут исполнять JavaScript-код на стороне клиента',
+        'Cookie можно ограничить по времени жизни'
+      ],
+      correct:[0,1,3], explain:'Cookie — это пассивные данные, они не могут выполнять код. Всё остальное верно.'
+    },
+    {
+      type:'single', text:'22. Какой паттерн проектирования чаще всего используется при автоматизации UI-тестов?',
+      options:[
+        'Singleton',
+        'Factory Method',
+        'Page Object Model (POM)',
+        'Observer'
+      ],
+      correct:[2],
+      explain:'Page Object Model — основной паттерн в UI-автоматизации, позволяющий разделить логику тестов и описание страниц.'
+    },
+    {
+      type:'match', text:'23. Соотнеси инструмент автоматизации с его основной областью применения.',
+      left:[
+        'Selenium WebDriver',
+        'RestAssured',
+        'Appium',
+        'Cucumber'
+      ],
+      rightOptions:[
+        'Автоматизация UI веб-приложений',
+        'Автоматизация тестирования REST API на Java',
+        'Автоматизация мобильных приложений',
+        'BDD-тестирование (поведенческое тестирование)'
+      ],
+      correct:[0,1,2,3],
+      explain:'Selenium — веб-UI. RestAssured — API на Java. Appium — мобильные приложения. Cucumber — BDD.'
+    },
+    {
+      type:'match', text:'24. Соотнеси утверждения с моделями пирамиды (SDLC).',
+      left:['Incremental model','Waterfall','V-model','Spiral'],
+      rightOptions:[
+        'Фазы следуют одна за другой, нельзя перейти к этапу, не завершив предыдущий.',
+        'В основе лежит контроль рисков на всех этапах, итерации с прототипированием.',
+        'Разработка разбивается на итерации, каждая включает фазы SDLC.',
+        'Контроль качества на всех этапах, объединяет итеративную разработку с верификацией.'
+      ],
+      correct:[2,0,3,1], explain:'Incremental — итерации; Waterfall — последовательно; V-model — верификация; Spiral — риски.'
+    },
+    {
+      type:'order', text:'25. Базовое представление пирамиды тестирования. Сопоставь уровни (снизу вверх).',
+      items:['System testing (системное)','Integration testing (интеграционное)','Unit тесты (модульное)'],
+      correctOrder:['Unit тесты (модульное)','Integration testing (интеграционное)','System testing (системное)'],
+      explain:'Основание пирамиды — Unit, затем Integration, на вершине — System (E2E).'
+    },
+    {
+      type:'single', text:'26. Что такое жизненный цикл ПО (SDLC)?',
+      options:[
+        'Структурированный подход, охватывающий все этапы от идеи до поддержки.',
+        'Набор инструментов для автоматической сборки проекта.',
+        'Процесс только тестирования и развёртывания.',
+        'Методология управления проектами.'
+      ],
+      correct:[0], explain:'SDLC — это весь жизненный цикл создания продукта от начала и до конца.'
+    },
+    {
+      type:'single', text:'27. Выбери пример кода, в котором операция сравнения вернёт true.',
+      options:[
+        'System.out.println("Trust" == "Trust");',
+        'System.out.println(new String("Trust") == "Trust");',
+        'System.out.println(new String("Trust") == new String("Trust"));',
+        'System.out.println("Trust" == new String("Trust"));'
+      ],
+      correct:[0], explain:'Строковые литералы интернируются в пул строк, поэтому == возвращает true. new String() создаёт новый объект, и сравнение по ссылке даст false.'
+    },
+    {
+      type:'single', text:'28. Что является важной особенностью мобильных приложений по сравнению с веб-приложениями?',
+      options:[
+        'Мобильные приложения всегда быстрее веб-приложений.',
+        'Мобильные приложения должны работать с разными разрешениями экрана и ориентацией.',
+        'Мобильные приложения не требуют подключения к интернету.',
+        'Мобильные приложения написаны только на JavaScript.'
+      ],
+      correct:[1], explain:'Разнообразие устройств, разрешений и ориентаций — ключевая сложность мобильной разработки и тестирования.'
+    },
+    {
+      type:'single', text:'29. Что делает команда git pull?',
+      options:[
+        'Скачивает изменения из удалённого репозитория и объединяет их с локальной веткой.',
+        'Только скачивает изменения без объединения.',
+        'Отправляет локальные изменения на удалённый сервер.',
+        'Создаёт новую локальную ветку.'
+      ],
+      correct:[0], explain:'git pull = git fetch + git merge.'
+    },
+    // --- Блок 4: Инструменты и практика тестирования (вопросы 30-46) ---
+    {
+      type:'multi', text:'30. Какие функции движков браузеров могут повлиять на поведение веб-приложения?',
+      options:[
+        'Различия в поддержке CSS-свойств',
+        'Несовпадения в реализации JavaScript-API',
+        'Особенности рендеринга шрифтов и анимаций',
+        'Поддержка или отсутствие новых веб-стандартов',
+        'Цветовая тема операционной системы'
+      ],
+      correct:[0,1,2,3], explain:'Цветовая тема ОС не относится к функциям движков браузеров (Blink, WebKit, Gecko).'
+    },
+    {
+      type:'multi', text:'31. Каким образом Appium поддерживает автоматизацию на iOS и Android?',
+      options:[
+        'Использование единого протокола WebDriver',
+        'Интеграция с нативными фреймворками: UIAutomator2 и XCUITest',
+        'Возможность писать кроссплатформенные тесты',
+        'Поддержка нативных, гибридных и веб-приложений',
+        'Appium работает только с эмуляторами, но не с реальными устройствами'
+      ],
+      correct:[0,1,2,3], explain:'Appium прекрасно работает с реальными устройствами, это один из его главных плюсов.'
+    },
+    {
+      type:'multi', text:'32. Какие стратегии локаторов поддерживает Appium?',
+      options:[
+        'ID, name, class name',
+        'resource-id (для Android)',
+        'accessibility-id',
+        'XPath',
+        'Predicate strings и class chain (для iOS)',
+        'CSS-селекторы в веб-контексте'
+      ],
+      correct:[0,1,2,3,4,5], explain:'Appium поддерживает все перечисленные стратегии для поиска элементов.'
+    },
+    {
+      type:'classify', text:'33. Определи HTTP-методы.',
+      items:[
+        'DELETE — удаление ресурса',
+        'PUT — полное обновление ресурса',
+        'POST — создание ресурса',
+        'GET — получение данных'
+      ],
+      labels:['Идемпотентный','Не идемпотентный'],
+      correct:['Идемпотентный','Идемпотентный','Не идемпотентный','Идемпотентный'],
+      explain:'GET, PUT, DELETE — идемпотентны, POST — нет.'
+    },
+    {
+      type:'multi', text:'34. Какие утверждения раскрывают понятие JSON и его преимущества перед XML и YAML?',
+      options:[
+        'Это текстовый формат для хранения и передачи структур данных.',
+        'Имеет компактную структуру из-за отсутствия тегов, в отличие от XML.',
+        'Легче читается и пишется, чем XML.',
+        'Поддерживает комментарии по умолчанию, как YAML.',
+        'Использует отступы для задания структуры, как YAML.'
+      ],
+      correct:[0,1,2], explain:'JSON не поддерживает комментарии по умолчанию и не использует отступы для определения структуры, в отличие от YAML.'
+    },
+    {
+      type:'single', text:'35. Какой XPath выберет div с текстом «Смартфон»?',
+      options:[
+        '//div[text()="Смартфон"]',
+        '//div[descendant::span[text()="Смартфон"]]',
+        '//span[text()="Смартфон"]/..',
+        '//div[span="Смартфон"]'
+      ],
+      correct:[1], explain:'Текст находится в span, который является потомком div. descendant::span находит вложенный span.'
+    },
+    {
+      type:'single', text:'36. В архитектуре клиент-серверного приложения как фронтенд взаимодействует с бэкендом?',
+      options:[
+        'Фронтенд напрямую подключается к базе данных.',
+        'Фронтенд отправляет запросы на бэкенд, который обрабатывает их и взаимодействует с БД.',
+        'Бэкенд напрямую управляет отображением элементов в браузере.',
+        'Фронтенд и бэкенд не взаимодействуют.'
+      ],
+      correct:[1], explain:'Классическая схема: клиент (фронтенд) -> запрос -> сервер (бэкенд) -> БД -> ответ -> клиент.'
+    },
+    {
+      type:'multi', text:'37. Какие инструменты для автоматизации тестирования веб-API на Java?',
+      options:[
+        'RestAssured',
+        'Retrofit (в связке с JUnit)',
+        'Selenium WebDriver',
+        'Appium'
+      ],
+      correct:[0,1], explain:'Selenium — для UI, Appium — для мобильных приложений. RestAssured и Retrofit — для API.'
+    },
+    {
+      type:'multi', text:'38. Выбери верные утверждения про типы Integer и int в Java.',
+      options:[
+        'Integer — это класс-обёртка над примитивным типом.',
+        'При операции над Integer создаётся новый объект (новое значение).',
+        'Integer используется при инициализации коллекций.',
+        'int может хранить null.'
+      ],
+      correct:[0,1,2], explain:'int не может быть null, в отличие от Integer.'
+    },
+    {
+      type:'classify', text:'39. Распредели команды по группам: DML и DDL.',
+      items:['CREATE','INSERT','UPDATE','DROP','SELECT','ALTER'],
+      labels:['DDL','DML'],
+      correct:['DDL','DML','DML','DDL','DML','DDL'],
+      explain:'DDL (Data Definition Language): CREATE, ALTER, DROP. DML (Data Manipulation Language): INSERT, UPDATE, SELECT.'
+    },
+    {
+      type:'text', text:'40. Обработка возраста: 4 группы кодов ошибок (0-14, 15-25, 26-59, 60+). Сколько тест-кейсов нужно для проверки всех групп на границах? (введите число)',
+      answerContains:'9', placeholder:'число тест-кейсов...',
+      explain:'3 границы (15, 26, 60) × 3 значения (до, на, после) = 9 тест-кейсов.'
+    },
+    {
+      type:'single', text:'41. При тестировании формы регистрации: 1) поля не соответствуют макету; 2) кнопка показать/скрыть пароль не работает. Что делать?',
+      options:[
+        'Заведу 1 баг, перечислив оба.',
+        'Заведу 2 бага: визуальный UI-баг и функциональный баг.',
+        'Сообщу разработчикам устно.',
+        'Буду ждать, пока макет поправят, а потом проверю кнопку.'
+      ],
+      correct:[1], explain:'Рекомендуется разделять визуальные дефекты и функциональные.'
+    },
+    {
+      type:'single', text:'42. Что НЕ является этапом CI/CD-пайплайна?',
+      options:[
+        'Сборка проекта',
+        'Запуск автотестов',
+        'Деплой на staging-окружение',
+        'Написание пользовательских историй'
+      ],
+      correct:[3], explain:'Написание пользовательских историй — это этап проработки требований, а не CI/CD.'
+    },
+    {
+      type:'single', text:'43. Как Selenium WebDriver отправляет команды в браузер?',
+      options:[
+        'Через REST API и JSON Wire Protocol (W3C WebDriver).',
+        'Через прямое подключение к процессу браузера.',
+        'Через SOAP-запросы.',
+        'Через консольные команды.'
+      ],
+      correct:[0], explain:'WebDriver использует стандартный протокол W3C WebDriver, эволюционировавший из JSON Wire Protocol.'
+    },
+    {
+      type:'single', text:'44. Какой метод для явного ожидания (Explicit Wait) в Selenium?',
+      options:[
+        'driver.manage().timeouts().implicitlyWait()',
+        'wait.until(ExpectedConditions.visibilityOfElementLocated(...))',
+        'Thread.sleep()',
+        'new FluentWait<>(driver).withTimeout(...)'
+      ],
+      correct:[1], explain:'wait.until — стандартная конструкция явного ожидания с условиями.'
+    },
+    {
+      type:'single', text:'45. Что произойдет: element = driver.find_element(...); driver.refresh(); element.click();',
+      options:[
+        'Всё отработает нормально.',
+        'Исключение NoSuchElementException.',
+        'Исключение StaleElementReferenceException.',
+        'Элемент будет найден заново автоматически.'
+      ],
+      correct:[2], explain:'После refresh() элементы страницы обновляются, и старая ссылка становится "протухшей" (stale).'
+    },
+    {
+      type:'multi', text:'46. Минимальный набор обязательных полей для задачи-дефекта (бага).',
+      options:[
+        'Фактический результат',
+        'Заголовок',
+        'Описание',
+        'Ожидаемый результат',
+        'Шаги для воспроизведения',
+        'Количество отработанных часов'
+      ],
+      correct:[0,1,2,3,4], explain:'Часы обычно не указываются в описании дефекта.'
+    },
+    // --- Блок 5: Управление качеством, требования (вопросы 47-52) ---
+    {
+      type:'single', text:'47. Severity и Major в контексте дефектов: Что означает Severity уровня Major?',
+      options:[
+        'Приложение полностью нерабочее.',
+        'Дефект существенно влияет на функциональность, но приложение работает.',
+        'Мелкая ошибка в UI.',
+        'Дефект, который не влияет на работу.'
+      ],
+      correct:[1], explain:'Major — серьёзный дефект, но не блокирующий всё приложение.'
+    },
+    {
+      type:'single', text:'48. Действия младшего тестировщика при обнаружении критического бага перед релизом.',
+      options:[
+        'Сразу заведу баг и пойду дальше.',
+        'Сообщу ответственному за релиз, согласую приоритет, продолжу локализацию.',
+        'Сам отменю релиз.',
+        'Попрошу разработчика быстро исправить без баг-репорта.'
+      ],
+      correct:[1], explain:'Важно оперативно поднять проблему и согласовать дальнейшие действия с командой.'
+    },
+    {
+      type:'multi', text:'49. Выбери все верные характеристики, относящиеся к Activity Lifecycle в Android.',
+      options:[
+        'Это последовательность состояний при запуске, сворачивании, закрытии.',
+        'Приложение может вести себя по-разному при повороте экрана.',
+        'Поведение Activity учитывается в методах onStart(), onResume(), onPause(), onStop() и onDestroy().',
+        'Activity запускается в отдельном процессе, не связанном с ОС.'
+      ],
+      correct:[0,1,2], explain:'Activity — это один из компонентов Android-приложения, работающий в его процессе.'
+    },
+    {
+      type:'match', text:'50. Соотнеси название типа HTTP авторизации с его описанием.',
+      left:['Auth 2.0','Basic Auth','Bearer Token (JWT)','API-Key'],
+      rightOptions:[
+        'Авторизация через сторонний сервис с получением access token (например, Google).',
+        'Авторизация с использованием пары логин-пароль в Base64.',
+        'Авторизация с помощью токена в заголовке Authorization: Bearer <token>.',
+        'Авторизация путём передачи уникального ключа, не требует логина и пароля.'
+      ],
+      correct:[0,1,2,3], explain:'OAuth 2.0 — делегирование, Basic — логин/пароль, Bearer — токен, API-Key — ключ.'
+    },
+    // ================= ИЗМЕНЁННЫЙ ВОПРОС 52 =================
+    {
+      type:'match', text:'52. Какие принципы нарушены в указанных требованиях? Сопоставьте требование с нарушенным принципом.',
+      left:[
+        'REG-FORM-001: «форма должна давать возможность пользователю указать след. данные: „Логин“, „Пароль“»',
+        'REG-FORM-002: «значение логина должно проверяться (валидироваться) на то, что оно является строкой»',
+        'REG-FORM-003: «значение логина должно проверяться на наличие уже зарегистрированного пользователя с таким логином. При совпадении не принимать данные и сообщить пользователю об ошибке»',
+        'REG-FORM-004: «для пароля должна быть предусмотрена страховка от ошибки (напр., дублирующее поле подтверждения пароля). Если пароль не совпадает — сообщать об ошибке»',
+        'REG-FORM-005: «над паролем должен быть предусмотрен маскированный ввод. Должна быть возможность вкл./выкл. видимость пароля»',
+        'REG-FORM-006: «недопустимое значение пароля должно проверяться на допустимые для пароля символы. Допустимы: строчные и заглавные латинские буквы, цифры и спецсимволы. Также должны быть указаны след. символы: …»',
+        'REG-FORM-007: «инициализация отправки формы должна быть доступна только в случае заполнения всех данных на сервере»'
+      ],
+      rightOptions:[
+        'Нарушен принцип атомарности (смешаны сущности логина и пароля).',
+        'Нарушена полнота (не указаны чёткие критерии валидации строки).',
+        'Нарушена однозначность (неясно, что значит «не принимать данные»).',
+        'Нарушена прослеживаемость (не указана связь «страховки» с требованиями).',
+        'Нарушена непротиворечивость (маскированный ввод конфликтует с видимостью).',
+        'Нарушена полнота (не указан конкретный список спецсимволов).',
+        'Нарушена однозначность (формулировка «заполнения данных на сервере»).'
+      ],
+      correct:[0,1,2,3,4,5,6],
+      explain:'REG-FORM-001: смешаны сущности -> атомарность. REG-FORM-002: нет критериев валидации -> полнота. REG-FORM-003: неоднозначное действие «не принимать» -> однозначность. REG-FORM-004: нет связи с требованием -> прослеживаемость. REG-FORM-005: противоречие (маскировка и видимость) -> непротиворечивость. REG-FORM-006: не указан полный список спецсимволов -> полнота. REG-FORM-007: неясно, где происходит проверка -> однозначность.'
+    },
+    // =====================================================
+    // --- Блок 6: Дополнительные темы (вопросы 53-56) ---
+    {
+      type:'multi', text:'53. Трудности QA-инженера при анализе требований в SDLC.',
+      options:[
+        'Неполные или противоречивые требования',
+        'Неоднозначные формулировки',
+        'Отсутствие критериев приёмки',
+        'Частая смена требований',
+        'Недостаток контекста и слабая коммуникация',
+        'Слишком много доступной документации'
+      ],
+      correct:[0,1,2,3,4], explain:'Обычно проблема в нехватке документации или её низком качестве, а не в избытке.'
+    },
+    {
+      type:'multi', text:'54. Характеристики жизненного цикла Activity в Android (дополнительно).',
+      options:[
+        'Управляется системой Android',
+        'Состояния строго упорядочены для управления ресурсами',
+        'Поддержка сохранения состояния через onSaveInstanceState',
+        'Activity не имеет жизненного цикла, он есть только у приложения'
+      ],
+      correct:[0,1,2], explain:'Activity имеет чёткий жизненный цикл, который управляется системой.'
+    },
+    {
+      type:'single', text:'55. Что такое Logcat в Android?',
+      options:[
+        'Инструмент для просмотра логов приложения и системы.',
+        'Язык программирования для UI-тестов.',
+        'Фреймворк для сборки проекта.',
+        'Название виртуальной машины Android.'
+      ],
+      correct:[0], explain:'Logcat — утилита командной строки и вкладка в Android Studio для просмотра логов.'
+    },
+    {
+      type:'single', text:'56. Dart — это язык программирования, используемый в ... ?',
+      options:[
+        'React Native',
+        'Xamarin',
+        'Flutter',
+        'Ionic'
+      ],
+      correct:[2], explain:'Dart — основной язык для кроссплатформенного фреймворка Flutter от Google.'
+    }
+    ];
+
+    function shuffleArray(arr){
+      const a = arr.slice();
+      for(let i = a.length - 1; i > 0; i--){
+        const j = Math.floor(Math.random() * (i+1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+      return a;
+    }
+
+    questions.forEach(q => {
+      if(q.type === 'single' || q.type === 'multi'){
+        const order = shuffleArray(q.options.map((_, i) => i));
+        const oldOptions = q.options, oldCorrect = q.correct;
+        q.options = order.map(i => oldOptions[i]);
+        q.correct = oldCorrect.map(origIdx => order.indexOf(origIdx));
+      }
+      if(q.type === 'classify'){
+        const order = shuffleArray(q.items.map((_, i) => i));
+        const oldItems = q.items, oldCorrect = q.correct;
+        q.items = order.map(i => oldItems[i]);
+        q.correct = order.map(i => oldCorrect[i]);
+      }
+      if(q.type === 'order'){
+        q.items = shuffleArray(q.items);
+      }
+      if(q.type === 'match'){
+        const rOrder = shuffleArray(q.rightOptions.map((_, i) => i));
+        const oldRight = q.rightOptions, oldCorrect = q.correct;
+        const newRight = rOrder.map(i => oldRight[i]);
+        const correctByLeft = oldCorrect.map(origIdx => rOrder.indexOf(origIdx));
+        q.rightOptions = newRight;
+
+        const lOrder = shuffleArray(q.left.map((_, i) => i));
+        const oldLeft = q.left;
+        q.left = lOrder.map(i => oldLeft[i]);
+        q.correct = lOrder.map(i => correctByLeft[i]);
+      }
+    });
+
+    const quizEl = document.getElementById('quiz');
+    const state = {};
+
+    questions.forEach((q, qi) => {
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.dataset.qi = qi;
+
+      const num = document.createElement('div');
+      num.className = 'qnum';
+      num.textContent = 'Вопрос ' + (qi+1) + ' из ' + questions.length;
+      card.appendChild(num);
+
+      const qt = document.createElement('div');
+      qt.className = 'qtext';
+      qt.innerHTML = q.text;
+      card.appendChild(qt);
+
+      if(q.type === 'single' || q.type === 'multi'){
+        const hint = document.createElement('div');
+        hint.className = 'hint';
+        hint.textContent = q.type === 'multi' ? '(можно выбрать несколько вариантов)' : '(выбери один вариант)';
+        card.appendChild(hint);
+
+        state[qi] = new Set();
+        q.options.forEach((opt, oi) => {
+          const label = document.createElement('label');
+          label.className = 'opt';
+          const input = document.createElement('input');
+          input.type = q.type === 'multi' ? 'checkbox' : 'radio';
+          input.name = 'q'+qi;
+          input.value = oi;
+          input.addEventListener('change', () => {
+            if(q.type === 'multi'){
+              if(input.checked) state[qi].add(oi); else state[qi].delete(oi);
+            } else {
+              state[qi] = new Set([oi]);
+            }
+            updateProgress();
+            evaluateQuestion(qi);
+          });
+          const span = document.createElement('span');
+          span.innerHTML = opt;
+          const mark = document.createElement('span');
+          mark.className = 'opt-mark';
+          label.appendChild(input);
+          label.appendChild(span);
+          label.appendChild(mark);
+          card.appendChild(label);
+        });
+      }
+
+      if(q.type === 'order'){
+        state[qi] = new Array(q.items.length).fill('');
+        q.items.forEach((_, posIdx) => {
+          const row = document.createElement('div');
+          row.className = 'order-row';
+          const pos = document.createElement('div');
+          pos.className = 'pos';
+          pos.textContent = (posIdx+1) + '.';
+          const select = document.createElement('select');
+          const blank = document.createElement('option');
+          blank.value = ''; blank.textContent = '— выбери этап —';
+          select.appendChild(blank);
+          q.items.forEach(item => {
+            const o = document.createElement('option');
+            o.value = item; o.textContent = item;
+            select.appendChild(o);
+          });
+          select.addEventListener('change', () => {
+            state[qi][posIdx] = select.value;
+            refreshOrderOptions(qi);
+            updateProgress();
+            evaluateQuestion(qi);
+          });
+          const mark = document.createElement('span');
+          mark.className = 'opt-mark';
+          row.appendChild(pos);
+          row.appendChild(select);
+          row.appendChild(mark);
+          card.appendChild(row);
+        });
+      }
+
+      if(q.type === 'match'){
+        state[qi] = new Array(q.left.length).fill('');
+        q.left.forEach((leftItem, li) => {
+          const row = document.createElement('div');
+          row.className = 'match-row';
+          const left = document.createElement('div');
+          left.className = 'left';
+          left.textContent = leftItem;
+          const select = document.createElement('select');
+          const blank = document.createElement('option');
+          blank.value = ''; blank.textContent = '— выбери —';
+          select.appendChild(blank);
+          q.rightOptions.forEach((opt, oi) => {
+            const o = document.createElement('option');
+            o.value = oi; o.textContent = opt;
+            select.appendChild(o);
+          });
+          select.addEventListener('change', () => {
+            state[qi][li] = select.value;
+            refreshMatchOptions(qi);
+            updateProgress();
+            evaluateQuestion(qi);
+          });
+          const mark = document.createElement('span');
+          mark.className = 'opt-mark';
+          row.appendChild(left);
+          row.appendChild(select);
+          row.appendChild(mark);
+          card.appendChild(row);
+        });
+      }
+
+      if(q.type === 'classify'){
+        state[qi] = new Array(q.items.length).fill('');
+        q.items.forEach((item, ii) => {
+          const row = document.createElement('div');
+          row.style.marginBottom = '10px';
+          const p = document.createElement('div');
+          p.style.fontSize = '0.92rem';
+          p.style.marginBottom = '4px';
+          p.textContent = '— ' + item;
+          row.appendChild(p);
+          const btnWrap = document.createElement('div');
+          btnWrap.style.display = 'flex';
+          btnWrap.style.gap = '14px';
+          q.labels.forEach(lab => {
+            const label = document.createElement('label');
+            label.className = 'opt';
+            label.style.padding = '4px 10px';
+            const input = document.createElement('input');
+            input.type = 'radio';
+            input.name = 'q'+qi+'_'+ii;
+            input.value = lab;
+            input.addEventListener('change', () => {
+              state[qi][ii] = lab;
+              updateProgress();
+              evaluateQuestion(qi);
+            });
+            const span = document.createElement('span');
+            span.textContent = lab;
+            label.appendChild(input);
+            label.appendChild(span);
+            btnWrap.appendChild(label);
+          });
+          row.appendChild(btnWrap);
+          card.appendChild(row);
+        });
+      }
+
+      if(q.type === 'text'){
+        state[qi] = '';
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.placeholder = q.placeholder || 'Введите ответ...';
+        input.addEventListener('input', () => {
+          state[qi] = input.value;
+          updateProgress();
+          card.classList.remove('correct','incorrect');
+          if(!quizEl.classList.contains('show-all-answers')) card.classList.remove('show-answer');
+        });
+        input.addEventListener('blur', () => { evaluateQuestion(qi); });
+        input.addEventListener('keydown', (e) => { if(e.key === 'Enter') evaluateQuestion(qi); });
+        card.appendChild(input);
+      }
+
+      const resultIcon = document.createElement('span');
+      resultIcon.className = 'result-icon';
+      num.appendChild(resultIcon);
+
+      const answerBox = document.createElement('div');
+      answerBox.className = 'answer';
+      answerBox.textContent = 'Пояснение: ' + q.explain;
+      card.appendChild(answerBox);
+
+      quizEl.appendChild(card);
+    });
+
+    function isAnswered(qi){
+      const q = questions[qi];
+      const s = state[qi];
+      if(q.type === 'single' || q.type === 'multi') return s.size > 0;
+      if(q.type === 'order') return s.every(v => v !== '');
+      if(q.type === 'match') return s.every(v => v !== '');
+      if(q.type === 'classify') return s.every(v => v !== '');
+      if(q.type === 'text') return s.trim() !== '';
+      return false;
+    }
+
+    function updateProgress(){
+      let answered = 0;
+      questions.forEach((_, qi) => { if(isAnswered(qi)) answered++; });
+      document.getElementById('progress').textContent = 'Отвечено: ' + answered + ' / ' + questions.length;
+    }
+
+    function updateOptionMarks(qi){
+      const q = questions[qi];
+      if(q.type !== 'single' && q.type !== 'multi') return;
+      const card = quizEl.children[qi];
+      const marks = card.querySelectorAll('.opt-mark');
+      const correctSet = new Set(q.correct);
+      const chosen = state[qi];
+      marks.forEach((m, oi) => {
+        if(chosen.has(oi)){
+          const isCorrectOpt = correctSet.has(oi);
+          m.textContent = isCorrectOpt ? '✓' : '✗';
+          m.style.color = isCorrectOpt ? 'var(--good)' : 'var(--bad)';
+        } else {
+          m.textContent = '';
+        }
+      });
+    }
+
+    function refreshOrderOptions(qi){
+      const q = questions[qi];
+      const card = quizEl.children[qi];
+      const selects = Array.from(card.querySelectorAll('.order-row select'));
+      const chosenValues = selects.map(s => s.value);
+      selects.forEach((select, idx) => {
+        const currentValue = select.value;
+        select.innerHTML = '';
+        const blank = document.createElement('option');
+        blank.value = '';
+        blank.textContent = '— выбери этап —';
+        select.appendChild(blank);
+        q.items.forEach(item => {
+          const usedElsewhere = chosenValues.some((v, i) => v === item && i !== idx);
+          if(usedElsewhere) return;
+          const o = document.createElement('option');
+          o.value = item;
+          o.textContent = item;
+          select.appendChild(o);
+        });
+        select.value = currentValue;
+      });
+    }
+
+    function refreshMatchOptions(qi){
+      const q = questions[qi];
+      const card = quizEl.children[qi];
+      const selects = Array.from(card.querySelectorAll('.match-row select'));
+      const chosenValues = selects.map(s => s.value);
+      const preventDup = q.uniqueMatch !== false;
+      selects.forEach((select, idx) => {
+        const currentValue = select.value;
+        select.innerHTML = '';
+        const blank = document.createElement('option');
+        blank.value = '';
+        blank.textContent = '— выбери —';
+        select.appendChild(blank);
+        q.rightOptions.forEach((opt, oi) => {
+          if(preventDup){
+            const usedElsewhere = chosenValues.some((v, i) => v === String(oi) && i !== idx);
+            if(usedElsewhere) return;
+          }
+          const o = document.createElement('option');
+          o.value = oi;
+          o.textContent = opt;
+          select.appendChild(o);
+        });
+        select.value = currentValue;
+      });
+    }
+
+    function updateOrderMarks(qi){
+      const q = questions[qi];
+      const card = quizEl.children[qi];
+      const rows = card.querySelectorAll('.order-row');
+      rows.forEach((row, posIdx) => {
+        const select = row.querySelector('select');
+        const mark = row.querySelector('.opt-mark');
+        if(!select.value){ mark.textContent = ''; return; }
+        const isCorrect = select.value === q.correctOrder[posIdx];
+        mark.textContent = isCorrect ? '✓' : '✗';
+        mark.style.color = isCorrect ? 'var(--good)' : 'var(--bad)';
+      });
+    }
+
+    function updateMatchMarks(qi){
+      const q = questions[qi];
+      const card = quizEl.children[qi];
+      const rows = card.querySelectorAll('.match-row');
+      rows.forEach((row, li) => {
+        const select = row.querySelector('select');
+        const mark = row.querySelector('.opt-mark');
+        if(select.value === ''){ mark.textContent = ''; return; }
+        const isCorrect = Number(select.value) === q.correct[li];
+        mark.textContent = isCorrect ? '✓' : '✗';
+        mark.style.color = isCorrect ? 'var(--good)' : 'var(--bad)';
+      });
+    }
+
+    function evaluateQuestion(qi){
+      const q = questions[qi];
+      const card = quizEl.children[qi];
+      const icon = card.querySelector('.result-icon');
+
+      if(q.type === 'order'){
+        updateOrderMarks(qi);
+        const selects = card.querySelectorAll('.order-row select');
+        let hasWrong = false, filledCount = 0;
+        selects.forEach((select, posIdx) => {
+          if(select.value){
+            filledCount++;
+            if(select.value !== q.correctOrder[posIdx]) hasWrong = true;
+          }
+        });
+        const isComplete = filledCount === q.items.length && !hasWrong;
+        card.classList.remove('correct','incorrect');
+        if(isComplete){
+          card.classList.add('correct');
+          icon.textContent = '✓';
+        } else if(hasWrong){
+          card.classList.add('incorrect');
+          icon.textContent = '✗';
+          card.classList.add('show-answer');
+        } else {
+          icon.textContent = '';
+        }
+        return;
+      }
+
+      if(q.type === 'match'){
+        updateMatchMarks(qi);
+        const selects = card.querySelectorAll('.match-row select');
+        let hasWrong = false, filledCount = 0;
+        selects.forEach((select, li) => {
+          if(select.value !== ''){
+            filledCount++;
+            if(Number(select.value) !== q.correct[li]) hasWrong = true;
+          }
+        });
+        const isComplete = filledCount === q.left.length && !hasWrong;
+        card.classList.remove('correct','incorrect');
+        if(isComplete){
+          card.classList.add('correct');
+          icon.textContent = '✓';
+        } else if(hasWrong){
+          card.classList.add('incorrect');
+          icon.textContent = '✗';
+          card.classList.add('show-answer');
+        } else {
+          icon.textContent = '';
+        }
+        return;
+      }
+
+      if(q.type === 'multi'){
+        updateOptionMarks(qi);
+        const correctSet = new Set(q.correct);
+        const chosen = state[qi];
+        const hasWrong = [...chosen].some(v => !correctSet.has(v));
+        const isComplete = chosen.size === correctSet.size && !hasWrong;
+        card.classList.remove('correct','incorrect');
+        if(isComplete){
+          card.classList.add('correct');
+          icon.textContent = '✓';
+        } else if(hasWrong){
+          card.classList.add('incorrect');
+          icon.textContent = '✗';
+          card.classList.add('show-answer');
+        } else {
+          icon.textContent = '';
+        }
+        return;
+      }
+
+      if(q.type === 'single') updateOptionMarks(qi);
+
+      if(!isAnswered(qi)){
+        card.classList.remove('correct','incorrect');
+        return;
+      }
+      const ok = checkAnswer(qi);
+      card.classList.remove('correct','incorrect');
+      card.classList.add(ok ? 'correct' : 'incorrect');
+      icon.textContent = ok ? '✓' : '✗';
+      if(!ok) card.classList.add('show-answer');
+    }
+
+    function checkAnswer(qi){
+      const q = questions[qi];
+      const s = state[qi];
+      if(q.type === 'single' || q.type === 'multi'){
+        const correctSet = new Set(q.correct);
+        if(s.size !== correctSet.size) return false;
+        for(const v of s) if(!correctSet.has(v)) return false;
+        return true;
+      }
+      if(q.type === 'order'){
+        return q.correctOrder.every((item, i) => s[i] === item);
+      }
+      if(q.type === 'match'){
+        return q.correct.every((idx, i) => Number(s[i]) === idx);
+      }
+      if(q.type === 'classify'){
+        return q.correct.every((lab, i) => s[i] === lab);
+      }
+      if(q.type === 'text'){
+        const val = s.toLowerCase();
+        if(Array.isArray(q.answerContains)) return q.answerContains.some(a => val.includes(a.toLowerCase()));
+        return val.includes(q.answerContains.toLowerCase());
+      }
+      return false;
+    }
+
+    document.getElementById('checkBtn').addEventListener('click', () => {
+      let score = 0;
+      const total = questions.length;
+      questions.forEach((q, qi) => {
+        const card = quizEl.children[qi];
+        const ok = checkAnswer(qi);
+        card.classList.remove('correct','incorrect');
+        card.classList.add(ok ? 'correct' : 'incorrect');
+        const icon = card.querySelector('.result-icon');
+        icon.textContent = ok ? '✓' : '✗';
+        if(!ok) card.classList.add('show-answer');
+        if(ok) score++;
+      });
+
+      const percentage = (score / total) * 100;
+      const passed = percentage >= 80;
+      const finalEl = document.getElementById('final');
+      finalEl.style.display = 'block';
+      finalEl.className = passed ? 'passed' : 'failed';
+      finalEl.innerHTML = 'Ваш результат: <strong>' + score + ' / ' + total + '</strong> (' + percentage.toFixed(0) + '%)<br>' + (passed ? '🎉 ТЕСТ ПРОЙДЕН!' : '😔 ТЕСТ НЕ ПРОЙДЕН. Попробуйте ещё раз.');
+      window.scrollTo({top:0, behavior:'smooth'});
+    });
+
+    document.getElementById('answersBtn').addEventListener('click', (e) => {
+      const showing = quizEl.classList.toggle('show-all-answers');
+      Array.from(quizEl.children).forEach(card => card.classList.toggle('show-answer', showing));
+      e.target.textContent = showing ? 'Скрыть правильные ответы' : 'Показать правильные ответы';
+    });
+
+    document.getElementById('resetBtn').addEventListener('click', () => {
+      location.reload();
+    });
+
+    updateProgress();
+</script>
+</body>
+</html>
