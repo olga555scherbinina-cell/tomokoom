@@ -1,0 +1,1007 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Портфолио Ольги Кашиной — раздел QA-инженер: теория, практика, глоссарий и шпаргалки по тестированию ПО">
+    <meta name="keywords" content="QA, тестирование, ISTQB, SDLC, Agile, баг-репорт, чек-лист, глоссарий, шпаргалка, портфолио, Ольга Кашина">
+    <meta name="robots" content="index, follow">
+    <title>QA-инженер — Теория, Глоссарий и Шпаргалки | Ольга Кашина</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Ballet:opsz@16..72&family=Cardo:wght@700&family=DM+Sans:ital,opsz,wght@0,9..40,700;0,9..40,1000;1,9..40,700;1,9..40,1000&family=DM+Serif+Display:ital@0;1&family=Meddon&family=Orelega+One&family=Philosopher:wght@400;700&family=Roboto+Serif:opsz,wght@8..144,100;8..144,400;8..144,500;8..144,700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Russo+One&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer">
+    <script src="https://code.jquery.com/jquery-2.2.3.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/6.1.2/swiper-bundle.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/6.1.2/swiper-bundle.min.js"></script>
+
+    <style>
+        *, *::before, *::after { padding: 0; margin: 0; border: 0; box-sizing: border-box; }
+        html, body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #000000;
+            color: var(--text-primary);
+            scroll-behavior: smooth;
+            line-height: 1.6;
+            overflow-x: hidden;
+            position: relative;
+        }
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; right: 0; bottom: 0; left: 0;
+            z-index: 0;
+            pointer-events: none;
+            background: repeating-linear-gradient(45deg, #000000, #049DBF, #000000 5%) 0/50% no-repeat,
+                        repeating-linear-gradient(-45deg, #000000, #049DBF, #000000 5%) 100%/50% no-repeat,
+                        linear-gradient(#A68A7B, #000000);
+            background-blend-mode: screen;
+            opacity: 0.2;
+        }
+        h1, h2, h3, h4 { font-family: 'Russo One', sans-serif; font-weight: 400; line-height: 1.3; }
+        a { text-decoration: none; color: inherit; transition: color 0.2s; }
+        ul { list-style: none; }
+        img { max-width: 100%; height: auto; display: block; }
+        button { cursor: pointer; background: none; font-family: inherit; }
+
+        :root {
+            --primary-orange: #F27405;
+            --deep-orange: #BF491F;
+            --warm-orange: #F28627;
+            --burnt-orange: #D96E30;
+            --dark-brown: #591202;
+            --light-beige: #D9B29C;
+            --grayish-blue: #A68A7B;
+            --teal: #049DBF;
+            --dark-teal: #035E73;
+            --light-teal: #2C6C73;
+            --pure-black: #04050D;
+            --almost-black: #0A151B;
+            --off-white: #FFFAFA;
+            --page-bg: #fdfbfa;
+            --card-bg: #eddacf;
+            --text-primary: #2B1A12;
+            --text-secondary: #b0b0b0;
+            --accent-color: #6B4A3D;
+            --accent-light: #8B6A5A;
+            --accent-dark: #4A3025;
+            --shadow-sm: 0 10px 30px rgba(0,0,0,0.05);
+            --shadow-md: 0 20px 40px rgba(0,0,0,0.08);
+            --shadow-lg: 0 30px 60px rgba(0,0,0,0.1);
+            --border-light: rgba(107, 74, 61, 0.2);
+            --accent-glow: 0 0 20px rgba(107, 74, 61, 0.2);
+            --container-width: 1600px;
+            --header-bg: #000000;
+            --header-text: var(--off-white);
+        }
+
+        .container { max-width: var(--container-width); margin: 0 auto; padding: 0 1.5rem; }
+        .section { padding: 5rem 0; position: relative; z-index: 2; }
+        .section-title {
+            font-size: clamp(2rem, 6vw, 3.2rem);
+            text-align: center;
+            margin-bottom: 3rem;
+            color: var(--primary-orange);
+            position: relative;
+            display: block;
+            letter-spacing: 1px;
+        }
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -12px;
+            left: 25%;
+            width: 50%;
+            height: 4px;
+            background: linear-gradient(90deg, transparent, var(--warm-orange), var(--primary-orange), var(--warm-orange), transparent);
+            border-radius: 2px;
+        }
+        .section-divider {
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, transparent, #049DBF, #035E73, #049DBF, transparent);
+            border-radius: 2px;
+            margin: 60px 0;
+            opacity: 0.8;
+        }
+        .main-content { position: relative; z-index: 1; }
+
+        .header {
+            position: sticky; top: 0; z-index: 1000;
+            background: var(--header-bg); color: var(--header-text);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            border-bottom: 1px solid var(--accent-dark);
+        }
+        .header__inner {
+            display: flex; justify-content: space-between; align-items: center;
+            max-width: 1400px; margin: 0 auto; padding: 0 15px;
+        }
+        .container-logotype1 { padding: 0; margin: 0; }
+        .logotype1, .logotype1:hover, .logotype1 div {
+            position: relative; display: inline-block; font-size: 20px; color: var(--light-teal);
+            text-shadow: 2px 4px 3px rgba(0,0,0,0.3); font-family: 'Russo One', sans-serif;
+            font-weight: 300; font-style: normal; text-decoration: none;
+            margin: 20px 0 20px 20px; line-height: 6px;
+        }
+        .logotype1 div { display: block;}
+        .logotype1 b {
+            font-family: 'Russo One', sans-serif; letter-spacing: 1px; font-size: 24px; color: #F28627;
+            background: var(--header-bg); -webkit-text-stroke: 1px #BF491F;
+            text-shadow: 2px 4px 3px rgba(0,0,0,0.3); font-weight: bolder; background-color: #00010D;
+        }
+        .logotype1 span {
+            text-shadow: 1px 2px 1px rgba(0,0,0,0.2); display: block; float: right; font-size: 18px;
+            color: #A68A7B; line-height: 6px; margin-top: 1px;
+        }
+        .logotype1 span b {
+            font-size: 30px; margin-left: 10px; padding-right: 5px; stroke-width: 4px;
+            color: #F28627; transition: all 0.3s ease; box-sizing: content-box; vertical-align: middle;
+        }
+        .logotype1:before {
+            position: absolute; top: -9px; left: 0; content: ""; border: 6px solid #F28627;
+            width: 46px; height: 46px; border-radius: 100%; transition: all 0.3s ease; box-sizing: content-box;
+        }
+        .logotype1:hover:before { transform: scale(1.1); border: 8px solid #F27F3D; }
+        .header-info { display: flex; align-items: center; gap: 25px; }
+        .header-greeting { display: flex; flex-direction: column; align-items: flex-end; font-family: 'Cardo', serif; color: #e7cfc1; }
+        .header-greeting .date-time { font-size: 0.9rem; opacity: 0.8; }
+        .header-greeting .greeting-text { font-size: 1.2rem; font-weight: 700; color: var(--warm-orange);}
+
+        .hero { display: flex; align-items: center; }
+        .hero__grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 4rem; align-items: center; }
+        .hero__title { font-size: clamp(2.5rem, 3.0rem, 3.5rem); line-height: 1.2; margin-bottom: 1.5rem; color: var(--deep-orange); }
+        .hero__title span { color: var(--teal); display: block; font-size: clamp(1.6rem, 5vw, 2.2rem); font-family: 'Cardo', serif; font-style: italic; margin-top: 0.5rem; }
+        .hero__text { font-size: 1.1rem; margin-bottom: 2rem; color: var(--text-secondary); max-width: 550px; }
+        .hero__image-box {
+            max-height: 90%; position: relative; border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+            overflow: hidden; box-shadow: var(--shadow-lg); border: 5px solid var(--primary-orange);
+            transition: border-radius 0.6s; aspect-ratio: 1 / 1.2;
+        }
+        .hero__image-box:hover { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
+        .hero__image { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s; }
+        .hero__image-box:hover .hero__image { transform: scale(1.05); }
+        .btn {
+            display: inline-block; padding: 0.9rem 2.2rem; border-radius: 50px; font-weight: 600;
+            text-transform: uppercase; letter-spacing: 1px; transition: 0.3s; background: var(--primary-orange);
+            color: var(--off-white); box-shadow: 0 8px 18px rgba(242, 134, 39, 0.3); border: 2px solid transparent;
+        }
+        .btn-outline { background: transparent; border-color: var(--warm-orange); color: var(--warm-orange); box-shadow: none; margin-left: 1rem; }
+        .btn:hover { transform: translateY(-3px); background: var(--deep-orange); }
+        .btn-outline:hover { border-color: var(--warm-orange); background: var(--warm-orange); color: var(--off-white); }
+
+        .skills-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; }
+        .skill-card {
+            background-color: rgba(0, 0, 0, 0.85); padding: 2rem 1.8rem; border-radius: 24px;
+            box-shadow: var(--shadow-md); border: 1px solid var(--border-light); transition: all 0.3s;
+        }
+        .skill-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-lg); border-color: var(--warm-orange); }
+        .skill-card i { font-size: 2.2rem; color: var(--warm-orange); margin-bottom: 1.5rem; }
+        .skill-card h3 { font-size: 1.5rem; margin-bottom: 1.2rem; color: var(--deep-orange); }
+        .skill-card li { padding: 0.5rem 0; border-bottom: 1px dashed var(--border-light); display: flex; align-items: center; gap: 10px; color: var(--text-secondary); }
+        .skill-card li i { font-size: 1rem; margin-bottom: 0; color: var(--teal); }
+
+        .article-content {
+            background-color: rgba(0, 0, 0, 0.85); padding: 2rem; border-radius: 24px; margin-bottom: 2rem;
+            border: 1px solid var(--border-light); color: var(--text-secondary);
+        }
+        .article-content h2 { color: var(--primary-orange); font-size: 1.8rem; margin: 1.5rem 0 1rem; }
+        .article-content h3 { color: var(--teal); font-size: 1.4rem; margin: 1.2rem 0 0.8rem; }
+        .article-content p { margin-bottom: 1rem; }
+        .article-content ul, .article-content ol { margin: 1rem 0 1rem 2rem; }
+        .article-content li { margin-bottom: 0.5rem; list-style: disc; }
+        .article-content strong { color: var(--warm-orange); }
+        .article-content a { color: var(--teal); text-decoration: underline; }
+        table {
+            width: 100%; border-collapse: collapse; margin: 1.5rem 0;
+            background: rgba(255,255,255,0.05); border-radius: 12px; overflow: hidden;
+        }
+        th, td { padding: 1rem; border: 1px solid var(--border-light); text-align: left; }
+        th { background-color: var(--deep-orange); color: var(--off-white); font-family: 'Russo One', sans-serif; }
+        td { color: var(--text-secondary); }
+
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            margin: 1.5rem 0;
+        }
+        .table-responsive table {
+            margin: 0;
+            min-width: 600px;
+        }
+
+        .qa-scheme { display: flex; justify-content: center; align-items: center; gap: 1rem; flex-wrap: wrap; margin: 2rem 0; }
+        .qa-box {
+            background-color: rgba(242, 116, 5, 0.2); border: 2px solid var(--primary-orange);
+            border-radius: 16px; padding: 1.5rem 2rem; text-align: center; min-width: 160px;
+            transition: all 0.3s ease;
+        }
+        .qa-box:hover { background-color: rgba(242, 116, 5, 0.4); transform: scale(1.05); }
+        .qa-box h3 { font-family: 'Russo One', sans-serif; color: var(--warm-orange); font-size: 1.6rem; margin-bottom: 0.5rem; }
+        .qa-box p { color: var(--text-secondary); font-size: 0.9rem; margin: 0; }
+        .qa-arrow { color: var(--teal); font-size: 2rem; font-weight: bold; }
+
+        .qa-image {
+            display: block;
+            max-width: 100%;
+            height: auto;
+            margin: 2rem auto;
+            border-radius: 16px;
+        }
+
+        /* SIDEBAR С АККОРДЕОНОМ */
+        .sidebar {
+            position: fixed; top: 0; left: 0; width: 280px; height: 100vh;
+            background: var(--header-bg); z-index: 1001; display: flex; flex-direction: column;
+            transition: transform 0.4s cubic-bezier(0.4,0,0.2,1); overflow-y: auto; overflow-x: hidden;
+            box-shadow: 4px 0 30px rgba(0,0,0,0.4);
+            border-right: 3px solid;
+            border-image: linear-gradient(to bottom, #049DBF, #035E73, #F28627) 1;
+        }
+        .sidebar-header { padding: 24px 20px; border-bottom: 1px solid rgba(255,255,255,0.1); text-align: center; }
+        .sidebar-nav { flex: 1; padding: 16px 0; }
+        .sidebar-nav a {
+            display: flex; align-items: center; gap: 12px; padding: 13px 24px;
+            color: var(--light-beige); font-size: 0.9rem; font-weight: 500; transition: all 0.3s ease;
+            position: relative;
+        }
+        .sidebar-nav a::before {
+            content: ''; position: absolute; left: 0; top: 15%; bottom: 15%; width: 4px;
+            background: var(--warm-orange); transform: scaleY(0); transition: transform 0.3s ease;
+            border-radius: 0 4px 4px 0;
+        }
+        .sidebar-nav a:hover, .sidebar-nav a.active { color: var(--off-white); background: rgba(242,116,5,0.08); }
+        .sidebar-nav a:hover::before, .sidebar-nav a.active::before { transform: scaleY(1); }
+        .sidebar-nav a i { width: 22px; text-align: center; font-size: 1rem; color: var(--warm-orange); }
+        .sidebar-nav .nav-section {
+            font-size: 0.7rem; text-transform: uppercase; letter-spacing: 3px;
+            color: var(--grayish-blue); padding: 24px 24px 10px; font-weight: 700;
+        }
+        .sidebar-footer { padding: 20px; border-top: 1px solid rgba(255,255,255,0.1); text-align: center; }
+        .sidebar-footer .copyright { font-size: 0.7rem; color: var(--grayish-blue); line-height: 1.8; }
+
+        /* Аккордеон */
+        .acc-header {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 13px 24px; color: var(--light-beige); font-size: 0.9rem; font-weight: 500;
+            cursor: pointer; transition: all 0.3s ease; position: relative;
+        }
+        .acc-header:hover { color: var(--off-white); background: rgba(242,116,5,0.08); }
+        .acc-header i.fa-chevron-down { font-size: 0.7rem; transition: transform 0.3s ease; }
+        .acc-header.open i.fa-chevron-down { transform: rotate(180deg); }
+        .acc-body { max-height: 0; overflow: hidden; transition: max-height 0.4s ease; background: rgba(255,255,255,0.02); }
+        .acc-body a { padding-left: 40px !important; font-size: 0.8rem !important; }
+
+
+        .main-with-sidebar { margin-left: 280px; transition: margin-left 0.4s ease; }
+        .menu-toggle {
+            display: none; position: fixed; top: 16px; left: 16px; z-index: 2000;
+            background: var(--header-bg); border: 2px solid var(--warm-orange); color: var(--warm-orange);
+            width: 48px; height: 48px; border-radius: 14px; cursor: pointer; font-size: 1.5rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.4); transition: all 0.3s ease;
+        }
+        .menu-toggle:hover { background: var(--warm-orange); color: #fff; }
+        .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 1000; backdrop-filter: blur(2px); }
+        .sidebar-overlay.show { display: block; }
+
+        .footer { padding: 2rem 0; text-align: center; border-top: 1px solid var(--border-light); color: var(--text-secondary); font-size: 0.95rem; background: var(--header-bg); }
+        .upbtn {
+            position: fixed; bottom: 30px; right: 30px; width: 50px; height: 50px;
+            background: var(--warm-orange); color: var(--off-white); border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2); cursor: pointer; border: 3px solid var(--deep-orange);
+            z-index: 999; transform: scale(0); transition: 0.3s;
+        }
+        .upbtn.visible { transform: scale(1); }
+        .upbtn:hover { background: var(--deep-orange); transform: scale(1.1) !important; }
+
+        /* ============================================================================
+        ADAPTIVE / RESPONSIVE
+        ============================================================================ */
+        @media screen and (max-width: 1200px) {
+            .container { padding: 0 1rem; }
+            .hero__grid { gap: 2rem; }
+            .skills-grid { grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); }
+        }
+        @media screen and (max-width: 992px) {
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.open { transform: translateX(0); }
+            .main-with-sidebar { margin-left: 0; }
+            .menu-toggle { display: flex; align-items: center; justify-content: center; }
+            .section-title { white-space: normal; }
+            .hero__grid { grid-template-columns: 1fr; text-align: center; }
+            .hero__image-box { max-width: 400px; margin: 0 auto; order: -1; }
+            .header__inner { padding: 0 15px; }
+            .container-logotype1 { margin-left: 50px; }
+            .section { padding: 4rem 0; }
+        }
+        @media screen and (max-width: 768px) {
+            .section { padding: 3rem 0; }
+            .header-info .header-greeting { display: none; }
+            .btn-outline { margin-left: 0; margin-top: 1rem; }
+            .hero__buttons .btn { display: block; width: 100%; margin-left: 0; }
+            .qa-scheme { flex-direction: column; }
+            .qa-arrow { transform: rotate(90deg); }
+            .article-content { padding: 1.5rem; }
+            .table-responsive { display: block; }
+        }
+        @media screen and (max-width: 480px) {
+            .section { padding: 2.5rem 0 0 0; }
+            .section-title { font-size: 1.8rem; white-space: normal; display: block; }
+            .hero__title { font-size: 2rem; }
+            .header__inner { padding: 0; }
+            .container-logotype1 { transform: scale(0.8); margin-left: 40px; }
+            .logotype1 span b { margin-left: 5px; }
+            .skills-grid { grid-template-columns: 1fr; }
+            .article-content { padding: 1.2rem; }
+            .qa-box { min-width: 120px; padding: 1rem 1.5rem; }
+        }
+        @media screen and (max-width: 360px) {
+            .container { padding: 0 0.5rem; }
+            .section-title { font-size: 1.5rem; }
+            .hero__title { font-size: 1.6rem; }
+            .hero__title span { font-size: 1.2rem; }
+            .container-logotype1 { transform: scale(0.65); margin-left: 35px; }
+            .menu-toggle { width: 40px; height: 40px; top: 10px; left: 10px; font-size: 1.2rem; }
+            .sidebar { width: 250px; }
+            .sidebar-nav a { padding: 10px 16px; font-size: 0.8rem; }
+            .acc-header { padding: 10px 16px; font-size: 0.8rem; }
+            .acc-body a { padding-left: 32px !important; font-size: 0.7rem !important; }
+            .article-content { padding: 1rem; }
+            .article-content h3 { font-size: 1.2rem; }
+            .skill-card { padding: 1rem; }
+            .skill-card h3 { font-size: 1.2rem; }
+            th, td { padding: 0.5rem; font-size: 0.8rem; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+
+<aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+        <a href="#" class="logotype1" style="margin:0;">
+            <div><b>Junior</b>FrontEnd</div>
+            <span>ашина Ольга </span>
+            <span><b>K </b></span>
+        </a>
+    </div>
+    <nav class="sidebar-nav">
+        <a href="#general" onclick="closeSidebar()"><i class="fas fa-info-circle"></i> Общая информация</a>
+        <a href="#skills-qa" onclick="closeSidebar()"><i class="fas fa-user-check"></i> Soft & Hard Skills</a>
+        <a href="#task1" onclick="closeSidebar()"><i class="fas fa-globe"></i> ISTQB (Задание 1)</a>
+        <a href="#qa-qc-testing" onclick="closeSidebar()"><i class="fas fa-sitemap"></i> QA, QC, Testing</a>
+        <a href="#task2" onclick="closeSidebar()"><i class="fas fa-list-ul"></i> Виды тестирования (Задание 2)</a>
+        <a href="#task3" onclick="closeSidebar()"><i class="fas fa-code-branch"></i> SDLC (Задание 3)</a>
+        <a href="#task4" onclick="closeSidebar()"><i class="fas fa-layer-group"></i> Уровни тестирования (Задание 4)</a>
+        <a href="#task5" onclick="closeSidebar()"><i class="fas fa-balance-scale"></i> Принципы тестирования (Задание 5)</a>
+        <a href="#glossary" onclick="closeSidebar()"><i class="fas fa-book"></i> Глоссарий</a>
+        <a href="#cheatsheets" onclick="closeSidebar()"><i class="fas fa-clipboard-list"></i> Шпаргалки</a>
+
+        <!-- Аккордеон: Тесты -->
+        <div class="acc-header" onclick="toggleAccordion(this)">
+            <span><i class="fas fa-vial"></i> Тесты и тренажеры</span>
+            <i class="fas fa-chevron-down"></i>
+        </div>
+        <div class="acc-body">
+            <a href="https://olga555scherbinina-cell.github.io/tomokoom/QA_Ex/QA_Ex.html" target="_blank"><i class="fas fa-external-link-alt"></i> QA_Ex</a>
+            <a href="https://www.learnqa.ru/tests" target="_blank"><i class="fas fa-external-link-alt"></i> Тесты и тренажеры</a>
+            <a href="https://qarocks.ru/test_post/big-qa-quiz/" target="_blank"><i class="fas fa-external-link-alt"></i> Большой тест с вопросами на собеседовании QA</a>
+            <a href="https://qarocks.ru/test_post/big-automation-test/" target="_blank"><i class="fas fa-external-link-alt"></i> Большой тест по автоматизации тестирования</a>
+            <a href="https://qarocks.ru/test_post/istqb-big-quiz/" target="_blank"><i class="fas fa-external-link-alt"></i> ISTQB — большой тест</a>
+            <a href="https://qarocks.ru/test_post/big-cypress-test/" target="_blank"><i class="fas fa-external-link-alt"></i> Большой тест по Cypress</a>
+            <a href="https://qarocks.ru/test_post/big-git-quiz/" target="_blank"><i class="fas fa-external-link-alt"></i> Большой тест по Git</a>
+            <a href="https://qarocks.ru/test_post/big-sql-quiz/" target="_blank"><i class="fas fa-external-link-alt"></i> Большой тест по SQL</a>
+            <a href="https://qarocks.ru/test_post/big-docker-quiz/" target="_blank"><i class="fas fa-external-link-alt"></i> Большой тест по Docker</a>
+            <a href="https://qarocks.ru/test_post/big-linux-quiz/" target="_blank"><i class="fas fa-external-link-alt"></i> Большой тест по Linux</a>
+        </div>
+
+        <!-- Аккордеон: Основы тестирования -->
+        <div class="acc-header" onclick="toggleAccordion(this)">
+            <span><i class="fas fa-flask"></i> Основы тестирования</span>
+            <i class="fas fa-chevron-down"></i>
+        </div>
+        <div class="acc-body">
+            <a href="https://qarocks.ru/test_post/alpha-beta-testing-quiz/" target="_blank"><i class="fas fa-external-link-alt"></i> Тест по альфа- и бета-тестированию ПО</a>
+            <a href="https://qarocks.ru/test_post/structural-software-testing-quiz/" target="_blank"><i class="fas fa-external-link-alt"></i> Тест по структурному тестированию</a>
+            <a href="https://qarocks.ru/test_post/testing-methodology-basics-quiz/" target="_blank"><i class="fas fa-external-link-alt"></i> Тест по основам методологии тестирования</a>
+            <a href="https://qarocks.ru/test_post/software-testing-terminology-quiz/" target="_blank"><i class="fas fa-external-link-alt"></i> Тест по терминологии тестирования</a>
+            <a href="https://qarocks.ru/test_post/qa-basics-quiz/" target="_blank"><i class="fas fa-external-link-alt"></i> Тест по основам тестирования ПО</a>
+            <a href="https://qarocks.ru/test_post/software-testing-basics-quiz/" target="_blank"><i class="fas fa-external-link-alt"></i> Тест по основам тестирования</a>
+            <a href="https://qarocks.ru/test_post/api-testing-quiz/" target="_blank"><i class="fas fa-external-link-alt"></i> Тест по тестированию API</a>
+            <a href="https://qarocks.ru/test_post/qa-terminology-test/" target="_blank"><i class="fas fa-external-link-alt"></i> Тест по терминологии QA</a>
+            <a href="https://qarocks.ru/test_post/qa-basic-terminology-quiz/" target="_blank"><i class="fas fa-external-link-alt"></i> Тест по базовым терминам QA</a>
+            <a href="https://qarocks.ru/test_post/testing-basics-ru/" target="_blank"><i class="fas fa-external-link-alt"></i> Тест по теории тестирования</a>
+            <a href="https://qarocks.ru/test_post/testing-basics/" target="_blank"><i class="fas fa-external-link-alt"></i> Тест по теории тестирования (en)</a>
+        </div>
+
+        <!-- Аккордеон: SQL -->
+        <div class="acc-header" onclick="toggleAccordion(this)">
+            <span><i class="fas fa-database"></i> SQL</span>
+            <i class="fas fa-chevron-down"></i>
+        </div>
+        <div class="acc-body">
+            <a href="https://qarocks.ru/test_post/big-sql-quiz/" target="_blank"><i class="fas fa-external-link-alt"></i> Большой тест по SQL</a>
+            <a href="https://qarocks.ru/test_post/sql-basic-command/" target="_blank"><i class="fas fa-external-link-alt"></i> Основы SQL: базовые команды</a>
+            <a href="https://qarocks.ru/test_post/sql-not-beginner/" target="_blank"><i class="fas fa-external-link-alt"></i> Тест по запросам и операторам SQL</a>
+            <a href="https://qarocks.ru/test_post/sql-quiz/" target="_blank"><i class="fas fa-external-link-alt"></i> Тест по основам SQL</a>
+            <a href="https://qarocks.ru/test_post/sql-basics/" target="_blank"><i class="fas fa-external-link-alt"></i> Тест на знание основ SQL</a>
+            <a href="https://qarocks.ru/test_post/sql-part-1/" target="_blank"><i class="fas fa-external-link-alt"></i> Тест на знание SQL — часть 1</a>
+            <a href="https://qarocks.ru/test_post/sql-part-2/" target="_blank"><i class="fas fa-external-link-alt"></i> Тест на знание SQL — часть 2</a>
+            <a href="https://qarocks.ru/test_post/sql-part-3/" target="_blank"><i class="fas fa-external-link-alt"></i> Тест на знание SQL – часть 3</a>
+            <a href="https://qarocks.ru/test_post/fundamentals-basic-command/" target="_blank"><i class="fas fa-external-link-alt"></i> Основы SQL: тест на знание базовых команд</a>
+            <a href="https://qarocks.ru/test_post/sql-understanding/" target="_blank"><i class="fas fa-external-link-alt"></i> Тест на глубину понимания SQL</a>
+            <a href="https://qarocks.ru/test_post/sql-knowledge-and-skills/" target="_blank"><i class="fas fa-external-link-alt"></i> Тест по SQL: проверьте свои знания и навыки</a>
+            <a href="https://qarocks.ru/test_post/sql-join-quiz-en/" target="_blank"><i class="fas fa-external-link-alt"></i> Тест по SQL JOIN (en)</a>
+        </div>
+
+        <!-- Аккордеон: Docker -->
+        <div class="acc-header" onclick="toggleAccordion(this)">
+            <span><i class="fab fa-docker"></i> Docker</span>
+            <i class="fas fa-chevron-down"></i>
+        </div>
+        <div class="acc-body">
+            <a href="https://qarocks.ru/test_post/docker-interview-questions-quiz/" target="_blank"><i class="fas fa-external-link-alt"></i> Вопросы на собеседовании по Docker</a>
+        </div>
+
+        <!-- Аккордеон: Linux -->
+        <div class="acc-header" onclick="toggleAccordion(this)">
+            <span><i class="fab fa-linux"></i> Linux</span>
+            <i class="fas fa-chevron-down"></i>
+        </div>
+        <div class="acc-body">
+            <a href="https://qarocks.ru/test_post/big-linux-quiz/" target="_blank"><i class="fas fa-external-link-alt"></i> Большой тест по Linux</a>
+            <a href="https://qarocks.ru/test_post/linux-commands-part-1/" target="_blank"><i class="fas fa-external-link-alt"></i> Тест по командам Linux. Часть 1</a>
+            <a href="https://qarocks.ru/test_post/linux-commands-part-2/" target="_blank"><i class="fas fa-external-link-alt"></i> Тест по командам Linux. Часть 2</a>
+            <a href="https://qarocks.ru/test_post/linux-commands-part-3/" target="_blank"><i class="fas fa-external-link-alt"></i> Тест по командам Linux. Часть 3</a>
+            <a href="https://qarocks.ru/test_post/bash-quiz/" target="_blank"><i class="fas fa-external-link-alt"></i> Тест на знание bash</a>
+        </div>
+
+        <!-- Аккордеон: TestNG -->
+        <div class="acc-header" onclick="toggleAccordion(this)">
+            <span><i class="fas fa-cog"></i> TestNG</span>
+            <i class="fas fa-chevron-down"></i>
+        </div>
+        <div class="acc-body">
+            <a href="https://qarocks.ru/test_post/testng-practical-questions-quiz/" target="_blank"><i class="fas fa-external-link-alt"></i> Практические вопросы по TestNG</a>
+            <a href="https://qarocks.ru/test_post/testng-quiz-en-part-1/" target="_blank"><i class="fas fa-external-link-alt"></i> Тест по TestNG (en). Часть 1</a>
+            <a href="https://qarocks.ru/test_post/testng-quiz-en-part-2/" target="_blank"><i class="fas fa-external-link-alt"></i> Тест по TestNG (en). Часть 2</a>
+            <a href="https://qarocks.ru/test_post/testng-quiz-en-part-3/" target="_blank"><i class="fas fa-external-link-alt"></i> Тест по TestNG (en). Часть 3</a>
+            <a href="https://qarocks.ru/test_post/testng-quiz-en-part-4/" target="_blank"><i class="fas fa-external-link-alt"></i> Тест по TestNG (en). Часть 4</a>
+            <a href="https://qarocks.ru/test_post/testng-quiz-en-part-5/" target="_blank"><i class="fas fa-external-link-alt"></i> Тест по TestNG (en). Часть 5</a>
+            <a href="https://qarocks.ru/test_post/testng-quiz-en-part-6/" target="_blank"><i class="fas fa-external-link-alt"></i> Тест по TestNG (en). Часть 6</a>
+            <a href="https://qarocks.ru/test_post/testng-quiz-en-part-7/" target="_blank"><i class="fas fa-external-link-alt"></i> Тест по TestNG (en). Часть 7</a>
+            <a href="https://qarocks.ru/test_post/testng-quiz-en-part-8/" target="_blank"><i class="fas fa-external-link-alt"></i> Тест по TestNG (en). Часть 8</a>
+            <a href="https://qarocks.ru/test_post/testng-quiz-en-part-9/" target="_blank"><i class="fas fa-external-link-alt"></i> Тест по TestNG (en). Часть 9</a>
+            <a href="https://qarocks.ru/test_post/testng-quiz-en-part-10/" target="_blank"><i class="fas fa-external-link-alt"></i> Тест по TestNG (en). Часть 10</a>
+            <a href="https://qarocks.ru/test_post/testng-quiz-en-part-11/" target="_blank"><i class="fas fa-external-link-alt"></i> Тест по TestNG (en). Часть 11</a>
+        </div>
+
+        <!-- Аккордеон: Cypress -->
+        <div class="acc-header" onclick="toggleAccordion(this)">
+            <span><i class="fas fa-code"></i> Cypress</span>
+            <i class="fas fa-chevron-down"></i>
+        </div>
+        <div class="acc-body">
+            <a href="https://qarocks.ru/test_post/big-cypress-test/" target="_blank"><i class="fas fa-external-link-alt"></i> Большой тест по Cypress</a>
+        </div>
+
+        <!-- Аккордеон: ISTQB -->
+        <div class="acc-header" onclick="toggleAccordion(this)">
+            <span><i class="fas fa-certificate"></i> ISTQB</span>
+            <i class="fas fa-chevron-down"></i>
+        </div>
+        <div class="acc-body">
+            <a href="https://qarocks.ru/test_post/istqb-big-quiz/" target="_blank"><i class="fas fa-external-link-alt"></i> ISTQB — большой тест</a>
+            <a href="https://qarocks.ru/test_post/istqb-testing-part-1/" target="_blank"><i class="fas fa-external-link-alt"></i> ISTQB тестирование. Часть 1</a>
+            <a href="https://qarocks.ru/test_post/istqb-testing-part-2/" target="_blank"><i class="fas fa-external-link-alt"></i> ISTQB тестирование. Часть 2</a>
+            <a href="https://qarocks.ru/test_post/istqb-testing-part-3/" target="_blank"><i class="fas fa-external-link-alt"></i> ISTQB тестирование. Часть 3</a>
+        </div>
+
+        <!-- Аккордеон: Автоматизация -->
+        <div class="acc-header" onclick="toggleAccordion(this)">
+            <span><i class="fas fa-robot"></i> Автоматизация</span>
+            <i class="fas fa-chevron-down"></i>
+        </div>
+        <div class="acc-body">
+            <a href="https://qarocks.ru/test_post/automation-qa-engineer-interview-questions-quiz/" target="_blank"><i class="fas fa-external-link-alt"></i> Вопросы на собеседовании автоматизатору тестирования ПО</a>
+            <a href="https://qarocks.ru/test_post/big-automation-test/" target="_blank"><i class="fas fa-external-link-alt"></i> Большой тест по автоматизации тестирования</a>
+            <a href="https://qarocks.ru/test_post/basics-python/" target="_blank"><i class="fas fa-external-link-alt"></i> Тест на знание Python (для автоматизаторов)</a>
+            <a href="https://qarocks.ru/test_post/test-automation-fundamentals-part-1/" target="_blank"><i class="fas fa-external-link-alt"></i> Тест по основам автоматизации тестирования. Часть 1</a>
+            <a href="https://qarocks.ru/test_post/test-automation-fundamentals-part-2/" target="_blank"><i class="fas fa-external-link-alt"></i> Тест по основам автоматизации тестирования. Часть 2</a>
+            <a href="https://qarocks.ru/test_post/fundamentals-automation/" target="_blank"><i class="fas fa-external-link-alt"></i> Тест по основам автоматизации тестирования (en). Часть 1</a>
+            <a href="https://qarocks.ru/test_post/automation-testing/" target="_blank"><i class="fas fa-external-link-alt"></i> Тест по основам автоматизации тестирования (en). Часть 2</a>
+        </div>
+
+        <!-- Аккордеон: Инструменты -->
+        <div class="acc-header" onclick="toggleAccordion(this)">
+            <span><i class="fas fa-tools"></i> Инструменты</span>
+            <i class="fas fa-chevron-down"></i>
+        </div>
+        <div class="acc-body">
+            <a href="https://qarocks.ru/test_post/loadrunner-quiz/" target="_blank"><i class="fas fa-external-link-alt"></i> Тест по LoadRunner</a>
+            <a href="https://qarocks.ru/test_post/api-postman-ru/" target="_blank"><i class="fas fa-external-link-alt"></i> Тест по основам Postman</a>
+        </div>
+
+        <!-- Аккордеон: Git -->
+        <div class="acc-header" onclick="toggleAccordion(this)">
+            <span><i class="fab fa-git-alt"></i> Git</span>
+            <i class="fas fa-chevron-down"></i>
+        </div>
+        <div class="acc-body">
+            <a href="https://qarocks.ru/test_post/big-git-quiz/" target="_blank"><i class="fas fa-external-link-alt"></i> Большой тест по Git</a>
+        </div>
+
+        <!-- Аккордеон: Разное -->
+        <div class="acc-header" onclick="toggleAccordion(this)">
+            <span><i class="fas fa-ellipsis-h"></i> Разное</span>
+            <i class="fas fa-chevron-down"></i>
+        </div>
+        <div class="acc-body">
+            <a href="https://qarocks.ru/test_post/big-qa-quiz/" target="_blank"><i class="fas fa-external-link-alt"></i> Большой тест с вопросами на собеседовании QA</a>
+            <a href="https://qarocks.ru/test_post/fun-logic-quiz/" target="_blank"><i class="fas fa-external-link-alt"></i> Крутой тест на логику</a>
+        </div>
+    </nav>
+    <div class="sidebar-footer">
+        <p class="copyright">© 2023–2026<br>Ольга Кашина (Щербинина)</p>
+    </div>
+</aside>
+
+<button class="menu-toggle" id="menuToggle" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
+
+<div class="main-with-sidebar">
+    <main class="main-content">
+
+        <section class="header">
+            <div class="header__inner">
+                <div class="container-logotype1">
+                    <a href="#" class="logotype1">
+                        <div><b>Junior</b>FrontEnd</div>
+                        <span>ашина Ольга </span>
+                        <span><b>K </b></span>
+                    </a>
+                </div>
+                <div class="header-info">
+                    <div class="header-greeting">
+                        <span class="greeting-text">QA-инженер: Теория и Практика</span>
+                        <span class="date-time" id="liveDateTime"></span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="section-divider"></div>
+
+        <section class="hero">
+            <div class="container hero__grid">
+                <div>
+                    <h1 class="hero__title">Основы тестирования ПО <span>От теории к практике QA</span></h1>
+                    <p class="hero__text">Изучаем фундаментальные концепции тестирования, стандарты ISTQB, SDLC и Agile. Разбираем ключевые hard и soft skills успешного QA-инженера.</p>
+                    <a href="#general" class="btn">Начать изучение</a>
+                </div>
+                <div class="hero__image-box">
+                    <img src="https://sun9-64.userapi.com/s/v1/ig2/ewBymdvqqPZ6SBQFNbBIUSbkYdbvckyexcP9syMdR0BYX-a-wmnRtn5ajt6R56aMZa2iCyzcl0UBRUQ6gHKBW02s.jpg?quality=95&as=32x41,48x62,72x93,108x139,160x206,240x309,360x463,480x617,540x694,640x823,720x926,896x1152&from=bu&u=OfP9p1USXrQzbs0-uNF9orId_dRVTwffPkUBc4c_02Y&cs=896x0" alt="QA Теория" class="hero__image">
+                </div>
+            </div>
+        </section>
+
+        <div class="section-divider"></div>
+
+        <section class="section" id="general">
+            <div class="container">
+                <h2 class="section-title">Общая информация о тестировании</h2>
+                <div class="article-content">
+                    <p>Профессия тестировщика программного обеспечения (Quality Assurance, QA) играет ключевую роль в процессе разработки ПО. Основная задача тестировщика — это проверка соответствия программного продукта требованиям и обеспечение качества на всех этапах жизненного цикла разработки ПО. Тестировщики работают над тем, чтобы конечный продукт был надежным, удобным в использовании и удовлетворял запросы пользователей/заказчика.</p>
+                    <p>Существуют разные виды тестирования, включая ручное и автоматизированное тестирование, каждый из которых требует определенных навыков и подходов. Тестировщик должен уметь не только выявлять ошибки, но и работать в тесной связке с командой разработки для их устранения.</p>
+                    <h3>Что такое тестирование?</h3>
+                    <p>Тестирование — это процесс, направленный на проверку соответствия программного продукта заданным требованиям. Другими словами, мы отвечаем на вопрос: «Соответствует ли реальное поведение программы ожидаемому?». Требования, в свою очередь, — это спецификация того, что должно быть реализовано.</p>
+                    <h3>Цели тестирования</h3>
+                    <ul>
+                        <li>Убедиться, что программный продукт функционирует в соответствии с ожиданиями.</li>
+                        <li>Выявить ситуации, в которых поведение программы является неправильным или не соответствует требованиям.</li>
+                        <li>Получить представление о состоянии продукта на данный момент.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <div class="section-divider"></div>
+
+        <section class="section" id="skills-qa">
+            <div class="container">
+                <h2 class="section-title">Soft и Hard Skills QA-инженера</h2>
+                <div class="skills-grid">
+                    <div class="skill-card">
+                        <h3><i class="fas fa-heart"></i> Soft Skills</h3>
+                        <ul>
+                            <li><i class="fas fa-comments"></i> Коммуникабельность</li>
+                            <li><i class="fas fa-question-circle"></i> Умение задавать вопросы</li>
+                            <li><i class="fas fa-pen-fancy"></i> Письменное общение</li>
+                            <li><i class="fas fa-shield-alt"></i> Стрессоустойчивость</li>
+                            <li><i class="fas fa-tasks"></i> Самоорганизация</li>
+                            <li><i class="fas fa-lightbulb"></i> Креативность</li>
+                            <li><i class="fas fa-brain"></i> Аналитическое мышление</li>
+                            <li><i class="fas fa-search"></i> Любопытство</li>
+                        </ul>
+                    </div>
+                    <div class="skill-card">
+                        <h3><i class="fas fa-cogs"></i> Hard Skills</h3>
+                        <ul>
+                            <li><i class="fas fa-file-alt"></i> Артефакты тестирования. Создание тест-кейсов, тест-планов, отчетов и другой документации.</li>
+                            <li><i class="fas fa-th"></i> Техники тест-дизайна. Умение выбирать и применять правильные методы тестирования для каждой конкретной задачи.</li>
+                            <li><i class="fab fa-windows"></i> ОС (Windows, Linux, MacOS)</li>
+                            <li><i class="fas fa-server"></i> Клиент-серверная архитектура</li>
+                            <li><i class="fas fa-database"></i> Базы данных и протоколы передачи данных (SQL, REST...)</li>
+                            <li><i class="fas fa-bug"></i> Логирование и анализ логов</li>
+                            <li><i class="fas fa-plug"></i> API и сетевой трафик (Postman, Charles Proxy, Wireshark)</li>
+                            <li><i class="fas fa-robot"></i> Автоматизация тестирования</li>
+                            <li><i class="fas fa-language"></i> Английский язык</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="section-divider"></div>
+
+        <section class="section" id="task1">
+            <div class="container">
+                <h2 class="section-title">Задание 1: Изучение ресурса ISTQB</h2>
+                <div class="article-content">
+                    <p>Сайт ISTQB (International Software Testing Qualifications Board) - ведущая глобальная схема сертификации в области тестирования программного обеспечения.</p>
+                    <h3>Назначение разделов</h3>
+                    <p><strong>Certifications:</strong> Посвящен сертификациям ISTQB. Здесь можно найти описание уровней сертификации (Foundation, Advanced, Expert, Specialist), требования для получения каждого уровня, учебные программы (Syllabus) и экзаменационные правила.</p>
+                    <p><strong>SCR (Syllabus and Curriculum Resources):</strong> Содержит официальные документы (Syllabus) для подготовки к экзаменам, учебные планы и рекомендации по обучению, шаблоны и материалы для преподавателей и учебных центров.</p>
+                    <p><strong>Glossary:</strong> Стандартизированный словарь терминов тестирования ПО. Включает определения ключевых понятий (например, «тест-кейс», «дефект») и единую терминологию для устранения разночтений в индустрии.</p>
+                    <h3>Определение «Отладка»</h3>
+                    <p><strong>Отладка (debugging)</strong> — это процесс поиска, анализа и устранения причин сбоев в компоненте или системе. Четкое разделение между тестированием (обнаружение дефектов) и отладкой (их устранение) помогает корректно классифицировать задачи: тестировщики сообщают о дефектах, разработчики занимаются отладкой.</p>
+                </div>
+            </div>
+        </section>
+
+        <div class="section-divider"></div>
+
+        <section class="section" id="qa-qc-testing">
+            <div class="container">
+                <h2 class="section-title">QA, QC и Testing</h2>
+                <div class="article-content">
+                    <p>В сфере тестирования часто можно встретить такие понятия, как Quality Assurance (QA), Quality Control (QC) и Testing (тестирование). Разберёмся, что это такое и как их различать.</p>
+                    <img src="https://testmatick.com/wp-content/uploads/2020/09/Correlation-between-QA-QC-and-testing.png" alt="qa-qc-testing" class="qa-image">
+                    <div class="qa-scheme">
+                        <div class="qa-box">
+                            <h3>QA</h3>
+                            <p>Обеспечение качества</p>
+                            <p style="font-size: 0.8rem; margin-top: 0.5rem;">Quality Assurance</p>
+                        </div>
+                        <div class="qa-arrow">→</div>
+                        <div class="qa-box">
+                            <h3>QC</h3>
+                            <p>Контроль качества</p>
+                            <p style="font-size: 0.8rem; margin-top: 0.5rem;">Quality Control</p>
+                        </div>
+                        <div class="qa-arrow">→</div>
+                        <div class="qa-box">
+                            <h3>Testing</h3>
+                            <p>Тестирование</p>
+                        </div>
+                    </div>
+                    <h3>Quality Control (QC) — Контроль качества</h3>
+                    <p><strong>QC</strong> обеспечивает проверку продукта не только на соответствие требованиям, но и на соответствие заранее согласованному уровню качества продукта и готовность к выпуску продукта в эксплуатацию.</p>
+                    <h3>Quality Assurance (QA) — Обеспечение качества</h3>
+                    <p><strong>QA</strong> — это не только и не столько тестирование, будь то ручное или автоматизированное, а больше набор методик и подходов, предназначенных для выявления и контроля всех несоответствий качества программных продуктов. То есть <strong>QA включает в себя QC</strong>. QA должно обеспечивать методы и технологии всех участников процесса создания ПО, чтобы в итоге получить качественный веб-продукт.</p>
+                    <h3>Testing (Тестирование)</h3>
+                    <p><strong>Тестирование</strong> является одной из техник контроля качества, включающей в себя активности по:</p>
+                    <ul>
+                        <li><strong>Планированию работ</strong> (Test Management)</li>
+                        <li><strong>Проектированию тестов</strong> (Test Design)</li>
+                        <li><strong>Выполнению тестирования</strong> (Test Execution)</li>
+                        <li><strong>Анализу полученных результатов</strong> (Test Analysis)</li>
+                    </ul>
+                    <p style="margin-top: 1.5rem;"><strong>Важно понимать:</strong> существует много разных видов тестирования. Данные знания очень помогают в покрытии функционала/приложения тестами. Чем больше видов тестирования ты знаешь, тем больше проверок сможешь сделать, и тем выше качество продукта получится на выходе.</p>
+                </div>
+            </div>
+        </section>
+
+        <div class="section-divider"></div>
+
+        <section class="section" id="task2">
+            <div class="container">
+                <h2 class="section-title">Задание 2: Виды тестирования</h2>
+                <div class="article-content">
+                    <h3>По уровню тестирования</h3>
+                    <ul>
+                        <li><strong>Модульное тестирование (Unit Testing):</strong> изолированная проверка части кода. Тесты пишут преимущественно разработчики.</li>
+                        <li><strong>Интеграционное тестирование (Integration Testing):</strong> тестирование взаимодействия систем (двух и более) друг с другом.</li>
+                        <li><strong>Системное тестирование (System Testing):</strong> процесс тестирования, направленный на проверку того, что система в целом соответствует заданным требованиям.</li>
+                        <li><strong>Приемочное тестирование (Acceptance Testing):</strong> оценка готовности системы к эксплуатации согласно заявленным бизнес-требованиям заказчика.</li>
+                    </ul>
+                    <h3>По типу выполняемой задачи</h3>
+                    <ul>
+                        <li><strong>Функциональное тестирование (Functional Testing):</strong> проверяет, соответствуют ли функции продукта ожидаемым результатам.</li>
+                        <li><strong>Нефункциональное тестирование (Non-functional Testing):</strong> оценивает производительность, юзабилити, безопасность, нагрузку и т.д.</li>
+                    </ul>
+                    <h3>По методике исполнения</h3>
+                    <ul>
+                        <li><strong>Ручное тестирование (Manual Testing):</strong> выполнение тестов вручную без использования скриптов.</li>
+                        <li><strong>Автоматизированное тестирование (Automated Testing):</strong> использует специальные инструменты (Selenium, JUnit) и скрипты.</li>
+                    </ul>
+                    <h3>По отношению к сценариям</h3>
+                    <ul>
+                        <li><strong>Позитивное тестирование (Positive Testing):</strong> ввод корректных данных и ожидание правильного результата.</li>
+                        <li><strong>Негативное тестирование (Negative Testing):</strong> провоцирует ошибочные сценарии, пытаясь обнаружить возможные сбои или уязвимости.</li>
+                    </ul>
+                    <h3>По степени детализации</h3>
+                    <ul>
+                        <li><strong>Черный ящик (Black-box):</strong> тестирование на основе анализа спецификации компонента или системы.</li>
+                        <li><strong>Белый ящик (White-box):</strong> предполагает глубокое понимание структуры, архитектуры и внутренних механизмов продукта.</li>
+                        <li><strong>Комбинаторное тестирование (combinatorial testing):</strong> комбинация подходов черного и белого ящика.</li>
+                    </ul>
+                    <h3>Дополнительные виды</h3>
+                    <ul>
+                        <li><strong>Альфа-тестирование (Alpha Testing):</strong> тип приемочного тестирования, выполняемого в тестовой среде разработчика.</li>
+                        <li><strong>Бета-тестирование (Beta Testing):</strong> открытие финальной версии продукта для широкой аудитории реальных пользователей.</li>
+                        <li><strong>Дымовое тестирование (Smoke Testing):</strong> быстрая проверка основных функций после сборки.</li>
+                        <li><strong>Регрессионное тестирование (regression testing):</strong> тип тестирования, связанного с изменениями, для определения того, были ли дефекты внесены или обнаружены в неизмененных областях.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <div class="section-divider"></div>
+
+        <section class="section" id="task3">
+            <div class="container">
+                <h2 class="section-title">Задание 3: SDLC и методологии</h2>
+                <div class="article-content">
+                    <h3>SDLC — жизненный цикл разработки ПО</h3>
+                    <p><strong>SDLC (Software Development Life Cycle)</strong> — это структура, описывающая этапы разработки программного обеспечения от идеи до выпуска и сопровождения продукта. Важно понимать, что существует множество моделей SDLC, каждая из которых имеет свои особенности, плюсы и минусы.</p>
+                    <h3>Вот несколько самых известных моделей разработки.</h3>
+                    <h3>1. Waterfall (Водопадная модель)</h3>
+                    <p><strong>Waterfall</strong> - последовательная модель с четкими фазами: сбор требований, проектирование, реализация, тестирование, эксплуатация.</p>
+                    <p><strong>➕ Плюсы:</strong> Четкая последовательность этапов, легко управлять сроками и бюджетом, подходит для проектов с ясными и неизменными требованиями.</p>
+                    <p><strong>➖ Минусы:</strong> Невозможность вернуться к предыдущему этапу без переделки всей работы, тестирование начинается слишком поздно, не подходит для больших или изменчивых проектов.</p>
+                    <h3>2. V-Model</h3>
+                    <p><strong>V-Model</strong> - улучшенный вариант водопадной модели с параллельной разработкой тестов.</p>
+                    <p><strong>➕ Плюсы:</strong> Каждому этапу разработки соответствует этап тестирования, раннее выявление дефектов, четкая структура для проектов с высокими требованиями к качеству.</p>
+                    <p><strong>➖ Минусы:</strong> Жесткая структура, как в Waterfall, сложно вносить изменения после начала разработки, требует детальной документации на ранних этапах.</p>
+                    <h3>3. Incremental Model</h3>
+                    <p><strong>Incremental Model</strong> - проект развивается постепенно, небольшими частями (инкрементами).</p>
+                    <p><strong>➕ Плюсы:</strong> Поэтапная разработка функциональности, возможность получать обратную связь после каждого инкремента, снижение рисков за счет постепенного внедрения.</p>
+                    <p><strong>➖ Минусы:</strong> Требует четкого планирования архитектуры на старте, риск накопления технического долга, высокая стоимость интеграции модулей, затруднительно оценивать сроки и бюджет проекта.</p>
+                    <h3>4. Scrum</h3>
+                    <p><strong>Scrum</strong> - методология Agile, основанная на коротких циклах ("спринтах").</p>
+                    <p><strong>➕ Плюсы:</strong> Гибкость (требования могут меняться между спринтами), регулярная демонстрация рабочего продукта заказчику, улучшение командной коммуникации через ежедневные стендапы.</p>
+                    <p><strong>➖ Минусы:</strong> Требует высокой самоорганизации команды, не подходит для небольших или простых проектов из-за накладных расходов на процессы, риск «спринт-марафона» — усталости от жестких дедлайнов.</p>
+                    <h3>5. Kanban</h3>
+                    <p><strong>Kanban</strong> - инструмент управления потоком задач с использованием канбан-досок.</p>
+                    <p><strong>➕ Плюсы:</strong> Лёгкий старт и плавное внедрение улучшений, гибкое управление задачами без фиксированных итераций, визуализация workflow (доска с колонками), оптимизация времени за счет ограничения задач в работе (WIP-лимиты).</p>
+                    <p><strong>➖ Минусы:</strong> Сложно прогнозировать сроки релиза, риск «размывания» приоритетов без четких временных рамок, требует дисциплины для регулярного обновления доски.</p>
+                    <h3>Agile-манифест: 4 ключевые идеи</h3>
+                    <ul>
+                        <li><strong>Люди и взаимодействие > Процессы и инструменты.</strong> Важнее всего эффективная коммуникация команды. Живое общение важнее формальных процессов и документации.</li>
+                        <li><strong>Работающий продукт > Подробная документация.</strong> Готовый продукт и его практические результаты обладают большей ценностью, чем обширная документация, детальные отчеты и планы.</li>
+                        <li><strong>Сотрудничество с клиентами > Согласование контрактов.</strong> Поддержка постоянного общения с заказчиками, команда фокусируется на гибкой адаптации к изменениям требований, а не на строгом следовании изначальному контракту.</li>
+                        <li><strong>Готовность к изменениям > Следование плану.</strong> Способность меняться важна для успеха проекта.</li>
+                    </ul>
+                    <p><strong>Пояснение фразы:</strong> «Не отрицая важности того, что справа...» — эта фраза подчёркивает приоритет гибкости и адаптации к изменениям, признавая важность традиционных подходов, но ставя человеческие факторы и динамику развития проекта выше формальных процедур. Agile не предлагает полностью отказаться от процессов, документации или планов. Он лишь смещает фокус на более гибкие и человекоориентированные подходы.</p>
+                </div>
+            </div>
+        </section>
+
+        <div class="section-divider"></div>
+
+        <section class="section" id="task4">
+            <div class="container">
+                <h2 class="section-title">Задание 4: Уровни тестирования</h2>
+                <div class="article-content">
+                    <div class="table-responsive">
+                        <table>
+                            <thead>
+                            <tr>
+                                <th>Уровень тестирования</th>
+                                <th>Кем проводится</th>
+                                <th>На каком этапе жизненного цикла ПО</th>
+                                <th>Процесс проведения</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td><strong>Модульное (оно же компонентное)</strong></td>
+                                <td>Разработчики</td>
+                                <td>После написания отдельных компонентов</td>
+                                <td>Юнит-тесты проверяют каждую отдельную единицу исходного кода. Тесты пишутся и запускаются разработчиками в изолированной среде.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Интеграционное</strong></td>
+                                <td>Тестировщики / DevOps-инженеры</td>
+                                <td>При сборке системы</td>
+                                <td>Оценивается взаимодействие модулей и сервисов между собой. Используются инструменты вроде Postman или Selenium. Проверяются интерфейсы, потоки данных.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Системное</strong></td>
+                                <td>Отдел тестирования</td>
+                                <td>До передачи продукта клиенту</td>
+                                <td>Комплексная проверка полной системы на предмет полного набора требований. Проверяются функциональность, производительность, безопасность, совместимость. Примеры: нагрузочные тесты (JMeter), UI-тесты (Cypress).</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Приемочное</strong> — тестирование, проводимое при сдаче продукта заказчику. Целью приемочного тестирования является определение готовности программного продукта к использованию конечными пользователями. Набор тест-кейсов и сценариев разрабатывается на основании требований к данному приложению.</td>
+                                <td>Представители бизнеса / заказчик</td>
+                                <td>Последний этап перед внедрением в продакшн</td>
+                                <td>Конечный пользователь оценивает готовую систему на соответствие ожиданиям. Включает User Acceptance Testing (UAT) — тестирование в реальной среде с использованием бизнес-сценариев. Пример: запуск пилотной версии для отдела заказчика.</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="section-divider"></div>
+
+        <section class="section" id="task5">
+            <div class="container">
+                <h2 class="section-title">Задание 5: 7 принципов тестирования</h2>
+                <div class="article-content">
+                    <ol>
+                        <li><strong>Тестирование показывает наличие дефектов, но не их отсутствие.</strong> Тестирование может выявить ошибки, но не гарантирует, что их нет. Чем больше пройдено успешных тестов, тем выше уверенность в продукте, хотя полное тестирование всех вариантов ввода и окружения практически невозможно.</li>
+                        <li><strong>Исчерпывающее тестирование невозможно.</strong> Проверить все комбинации входных данных, сценариев и условий нереально. Решение: Приоритезация тестов на основе рисков и критичности функционала.</li>
+                        <li><strong>Раннее тестирование.</strong> Обнаружение дефектов на ранней стадии снижает затраты на исправления. Рекомендуется запускать тестирование как можно раньше, начиная с этапа проектирования.</li>
+                        <li><strong>Кластеризация дефектов (Закон Парето).</strong> Большинство дефектов находится в небольшом количестве модулей программы. Этот принцип известен как закон Парето ("80% проблем происходят из-за 20% элементов"). Фокусируйтесь на тщательном тестировании ключевых участков.</li>
+                        <li><strong>Парадокс пестицидов.</strong> Повторение одних и тех же тестов перестает находить новые дефекты. Решение: регулярно пересматривать существующие тест-кейсы и создавать новые, разнообразные тесты.</li>
+                        <li><strong>Тестирование зависит от контекста.</strong> Уровень риска влияет на выбор методологий, техник и типов тестирования. Подходы различаются для веб-приложений, мобильных apps, embedded-систем и т.д. Например: Для банковского ПО критична безопасность, для игры — UX.</li>
+                        <li><strong>Заблуждение об отсутствии ошибок.</strong> Отсутствие дефектов ≠ готовность продукта. Приложение без багов может не решать задачи пользователя.</li>
+                    </ol>
+                    <p><strong>Источники:</strong> ISTQB Syllabus, Software Testing Fundamentals, Guru99: Principles of Testing.</p>
+                </div>
+            </div>
+        </section>
+
+        <div class="section-divider"></div>
+
+        <section class="section" id="glossary">
+            <div class="container">
+                <h2 class="section-title">Глоссарий</h2>
+                <div class="article-content">
+                    <div class="skills-grid">
+                        <div class="skill-card"><strong>API</strong> — способ взаимодействия двух программ.</div>
+                        <div class="skill-card"><strong>MAU</strong> — количество активных пользователей в месяц.</div>
+                        <div class="skill-card"><strong>Автоматизация</strong> — процесс создания системы, которая автоматически выполняет действия за человека.</div>
+                        <div class="skill-card"><strong>Автоматизированный тест</strong> — проверка, которую проводит система без участия человека.</div>
+                        <div class="skill-card"><strong>Апрейзал</strong> — оценка работы сотрудника за определённый период (appraisal).</div>
+                        <div class="skill-card"><strong>Баг-репорт</strong> — технический документ, который описывает ошибку в приложении.</div>
+                        <div class="skill-card"><strong>База данных</strong> — набор данных, организованных по определённым принципам.</div>
+                        <div class="skill-card"><strong>Бирюзовая трансформация</strong> — переход компании к большему самоуправлению.</div>
+                        <div class="skill-card"><strong>Веб-сайт</strong> — одна или несколько логически связанных между собой веб-страниц.</div>
+                        <div class="skill-card"><strong>Движок</strong> — часть браузера, которая преобразует код страницы в изображение.</div>
+                        <div class="skill-card"><strong>Демо</strong> — демонстрация работы продукта или его части (demonstration).</div>
+                        <div class="skill-card"><strong>Деплой</strong> — размещение проекта на сервере (deploy).</div>
+                        <div class="skill-card"><strong>Индакшн</strong> — вводный инструктаж (induction).</div>
+                        <div class="skill-card"><strong>Катить</strong> — выкладывать цифровой продукт в сеть.</div>
+                        <div class="skill-card"><strong>Лог, лог-файл</strong> — файл, в котором хранится информация о событиях в системе.</div>
+                        <div class="skill-card"><strong>Логирование</strong> — запись информации в лог-файлы (logging).</div>
+                        <div class="skill-card"><strong>Нативное приложение</strong> — программа, устанавливаемая на устройство.</div>
+                        <div class="skill-card"><strong>Окружение</strong> — среда, в которой работает приложение (ОС, браузер, устройство).</div>
+                        <div class="skill-card"><strong>Операционная система</strong> — комплекс программ, управляющих компьютером.</div>
+                        <div class="skill-card"><strong>Ошибка 409</strong> — конфликт с текущим состоянием ресурса.</div>
+                        <div class="skill-card"><strong>Ошибка 503</strong> — сервис временно недоступен.</div>
+                        <div class="skill-card"><strong>Пивот</strong> — смена модели бизнеса, продукта или сферы деятельности (pivot).</div>
+                        <div class="skill-card"><strong>Программное обеспечение</strong> — то же самое, что программа.</div>
+                        <div class="skill-card"><strong>Релиз</strong> — выпуск продукта, а также сам выпускаемый продукт (release).</div>
+                        <div class="skill-card"><strong>Скринкаст</strong> — видеозапись экрана (screencast).</div>
+                        <div class="skill-card"><strong>Скролл</strong> — прокрутка экрана (scroll).</div>
+                        <div class="skill-card"><strong>Пачка</strong> — корпоративный мессенджер.</div>
+                        <div class="skill-card"><strong>Стенд</strong> — набор аппаратного и программного обеспечения для тестирования (stand).</div>
+                        <div class="skill-card"><strong>Тест-кейс</strong> — сценарий тестирования с чётко описанными шагами (test case).</div>
+                        <div class="skill-card"><strong>Тест-сьют</strong> — набор тест-кейсов, сгруппированных по определённому принципу (test suite).</div>
+                        <div class="skill-card"><strong>Тикет</strong> — рабочая задача в системе управления задачами (ticket).</div>
+                        <div class="skill-card"><strong>Требования к продукту</strong> — описание того, как должна работать система.</div>
+                        <div class="skill-card"><strong>Уникальный идентификатор</strong> — уникальный признак объекта (identificator).</div>
+                        <div class="skill-card"><strong>Чек-лист</strong> — документ со списком проверок (check list).</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="section-divider"></div>
+
+        <section class="section" id="cheatsheets">
+            <div class="container">
+                <h2 class="section-title">Шпаргалки</h2>
+                <div class="article-content" style="margin-bottom: 3rem;">
+                    <h3>Шпаргалка: баг-репорт</h3>
+                    <div class="table-responsive">
+                        <table>
+                            <tr><th>Поле</th><th>Определение</th></tr>
+                            <tr><td>ID</td><td>Уникальный номер</td></tr>
+                            <tr><td>Заголовок</td><td>Суть ошибки</td></tr>
+                            <tr><td>Шаги воспроизведения</td><td>Инструкция для воспроизведения бага</td></tr>
+                            <tr><td>Результаты</td><td>Описание Фактического (ФР) и Ожидаемого (ОР) результатов</td></tr>
+                            <tr><td>Окружение</td><td>Операционные системы и браузеры, где возникает ошибка</td></tr>
+                            <tr><td>Приоритет</td><td>Критичность и срочность исправления</td></tr>
+                        </table>
+                    </div>
+                    <h4>Необязательные поля</h4>
+                    <ul>
+                        <li><strong>Описание</strong> — если в заголовке недостаточно информации о дефекте.</li>
+                        <li><strong>Предусловие</strong> — если систему нужно подготовить перед тестированием.</li>
+                        <li><strong>Постусловие</strong> — если систему нужно вернуть в прежний вид после тестирования.</li>
+                        <li><strong>Доп. материалы</strong> — скриншоты, скринкасты, логи, файлы для воспроизведения ошибки.</li>
+                    </ul>
+                </div>
+                <div class="article-content" style="margin-bottom: 3rem;">
+                    <h3>Шпаргалка: скриншоты</h3>
+                    <div class="skills-grid">
+                        <div class="skill-card"><h4>Windows</h4><p><code>PrtScr</code> — весь экран</p><p><code>Alt + PrtScr</code> — активное окно</p><p>Или программа «Ножницы»</p></div>
+                        <div class="skill-card"><h4>Mac</h4><p><code>Shift + ⌘ + 3</code> — весь экран</p><p><code>Shift + ⌘ + 4</code> — область</p></div>
+                        <div class="skill-card"><h4>Мобильные</h4><p><strong>Android/iOS:</strong> Зажать питание + громкость вниз (или Home)</p></div>
+                        <div class="skill-card"><h4>Программы</h4><p>Яндекс.Диск, LightShot, Monosnap, Joxi</p></div>
+                    </div>
+                </div>
+                <div class="article-content">
+                    <h3>Шпаргалка: окружение</h3>
+                    <p>Для воспроизведения ошибок и тестирования необходимо точно указывать окружение, в котором проводилась проверка.</p>
+                    <div class="table-responsive">
+                        <table>
+                            <tr><th>Категория</th><th>Детали</th></tr>
+                            <tr><td><strong>Десктоп</strong></td><td>Windows 10/11, macOS Ventura/Monterey, Ubuntu 22.04</td></tr>
+                            <tr><td><strong>Мобильные устройства</strong></td><td>Android 13/14, iOS 16/17, эмуляторы Android Studio, Xcode Simulator</td></tr>
+                            <tr><td><strong>Браузеры</strong></td><td>Chromium (Chrome, Edge, Яндекс.Браузер), Gecko (Firefox), WebKit (Safari)</td></tr>
+                            <tr><td><strong>Инструменты</strong></td><td>Снифферы: Charles Proxy, Fiddler, Wireshark. API-клиенты: Postman, Insomnia. Логи: Kibana, Sentry, Android Logcat</td></tr>
+                        </table>
+                    </div>
+                    <p style="margin-top: 1.5rem;"><strong>Примечание:</strong> всегда указывайте версии ОС, браузеров и разрешение экрана (для десктопа) или модель устройства (для мобильного тестирования).</p>
+                </div>
+            </div>
+        </section>
+
+        <div class="section-divider"></div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>© 2023-2026 Ольга Кашина (Щербинина). Все права защищены.</p>
+        </div>
+    </footer>
+</div>
+
+<div class="upbtn" id="upbtn"><i class="fas fa-arrow-up"></i></div>
+
+<script>
+    function updateDateTime() {
+        const d = new Date();
+        const months = ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'];
+        const week = ['Воскресенье', 'Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота'];
+        const el = document.getElementById('liveDateTime');
+        if (el) el.textContent = `${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}, ${week[d.getDay()]} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
+    }
+    updateDateTime(); setInterval(updateDateTime, 1000);
+
+    const upBtn = document.getElementById('upbtn');
+    window.addEventListener('scroll', () => upBtn.classList.toggle('visible', window.scrollY > 300));
+    upBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+    function toggleSidebar() {
+        document.getElementById('sidebar').classList.toggle('open');
+        document.getElementById('sidebarOverlay').classList.toggle('show');
+    }
+    function closeSidebar() {
+        document.getElementById('sidebar').classList.remove('open');
+        document.getElementById('sidebarOverlay').classList.remove('show');
+    }
+
+    function toggleAccordion(header) {
+    header.classList.toggle('open');
+    const body = header.nextElementSibling;
+    if (body.style.maxHeight && body.style.maxHeight !== '0px') {
+        body.style.maxHeight = '0';
+    } else {
+        body.style.maxHeight = body.scrollHeight + 'px';
+    }
+}
+</script>
+</body>
+</html>
