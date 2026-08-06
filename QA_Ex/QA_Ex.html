@@ -8,6 +8,7 @@
         :root{
           --bg:#f4f5f7; --card:#ffffff; --text:#1f2430; --muted:#6b7280;
           --accent:#4f46e5; --good:#16a34a; --bad:#dc2626; --border:#e5e7eb;
+          --highlight-bg:#fff9db; --highlight-border:#f08c00;
         }
         *{box-sizing:border-box;}
         body{
@@ -27,6 +28,10 @@
         .card{
           background:var(--card); border:1px solid var(--border); border-radius:12px;
           padding:18px 20px; margin-bottom:16px; transition:border-color .2s; word-wrap:break-word; overflow-wrap:break-word;
+        }
+        .card.highlight {
+          background:#cef6f6; border:2px solid var(--highlight-border);
+          box-shadow:0 2px 8px rgba(240,140,0,0.15);
         }
         .card.correct{ border-color:var(--good); box-shadow:0 0 0 1px var(--good) inset; }
         .card.incorrect{ border-color:var(--bad); box-shadow:0 0 0 1px var(--bad) inset; }
@@ -113,6 +118,9 @@
 </div>
 
 <script>
+    // Список индексов вопросов, которые нужно выделить (0-based: 1 -> 0, 10 -> 9, 16 -> 15, 18 -> 17, 21 -> 20, 34 -> 33, 41 -> 40)
+    const highlightedQuestions = [0,1,2,3,4,5,6,7,8,9, 15, 17, 20, 33,34,35,36,37,38,39,40];
+
     const questions = [
     // --- Блок 1: Базовые концепции и процессы (вопросы 1-7) ---
     {
@@ -704,6 +712,9 @@
     questions.forEach((q, qi) => {
       const card = document.createElement('div');
       card.className = 'card';
+      if (highlightedQuestions.includes(qi)) {
+        card.classList.add('highlight');
+      }
       card.dataset.qi = qi;
 
       const num = document.createElement('div');
