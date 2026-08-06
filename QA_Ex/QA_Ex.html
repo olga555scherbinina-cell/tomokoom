@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
     <title>QA экзамен — полный тренажёр</title>
     <style>
         :root{
@@ -12,69 +12,81 @@
         *{box-sizing:border-box;}
         body{
           margin:0; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
-          background:var(--bg); color:var(--text); line-height:1.5;
+          background:var(--bg); color:var(--text); line-height:1.5; min-width:320px;
         }
-        .wrap{max-width:820px; margin:0 auto; padding:24px 16px 80px;}
+        .wrap{max-width:820px; margin:0 auto; padding:24px 16px 100px;}
         header{ text-align:center; margin-bottom:24px; }
         header h1{ font-size:1.6rem; margin:0 0 6px; }
         header p{ color:var(--muted); margin:0; font-size:0.95rem; }
         #score-bar{
           position:sticky; top:0; z-index:10; background:var(--bg); padding:10px 0;
           display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;
-          border-bottom:1px solid var(--border);
+          border-bottom:1px solid var(--border); flex-wrap:wrap; gap:8px;
         }
         #score-bar .count{ color:var(--muted); font-size:0.9rem; }
         .card{
           background:var(--card); border:1px solid var(--border); border-radius:12px;
-          padding:18px 20px; margin-bottom:16px; transition:border-color .2s;
+          padding:18px 20px; margin-bottom:16px; transition:border-color .2s; word-wrap:break-word; overflow-wrap:break-word;
         }
         .card.correct{ border-color:var(--good); box-shadow:0 0 0 1px var(--good) inset; }
         .card.incorrect{ border-color:var(--bad); box-shadow:0 0 0 1px var(--bad) inset; }
-        .qnum{ font-size:0.78rem; color:var(--accent); font-weight:600; letter-spacing:.03em; margin-bottom:4px; }
-        .qtext{ font-weight:600; margin-bottom:12px; }
+        .qnum{ font-size:0.78rem; color:var(--accent); font-weight:600; letter-spacing:.03em; margin-bottom:4px; display:flex; align-items:center; justify-content:space-between; }
+        .qtext{ font-weight:600; margin-bottom:12px; word-break:break-word; }
         .hint{ font-size:0.82rem; color:var(--muted); margin:-8px 0 10px; }
         label.opt{
           display:flex; align-items:flex-start; gap:8px; padding:8px 10px; border-radius:8px;
-          cursor:pointer; margin-bottom:4px; border:1px solid transparent;
+          cursor:pointer; margin-bottom:4px; border:1px solid transparent; word-break:break-word;
         }
         label.opt:hover{ background:#f1f2f6; }
-        label.opt input{ margin-top:3px; }
-        .opt-mark{ margin-left:auto; padding-left:10px; font-weight:700; }
+        label.opt input{ margin-top:3px; flex-shrink:0; }
+        .opt-mark{ margin-left:auto; padding-left:10px; font-weight:700; flex-shrink:0; }
         code{
-          background:#eef0f5; padding:1px 5px; border-radius:5px; font-size:0.88em;
+          background:#eef0f5; padding:1px 5px; border-radius:5px; font-size:0.88em; word-break:break-word;
         }
         .match-row{ display:flex; align-items:center; gap:10px; margin-bottom:8px; flex-wrap:wrap; }
-        .match-row .left{ flex:0 0 260px; font-size:0.92rem; }
-        .match-row select{ flex:1; min-width:200px; padding:6px 8px; border-radius:6px; border:1px solid var(--border); }
-        .order-row{ display:flex; align-items:center; gap:10px; margin-bottom:8px; }
-        .order-row .pos{ width:22px; font-weight:600; color:var(--muted); }
-        .order-row select{ flex:1; padding:6px 8px; border-radius:6px; border:1px solid var(--border); }
+        .match-row .left{ flex:0 0 auto; font-size:0.92rem; min-width:0; word-break:break-word; max-width:100%; }
+        .match-row select{ flex:1; min-width:0; padding:6px 8px; border-radius:6px; border:1px solid var(--border); max-width:100%; }
+        .order-row{ display:flex; align-items:center; gap:10px; margin-bottom:8px; flex-wrap:wrap; }
+        .order-row .pos{ width:22px; font-weight:600; color:var(--muted); flex-shrink:0; }
+        .order-row select{ flex:1; min-width:0; padding:6px 8px; border-radius:6px; border:1px solid var(--border); max-width:100%; }
         input[type=text]{
-          width:100%; padding:8px 10px; border-radius:6px; border:1px solid var(--border); font-family:monospace;
+          width:100%; padding:8px 10px; border-radius:6px; border:1px solid var(--border); font-family:monospace; max-width:100%;
         }
         .answer{
           display:none; margin-top:10px; padding:10px 12px; background:#f0fdf4; border:1px dashed var(--good);
-          border-radius:8px; font-size:0.88rem; color:#14532d;
+          border-radius:8px; font-size:0.88rem; color:#14532d; word-break:break-word;
         }
         .card.show-answer .answer{ display:block; }
-        .result-icon{ float:right; font-weight:700; }
+        .result-icon{ font-weight:700; flex-shrink:0; }
         .card.correct .result-icon{ color:var(--good); }
         .card.incorrect .result-icon{ color:var(--bad); }
         .controls{
           position:fixed; bottom:0; left:0; right:0; background:var(--card); border-top:1px solid var(--border);
-          padding:12px 16px; display:flex; gap:10px; justify-content:center; flex-wrap:wrap;
+          padding:12px 16px; display:flex; gap:10px; justify-content:center; flex-wrap:wrap; z-index:20;
         }
         button{
           background:var(--accent); color:#fff; border:none; padding:10px 20px; border-radius:8px;
-          font-size:0.95rem; cursor:pointer; font-weight:600;
+          font-size:0.95rem; cursor:pointer; font-weight:600; white-space:nowrap;
         }
         button.secondary{ background:#e5e7eb; color:var(--text); }
         button:hover{ opacity:.9; }
         #final{
-          text-align:center; font-size:1.2rem; font-weight:700; margin:16px 0; padding:20px; border-radius:12px; display:none;
+          text-align:center; font-size:1.2rem; font-weight:700; margin:16px 0; padding:20px; border-radius:12px; display:none; word-break:break-word;
         }
         #final.passed { background: #dcfce7; color: #166534; border: 2px solid #22c55e; }
         #final.failed { background: #fee2e2; color: #991b1b; border: 2px solid #ef4444; }
+
+        @media screen and (max-width: 600px) {
+          .wrap{ padding:16px 8px 120px; }
+          .card{ padding:14px 12px; }
+          header h1{ font-size:1.3rem; }
+          label.opt{ font-size:0.9rem; padding:6px 8px; }
+          .match-row .left{ font-size:0.85rem; width:100%; flex-basis:100%; }
+          .match-row select{ width:100%; flex-basis:100%; }
+          .order-row select{ width:100%; }
+          button{ padding:10px 14px; font-size:0.9rem; }
+          .controls{ gap:6px; padding:10px 8px; }
+        }
     </style>
 </head>
 <body>
@@ -696,7 +708,7 @@
 
       const num = document.createElement('div');
       num.className = 'qnum';
-      num.textContent = 'Вопрос ' + (qi+1) + ' из ' + questions.length;
+      num.innerHTML = '<span>Вопрос ' + (qi+1) + ' из ' + questions.length + '</span><span class="result-icon"></span>';
       card.appendChild(num);
 
       const qt = document.createElement('div');
@@ -810,11 +822,13 @@
           const p = document.createElement('div');
           p.style.fontSize = '0.92rem';
           p.style.marginBottom = '4px';
+          p.style.wordBreak = 'break-word';
           p.textContent = '— ' + item;
           row.appendChild(p);
           const btnWrap = document.createElement('div');
           btnWrap.style.display = 'flex';
           btnWrap.style.gap = '14px';
+          btnWrap.style.flexWrap = 'wrap';
           q.labels.forEach(lab => {
             const label = document.createElement('label');
             label.className = 'opt';
@@ -854,10 +868,6 @@
         input.addEventListener('keydown', (e) => { if(e.key === 'Enter') evaluateQuestion(qi); });
         card.appendChild(input);
       }
-
-      const resultIcon = document.createElement('span');
-      resultIcon.className = 'result-icon';
-      num.appendChild(resultIcon);
 
       const answerBox = document.createElement('div');
       answerBox.className = 'answer';
